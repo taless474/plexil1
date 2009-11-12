@@ -1,0 +1,29 @@
+This directory contains the PLEXIL schemas and related files.  Look
+inside the files for more comments.
+
+All schemas are provided in two formats: XSD and RNG (Compact Relax NG).
+
+core-plexil.xsd define the Core PLEXIL that is currently implemented by
+the Universal Executive.
+
+core-plexil-draft.xsd is a schema for planned extensions to Core PLEXIL
+(core-plexil).
+
+safe-plexil.xsd defines a restricted version of Core PLEXIL that is
+easier to verify.
+
+extended-plexil.xsd define an extension of Core PLEXIL that adds
+conditionals, loops, and other convenient forms.
+
+plexil-script.xsd are schemas for the simulation script.
+
+translate-plexil.xsl is an XSLT program that translates Extended Plexil
+into Core Plexil.  It is run conveniently via the 'eplexil' script found
+in plexil/bin.  See that directory for more information.
+
+Makefile and 'rncfix' are used to generate .rnc schemas from .xsd.  This
+process is described within Makefile.
+
+For more information, see:
+
+  https://sourceforge.net/apps/mediawiki/plexil/index.php?title=PLEXIL,_XML,_and_Emacs
