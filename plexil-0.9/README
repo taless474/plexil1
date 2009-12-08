@@ -1,0 +1,80 @@
+This is the top level directory of the PLEXIL/UE distribution.
+
+See http://sourceforge.net/projects/plexil for information about this 
+software, including its user manuals.  There is more information in the 
+README files found in each subdirectory of this directory.
+
+This distribution is based on SVN revision: [to be filled for prebuilt
+distributions only]
+
+Release Notes
+-------------
+
+0.80
+ - first Sourceforge release
+
+0.81
+ - new syntax and translator for simulation scripts
+   (standard-plexil/plexilscript)
+ - numerous minor fixes and enhancements
+
+0.82
+ - refactored universal-exec/Exec/test,
+   creating new 'bin' and 'apps' directories
+ - slightly simplified installation
+ - added RoboSim example application and plans
+ - reduced response time to external world events
+ - support for 64-bit architectures
+ - numerous minor fixes and enhancements
+
+0.83
+ - critical bug fix for event processing
+ - the Node Priority clause has been deprecated.  It had semantic
+   issues, and is not used in any known PLEXIL applications.  Multiple
+   assignments to the same variable occuring simultaneously results in a
+   runtime error.  At this stage, the Priority clause has only been
+   removed from documentation and tests.  It is still implemented, as an
+   undocumented and unsupported feature.  It may someday be removed from
+   the implementation without notice.  A better solution may be designed.
+ - more documentation regarding concurrency in list nodes
+ - added PLEXIL workshop presentations
+ - significant revision of several UE reference manual chapters
+ - PDF manuals now included in distribution
+
+0.84
+ - new component: a standalone simulator for PLEXIL.
+ - new component: static checker for PLEXIL.
+ - added global declarations (for static plan checking) to schemas and
+   Plexilisp
+ - additional workshop slides
+ - easier setup for Plexilisp
+ - misc bug fixes and enhancements
+
+0.90
+ - New application framework, revised external interfaces, and simple
+   test application using both.  See the app-framework directory.  The
+   existing external interfaces are unchanged from the previous release,
+   but are deprecated.
+ - Standard Plexil no longer supports hyphenated variable names. Hyphenated
+   variables may be supported in a future release.
+ - Standalone simulator now supports telemetry and has a test executive.
+ - New Extended Plexil language: schema, translator, examples.
+ - Plexilisp has several new constructs and generates Extended Plexil
+ - Refactoring of Plexil schemas.
+ - New enhancements and bug fixes to the Luv Viewer.
+ - Top level Makefile and simplified build and installation instructions.
+ - Numerous small enhancements and bug fixes throughout code base.
+
+0.91
+ - Deprecated Function Call node.
+ - Added 'jam' executables in plexil/bin
+ - Added support for testing node iteration outcome.
+ - Extended Plexil: added Concurrence form; bug fixes
+ - Plexilisp: added Wait, Concurrence; action forms can now contain
+   nodes or node bodies; empty sequences are properly supported
+ - XML schema updates
+ CAVEATS: 
+ - Standalone Simulator may not work in Mac OS and some versions of
+   Linux, due to errors in the LCM library.  The problem is being worked on.
+
+ 
