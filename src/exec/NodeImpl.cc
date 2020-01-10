@@ -75,7 +75,8 @@ namespace PLEXIL
       "PostCondition",
       "RepeatCondition",
       "ActionCompleteCondition",
-      "AbortCompleteCondition"
+      "AbortCompleteCondition",
+      "AssignmentConflictCondition"
     };
 
   // gperf-inspired version
@@ -244,6 +245,7 @@ namespace PLEXIL
       activateExitCondition();
       activateInvariantCondition();
       activatePreSkipStartConditions();
+      activateAssignmentConflictCondition();
       break;
 
     case EXECUTING_STATE:
@@ -1564,6 +1566,13 @@ namespace PLEXIL
     m_conditions[abortCompleteIdx]->activate();
   }
 
+void NodeImpl::activateAssignmentConflictCondition() {
+    assertTrueMsg(m_conditions[assignmentConflictIdx],
+                  "No AssignmentConflictCondition exists in node \"" << m_nodeId << "\"");
+    m_conditions[assignmentConflictIdx]->activate();
+  
+}
+
   // These are special because parent owns the condition expression
   void NodeImpl::deactivateAncestorEndCondition()
   {
@@ -1623,6 +1632,11 @@ namespace PLEXIL
   void NodeImpl::deactivateAbortCompleteCondition()
   {
     m_conditions[abortCompleteIdx]->deactivate();
+  }
+
+  void NodeImpl::deactivateAssignmentConflictCondition()
+  {
+    m_conditions[assignmentConflictIdx]->deactivate();
   }
 
   void NodeImpl::activateLocalVariables()

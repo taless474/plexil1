@@ -25,13 +25,15 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+use warnings qw/all/;
+use strict;
 
-$fileout = 'RegressionResults';
-$file1 = @ARGV[0];
-$file2 = @ARGV[1];
+my $fileout = 'RegressionResults';
+my $file1 = $ARGV[0];
+my $file2 = $ARGV[1];
 
 open(DIF, ">>$fileout");	# Open for output
-$testName = $file1;
+my $testName = $file1;
 $testName =~ s/output\/RUN_(.*)_(.*)\.out/$1 + $2/;
 
 
@@ -41,40 +43,55 @@ if ($file2){
 
 open (F1, $file1);
 open (F2, $file2);
-open(FE, STDERR);
-@lines1 = <F1>;
-@lines2 = <F2>;
-$n = 0;
-$m = 0;
-foreach $temp (@lines2){
-  $line1 = @lines1[$n];
-  $line1 =~ s/(0x[0-9a-fA-F]{2,16})//g;
-  $temp =~ s/(0x[0-9a-fA-F]{2,16})//g;
- if ($line1 ne $temp){   
-      if ($m == 0){
-          print DIF "\n";
-          print DIF "**** TEST FAILED: ", $testName; 
-          print "\nTEST FAILED:  ", $testName;
-          print "***\n  ------ .out file differs from .valid file\n";
-      }
-      $m++;
-      print DIF "\nLine: ", $n;
-      print DIF "\n";
-      print DIF ".out:   ", $line1; 
-      print DIF ".valid: ", $temp;  
-      print DIF "\n";
+
+my @lines1 = <F1>;
+my @lines2 = <F2>;
+my $n = 0;
+my $m = 0;
+foreach my $temp (@lines2){
+    if($n > $#lines1) {
+        print DIF "\n";
+        print DIF "**** TEST FAILED: ", $testName; 
+        print "\nTEST FAILED:  ", $testName;
+        print "***\n  ------ .out file differs from .valid file.  .out file is longer than .valid.\n";
+        ++$m; #make sure m is non-zero so that it doesn't accidentally get regarded as a success
+        last;
+    }
+    my $line1 = $lines1[$n];
+    #temporarily skip lines adding a print of the assignment conflict condition
+    if($line1 =~ /AssignmentConflictCondition: \(Variable Boolean .* AssignmentConflictCondition/) {
+        print "TEST ", $testName, " required skipping the AssignmentConflictCondition.\n";
+        while($line1 =~ /AssignmentConflictCondition: \(Variable Boolean .* AssignmentConflictCondition/) {
+            $line1 = $lines1[++$n];
+        }
+    }
+    $line1 =~ s/(0x[0-9a-fA-F]{2,16})//g;
+    $temp =~ s/(0x[0-9a-fA-F]{2,16})//g;
+    if ($line1 ne $temp){   
+        if ($m == 0){
+            print DIF "\n";
+            print DIF "**** TEST FAILED: ", $testName; 
+            print "\nTEST FAILED:  ", $testName;
+            print "***\n  ------ .out file differs from .valid file\n";
+        }
+        $m++;
+        print DIF "\nLine: ", $n;
+        print DIF "\n";
+        print DIF ".out:   ", $line1; 
+        print DIF ".valid: ", $temp;  
+        print DIF "\n";
  
-  }  
-$n++  
+    }  
+    $n++  
 }
 if ($n == 0){
-          print DIF "\n";
-          print DIF "\n**** TEST FAILED: ", $testName; 
-          print DIF "***\n  ------ No .output file was provided\n";
-          print "\nTEST FAILED:  ", $testName, "\n";
-          print "  ------ No .output file was provided\n";
+    print DIF "\n";
+    print DIF "\n**** TEST FAILED: ", $testName; 
+    print DIF "***\n  ------ No .output file was provided\n";
+    print "\nTEST FAILED:  ", $testName, "\n";
+    print "  ------ No .output file was provided\n";
 }elsif ($m == 0){
-   print DIF "\nTEST PASSED: ", $testName, "\n"; 
+    print DIF "\nTEST PASSED: ", $testName, "\n"; 
 }
 close(F2);
 
@@ -83,20 +100,20 @@ close(F2);
 # for files where this enough to show success
     open (F1, $file1);
     
-    @lines1 = <F1>;
-    $n = 0;
-    $k = 0;
-    foreach $line1 (@lines1){
+    my @lines1 = <F1>;
+    my $n = 0;
+    my $k = 0;
+    foreach my $line1 (@lines1){
         if ($line1 =~ m/Added plan:/){
-            if (@lines1[$n+1] =~ m/^(.*)\{$/){
-                $rootNode = $1;
-                $count = @lines1;
-                for ($i = $count-1; $i > 0; $i--){
-                    if(@lines1[$i] =~ m/PlexilExec:printPlan/){
-                         $k = 1;
-                        if (@lines1[$i+1] =~ m/^$rootNode\{$/){
-                            if (@lines1[$i+3] =~ m/^ Outcome: ([A-Z]*)$/){
-							  $outcome = $1;
+            if ($lines1[$n+1] =~ m/^(.*)\{$/){
+                my $rootNode = $1;
+                my $count = @lines1;
+                for (my $i = $count-1; $i > 0; $i--){
+                    if($lines1[$i] =~ m/PlexilExec:printPlan/){
+                        $k = 1;
+                        if ($lines1[$i+1] =~ m/^$rootNode\{$/){
+                            if ($lines1[$i+3] =~ m/^ Outcome: ([A-Z]*)$/){
+                                my $outcome = $1;
                                 if ($outcome eq "SUCCESS"){
                                     print DIF "\nTEST PASSED: ", $testName, "\n";
                                     $i = 0;
@@ -127,23 +144,23 @@ close(F2);
  }
 
 #this doesn't work (tempName) with libraries yet
-$fileErrs = 'tempRegressionResults';
+my $fileErrs = 'tempRegressionResults';
 open (F3, $fileErrs);
 my $i = 0;
-@lines3 = <F3>;
-foreach $line3 (@lines3){
+my @lines3 = <F3>;
+foreach my $line3 (@lines3){
     $i++;
-   if ($line3 =~ s/^RUN_exec-test-runner_g_rt\.-s\.(.*?)\.xml\.-p\.(.*?)\.xml.*/$2 + $1/)
-   {
-      chomp($tempName = $line3);
-      if ($tempName eq $testName){    
-         $line3 = @lines3[$i++];
-         while ($line3 && !($line3 =~ m/^RUN_exec-test-runner_g_rt\.-s\.(.*?)\.xml\.-p\.(.*?)\.xml.*/)){
-            print DIF $line3;
-               $line3 = @lines3[$i++];
-          }
-       }
-  }
+    if ($line3 =~ s/^RUN_exec-test-runner_g_rt\.-s\.(.*?)\.xml\.-p\.(.*?)\.xml.*/$2 + $1/)
+    {
+        chomp(my $tempName = $line3);
+        if ($tempName eq $testName){    
+            $line3 = $lines3[$i++];
+            while ($line3 && !($line3 =~ m/^RUN_exec-test-runner_g_rt\.-s\.(.*?)\.xml\.-p\.(.*?)\.xml.*/)){
+                print DIF $line3;
+                $line3 = $lines3[$i++];
+            }
+        }
+    }
 }
 
 close(F1);

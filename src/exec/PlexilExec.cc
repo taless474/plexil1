@@ -28,6 +28,7 @@
 
 #include "Assignable.hh"
 #include "Assignment.hh"
+#include "AssignmentNode.hh"
 #include "Debug.hh"
 #include "Error.hh"
 #include "ExecListenerBase.hh"
@@ -312,8 +313,8 @@ namespace PLEXIL
         // Sort Assignment nodes by priority
         resolveResourceConflicts();
 
-        if (m_stateChangeQueue.empty())
-          break; // nothing to do, exit quiescence loop
+        // if (m_stateChangeQueue.empty())
+        //   break; // nothing to do, exit quiescence loop
 
         debugMsg("PlexilExec:step",
                  "[" << cycleNum << ":" << stepCount << "] State change queue: "
@@ -548,8 +549,8 @@ namespace PLEXIL
         }
       }
       else {
-        size_t conflictCounter = 0;
-        VariableConflictSet::iterator conflictIt = conflict->begin(); 
+        VariableConflictSet::iterator conflictIt = conflict->begin();
+        std::vector<Node*> nodes_to_exec;
         // Look at the destination states of all the nodes with equal priority
         for (size_t i = 0; i < count; ++i) {
           Node *node = *conflictIt;
@@ -579,21 +580,26 @@ namespace PLEXIL
             continue;
           }
 
+
           // Got a live one
-          ++conflictCounter;
+          nodes_to_exec.push_back(node);
           ++conflictIt;
-
-          // If more than one node is scheduled for execution, we have a resource contention.
-          // N.B.: If this message triggers, nodeToExecute has been set in a previous iteration
-          // *** FIXME: This is a plan error. Find a non-fatal way to handle this conflict!! ***
-          checkError(conflictCounter < 2,
-                     "Error: nodes " << node->getNodeId() << ' ' << node << " and "
-                     << nodeToExecute->getNodeId() << ' ' << nodeToExecute
-                     << " are in contention over variable "
-                     << var->toString() << " and have equal priority.");
-
-          nodeToExecute = node;
-          destState = dest;
+        }
+        if(nodes_to_exec.size() == 1) {
+          nodeToExecute = nodes_to_exec[0];
+          destState = nodeToExecute->getNextState();
+        }
+        else {
+          for(std::vector<Node*>::const_iterator  it = nodes_to_exec.begin();
+              it != nodes_to_exec.end(); ++it) {
+            debugMsg("PlexilExec:resolveResourceConflicts",
+                     " Node " << (*it)->getNodeId() << " is in conflict for variable " <<
+                     var->toString() << ".  Failing it.");
+            dynamic_cast<AssignmentNode*>(*it)->getAssignmentConflictCondition()->
+                asAssignable()->setValue(true); //what now?
+            //force a next state re-calculation
+            //(*it)->getDestState();
+          }
         }
       }
 

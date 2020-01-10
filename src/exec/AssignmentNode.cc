@@ -101,6 +101,15 @@ namespace PLEXIL
     // Set abort-complete condition
     m_conditions[abortCompleteIdx] = m_assignment->getAbortComplete();
     m_garbageConditions[abortCompleteIdx] = false;
+
+    // Set assignment-conflict condition
+    std::string conflictName(m_nodeId + ' ' + ALL_CONDITIONS[assignmentConflictIdx]);
+    BooleanVariable* v  = new BooleanVariable(conflictName.c_str());
+    v->setValue(false);
+    m_conditions[assignmentConflictIdx] = v;
+    m_conditions[assignmentConflictIdx]->addListener(this);
+    m_garbageConditions[assignmentConflictIdx] = true;
+    
   }
 
   // Unit test variant of above
@@ -120,6 +129,37 @@ namespace PLEXIL
   //
   // Transition handlers
   //
+
+bool AssignmentNode::getDestStateFromWaiting() {
+  bool retval = NodeImpl::getDestStateFromWaiting();
+
+  if(m_nextState == EXECUTING_STATE) {
+    Expression* cond = NULL;
+    if((cond = getAssignmentConflictCondition())) {
+      bool temp = false;
+      if(cond->getValue(temp) && temp)  {
+        debugMsg("AssignmentNode:getDestState",
+                 ' ' << m_nodeId << ' ' << this << ' ' << nodeStateName(m_state)
+                 << " -> ITERATION_ENDED. Would be EXECUTING and ASSIGNMENT_CONFLICT_CONDITION true.");
+        m_nextState = ITERATION_ENDED_STATE;
+        m_nextOutcome = FAILURE_OUTCOME;
+        m_nextFailureType = ASSIGNMENT_CONFLICT;
+        return true;
+      }
+    }
+  }
+  return retval;
+}
+
+void AssignmentNode::transitionToWaiting() {
+  activateAssignmentConflictCondition();
+  NodeImpl::transitionToWaiting();
+}
+
+void AssignmentNode::transitionFromWaiting() {
+  deactivateAssignmentConflictCondition();
+  NodeImpl::transitionFromWaiting();
+}
 
   //
   // EXECUTING 

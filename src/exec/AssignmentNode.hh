@@ -104,12 +104,15 @@ namespace PLEXIL
     virtual void specializedHandleExecution();
     virtual void specializedDeactivateExecutable();
 
+    virtual bool getDestStateFromWaiting();
     virtual bool getDestStateFromExecuting();
     virtual bool getDestStateFromFailing();
 
+    virtual void transitionFromWaiting();
     virtual void transitionFromExecuting();
     virtual void transitionFromFailing();
 
+    virtual void transitionToWaiting();
     virtual void transitionToExecuting();
     virtual void transitionToFailing();
 

@@ -9,229 +9,235 @@ NonLocalExit{
   }
 }
 
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
 [PlexilExec:cycle] ==>Start cycle 1
-[PlexilExec:step][1:0] Check queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fdc79500e50 for state transition.
-[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fdc79500e50 on the state change queue in position 1
-[PlexilExec:step][1:0] State change queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:step][1:0:0] Transitioning node NonLocalExit 0x7fdc79500e50 from INACTIVE to WAITING
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][1:1] Check queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fdc79500e50 for state transition.
-[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fdc79500e50 on the state change queue in position 2
-[PlexilExec:step][1:1] State change queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:step][1:1:0] Transitioning node NonLocalExit 0x7fdc79500e50 from WAITING to EXECUTING
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
-[PlexilExec:handleNeedsExecution] Storing action for node NonLocalExit 0x7fdc79500e50 of type NodeList to be executed.
-[PlexilExec:step][1:2] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 3
-[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fdc79501320 for state transition.
-[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fdc79501320 on the state change queue in position 4
-[PlexilExec:step][1:2] State change queue: theLoop 0x7fdc79501130 theSpoiler 0x7fdc79501320 
-[PlexilExec:step][1:2:0] Transitioning node theLoop 0x7fdc79501130 from INACTIVE to WAITING
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][1:2:1] Transitioning node theSpoiler 0x7fdc79501320 from INACTIVE to WAITING
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
-[PlexilExec:step][1:3] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:handleConditionsChanged] Node theLoop 0x7fdc79501130 is an assignment node that could be executing. Adding it to the resource contention list
-[PlexilExec:addToResourceContention]Adding node theLoop 0x7fdc79501130 to resource contention.
-[PlexilExec:ensureConflictSet] created new conflict set for (Variable Integer loopCount 0x7fdc795010a8 [a](0))
+[PlexilExec:step][1:0] Check queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fa237500240 for state transition.
+[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fa237500240 on the state change queue in position 1
+[PlexilExec:step][1:0] State change queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:step][1:0:0] Transitioning node NonLocalExit 0x7fa237500240 from INACTIVE to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][1:1] Check queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fa237500240 for state transition.
+[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fa237500240 on the state change queue in position 2
+[PlexilExec:step][1:1] State change queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:step][1:1:0] Transitioning node NonLocalExit 0x7fa237500240 from WAITING to EXECUTING
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
+[PlexilExec:handleNeedsExecution] Storing action for node NonLocalExit 0x7fa237500240 of type NodeList to be executed.
+[PlexilExec:step][1:2] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 3
+[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fa2375008b0 for state transition.
+[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fa2375008b0 on the state change queue in position 4
+[PlexilExec:step][1:2] State change queue: theLoop 0x7fa2375005e0 theSpoiler 0x7fa2375008b0 
+[PlexilExec:step][1:2:0] Transitioning node theLoop 0x7fa2375005e0 from INACTIVE to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][1:2:1] Transitioning node theSpoiler 0x7fa2375008b0 from INACTIVE to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
+[PlexilExec:step][1:3] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theLoop 0x7fa2375005e0 is an assignment node that could be executing. Adding it to the resource contention list
+[PlexilExec:addToResourceContention]Adding node theLoop 0x7fa2375005e0 to resource contention.
+[PlexilExec:ensureConflictSet] created new conflict set for (Variable Integer loopCount 0x7fa237500558 [a](0))
 [PlexilExec:resolveResourceConflicts] 1 Assignment node(s) with best priority for variable loopCount
-[PlexilExec:resolveResourceConflicts] Node theLoop 0x7fdc79501130 has best priority.
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 5
-[PlexilExec:step][1:3] State change queue: theLoop 0x7fdc79501130 
-[PlexilExec:step][1:3:0] Transitioning node theLoop 0x7fdc79501130 from WAITING to EXECUTING
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:handleNeedsExecution] Storing action for node theLoop 0x7fdc79501130 of type Assignment to be executed.
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
+[PlexilExec:resolveResourceConflicts] Node theLoop 0x7fa2375005e0 has best priority.
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 5
+[PlexilExec:step][1:3] State change queue: theLoop 0x7fa2375005e0 
+[PlexilExec:step][1:3:0] Transitioning node theLoop 0x7fa2375005e0 from WAITING to EXECUTING
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:handleNeedsExecution] Storing action for node theLoop 0x7fa2375005e0 of type Assignment to be executed.
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
 [PlexilExec:performAssignments] performing 1 assignments and 0 retractions
-[Test:testOutput]Assigning (Variable Integer loopCount 0x7fdc795010a8 [a](0)) to 1
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
+[Test:testOutput]Assigning (Variable Integer loopCount 0x7fa237500558 [a](0)) to 1
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
 [PlexilExec:cycle] ==>End cycle 1
 [PlexilExec:printPlan]
 NonLocalExit{
  State: EXECUTING (0)
- EndCondition: (AllChildrenFinished Boolean NonLocalExit0x7fdc795015c0 [a](0))
- ActionCompleteCondition: (AllChildrenWaitingOrFinished Boolean NonLocalExit0x7fdc79501530 [i](0))
- loopCount: (Variable Integer loopCount 0x7fdc795010a8 [a](1))
- quitLooping: (Variable Boolean quitLooping 0x7fdc79501028 [a](0))
+ EndCondition: (AllChildrenFinished Boolean NonLocalExit0x7fa2375003c8 [a](0))
+ ActionCompleteCondition: (AllChildrenWaitingOrFinished Boolean NonLocalExit0x7fa237500380 [i](0))
+ loopCount: (Variable Integer loopCount 0x7fa237500558 [a](1))
+ quitLooping: (Variable Boolean quitLooping 0x7fa2375004d8 [a](0))
   theLoop{
    State: EXECUTING (0)
-   ExitCondition: (Variable Boolean quitLooping 0x7fdc79501028 [a](0))
-   RepeatCondition: (LT Boolean 0x7fdc79501640 [i](1) (Variable Integer loopCount 0x7fdc795010a8 [a](1)) (Constant Integer 0x7fdc79501610 [a](5)))
-   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fdc79501270 [a](1))
-   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fdc795012b0 [i](0))
+   ExitCondition: (Variable Boolean quitLooping 0x7fa2375004d8 [a](0))
+   RepeatCondition: (LT Boolean 0x7fa237500b90 [i](1) (Variable Integer loopCount 0x7fa237500558 [a](1)) (Constant Integer 0x7fa2375007e0 [a](5)))
+   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fa237500730 [a](1))
+   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fa237500770 [i](0))
+   AssignmentConflictCondition: (Variable Boolean theLoop AssignmentConflictCondition 0x7fa237500818 [i](UNKNOWN))
   }
   theSpoiler{
    State: WAITING (0)
-   StartCondition: (EQ Boolean 0x7fdc79501750 [a](0) (Variable Integer loopCount 0x7fdc795010a8 [a](1)) (Constant Integer 0x7fdc795017b0 [a](2)))
-   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fdc79501460 [i](0))
-   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fdc795014a0 [i](0))
+   StartCondition: (EQ Boolean 0x7fa237500c80 [a](0) (Variable Integer loopCount 0x7fa237500558 [a](1)) (Constant Integer 0x7fa237500ce0 [a](2)))
+   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fa237500a00 [i](0))
+   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fa237500a40 [i](0))
+   AssignmentConflictCondition: (Variable Boolean theSpoiler AssignmentConflictCondition 0x7fa237500ab8 [a](UNKNOWN))
   }
 }
 
 [PlexilExec:cycle] ==>Start cycle 2
-[PlexilExec:step][2:0] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:handleConditionsChanged] Node theLoop 0x7fdc79501130 is an assignment node that is no longer possibly executing. Removing it from resource contention.
-[PlexilExec:removeFromResourceContention] removing node theLoop 0x7fdc79501130 from contention for variable (Variable Integer loopCount 0x7fdc795010a8 [a](1))
-[PlexilExec:removeFromResourceContention] node theLoop 0x7fdc79501130 was only node assigning (Variable Integer loopCount 0x7fdc795010a8 [a](1)), removing variable from contention
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 6
-[PlexilExec:step][2:0] State change queue: theLoop 0x7fdc79501130 
-[PlexilExec:step][2:0:0] Transitioning node theLoop 0x7fdc79501130 from EXECUTING to ITERATION_ENDED
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][2:1] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 7
-[PlexilExec:step][2:1] State change queue: theLoop 0x7fdc79501130 
-[PlexilExec:step][2:1:0] Transitioning node theLoop 0x7fdc79501130 from ITERATION_ENDED to WAITING
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][2:2] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:handleConditionsChanged] Node theLoop 0x7fdc79501130 is an assignment node that could be executing. Adding it to the resource contention list
-[PlexilExec:addToResourceContention]Adding node theLoop 0x7fdc79501130 to resource contention.
-[PlexilExec:ensureConflictSet] created new conflict set for (Variable Integer loopCount 0x7fdc795010a8 [a](1))
+[PlexilExec:step][2:0] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theLoop 0x7fa2375005e0 is an assignment node that is no longer possibly executing. Removing it from resource contention.
+[PlexilExec:removeFromResourceContention] removing node theLoop 0x7fa2375005e0 from contention for variable (Variable Integer loopCount 0x7fa237500558 [a](1))
+[PlexilExec:removeFromResourceContention] node theLoop 0x7fa2375005e0 was only node assigning (Variable Integer loopCount 0x7fa237500558 [a](1)), removing variable from contention
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 6
+[PlexilExec:step][2:0] State change queue: theLoop 0x7fa2375005e0 
+[PlexilExec:step][2:0:0] Transitioning node theLoop 0x7fa2375005e0 from EXECUTING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][2:1] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 7
+[PlexilExec:step][2:1] State change queue: theLoop 0x7fa2375005e0 
+[PlexilExec:step][2:1:0] Transitioning node theLoop 0x7fa2375005e0 from ITERATION_ENDED to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][2:2] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theLoop 0x7fa2375005e0 is an assignment node that could be executing. Adding it to the resource contention list
+[PlexilExec:addToResourceContention]Adding node theLoop 0x7fa2375005e0 to resource contention.
+[PlexilExec:ensureConflictSet] created new conflict set for (Variable Integer loopCount 0x7fa237500558 [a](1))
 [PlexilExec:resolveResourceConflicts] 1 Assignment node(s) with best priority for variable loopCount
-[PlexilExec:resolveResourceConflicts] Node theLoop 0x7fdc79501130 has best priority.
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 8
-[PlexilExec:step][2:2] State change queue: theLoop 0x7fdc79501130 
-[PlexilExec:step][2:2:0] Transitioning node theLoop 0x7fdc79501130 from WAITING to EXECUTING
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:handleNeedsExecution] Storing action for node theLoop 0x7fdc79501130 of type Assignment to be executed.
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
+[PlexilExec:resolveResourceConflicts] Node theLoop 0x7fa2375005e0 has best priority.
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 8
+[PlexilExec:step][2:2] State change queue: theLoop 0x7fa2375005e0 
+[PlexilExec:step][2:2:0] Transitioning node theLoop 0x7fa2375005e0 from WAITING to EXECUTING
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:handleNeedsExecution] Storing action for node theLoop 0x7fa2375005e0 of type Assignment to be executed.
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
 [PlexilExec:performAssignments] performing 1 assignments and 0 retractions
-[Test:testOutput]Assigning (Variable Integer loopCount 0x7fdc795010a8 [a](1)) to 2
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
+[Test:testOutput]Assigning (Variable Integer loopCount 0x7fa237500558 [a](1)) to 2
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
 [PlexilExec:cycle] ==>End cycle 2
 [PlexilExec:printPlan]
 NonLocalExit{
  State: EXECUTING (0)
- EndCondition: (AllChildrenFinished Boolean NonLocalExit0x7fdc795015c0 [a](0))
- ActionCompleteCondition: (AllChildrenWaitingOrFinished Boolean NonLocalExit0x7fdc79501530 [i](0))
- loopCount: (Variable Integer loopCount 0x7fdc795010a8 [a](2))
- quitLooping: (Variable Boolean quitLooping 0x7fdc79501028 [a](0))
+ EndCondition: (AllChildrenFinished Boolean NonLocalExit0x7fa2375003c8 [a](0))
+ ActionCompleteCondition: (AllChildrenWaitingOrFinished Boolean NonLocalExit0x7fa237500380 [i](0))
+ loopCount: (Variable Integer loopCount 0x7fa237500558 [a](2))
+ quitLooping: (Variable Boolean quitLooping 0x7fa2375004d8 [a](0))
   theLoop{
    State: EXECUTING (0)
-   ExitCondition: (Variable Boolean quitLooping 0x7fdc79501028 [a](0))
-   RepeatCondition: (LT Boolean 0x7fdc79501640 [i](1) (Variable Integer loopCount 0x7fdc795010a8 [a](2)) (Constant Integer 0x7fdc79501610 [a](5)))
-   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fdc79501270 [a](1))
-   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fdc795012b0 [i](0))
+   ExitCondition: (Variable Boolean quitLooping 0x7fa2375004d8 [a](0))
+   RepeatCondition: (LT Boolean 0x7fa237500b90 [i](1) (Variable Integer loopCount 0x7fa237500558 [a](2)) (Constant Integer 0x7fa2375007e0 [a](5)))
+   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fa237500730 [a](1))
+   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fa237500770 [i](0))
+   AssignmentConflictCondition: (Variable Boolean theLoop AssignmentConflictCondition 0x7fa237500818 [i](UNKNOWN))
   }
   theSpoiler{
    State: WAITING (0)
-   StartCondition: (EQ Boolean 0x7fdc79501750 [a](1) (Variable Integer loopCount 0x7fdc795010a8 [a](2)) (Constant Integer 0x7fdc795017b0 [a](2)))
-   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fdc79501460 [i](0))
-   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fdc795014a0 [i](0))
+   StartCondition: (EQ Boolean 0x7fa237500c80 [a](1) (Variable Integer loopCount 0x7fa237500558 [a](2)) (Constant Integer 0x7fa237500ce0 [a](2)))
+   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fa237500a00 [i](0))
+   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fa237500a40 [i](0))
+   AssignmentConflictCondition: (Variable Boolean theSpoiler AssignmentConflictCondition 0x7fa237500ab8 [a](UNKNOWN))
   }
 }
 
 [PlexilExec:cycle] ==>Start cycle 3
-[PlexilExec:step][3:0] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:handleConditionsChanged] Node theLoop 0x7fdc79501130 is an assignment node that is no longer possibly executing. Removing it from resource contention.
-[PlexilExec:removeFromResourceContention] removing node theLoop 0x7fdc79501130 from contention for variable (Variable Integer loopCount 0x7fdc795010a8 [a](2))
-[PlexilExec:removeFromResourceContention] node theLoop 0x7fdc79501130 was only node assigning (Variable Integer loopCount 0x7fdc795010a8 [a](2)), removing variable from contention
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 9
-[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fdc79501320 for state transition.
-[PlexilExec:handleConditionsChanged] Node theSpoiler 0x7fdc79501320 is an assignment node that could be executing. Adding it to the resource contention list
-[PlexilExec:addToResourceContention]Adding node theSpoiler 0x7fdc79501320 to resource contention.
-[PlexilExec:ensureConflictSet] created new conflict set for (Variable Boolean quitLooping 0x7fdc79501028 [a](0))
+[PlexilExec:step][3:0] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theLoop 0x7fa2375005e0 is an assignment node that is no longer possibly executing. Removing it from resource contention.
+[PlexilExec:removeFromResourceContention] removing node theLoop 0x7fa2375005e0 from contention for variable (Variable Integer loopCount 0x7fa237500558 [a](2))
+[PlexilExec:removeFromResourceContention] node theLoop 0x7fa2375005e0 was only node assigning (Variable Integer loopCount 0x7fa237500558 [a](2)), removing variable from contention
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 9
+[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fa2375008b0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theSpoiler 0x7fa2375008b0 is an assignment node that could be executing. Adding it to the resource contention list
+[PlexilExec:addToResourceContention]Adding node theSpoiler 0x7fa2375008b0 to resource contention.
+[PlexilExec:ensureConflictSet] created new conflict set for (Variable Boolean quitLooping 0x7fa2375004d8 [a](0))
 [PlexilExec:resolveResourceConflicts] 1 Assignment node(s) with best priority for variable quitLooping
-[PlexilExec:resolveResourceConflicts] Node theSpoiler 0x7fdc79501320 has best priority.
-[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fdc79501320 on the state change queue in position 10
-[PlexilExec:step][3:0] State change queue: theLoop 0x7fdc79501130 theSpoiler 0x7fdc79501320 
-[PlexilExec:step][3:0:0] Transitioning node theLoop 0x7fdc79501130 from EXECUTING to ITERATION_ENDED
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][3:0:1] Transitioning node theSpoiler 0x7fdc79501320 from WAITING to EXECUTING
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
-[PlexilExec:handleNeedsExecution] Storing action for node theSpoiler 0x7fdc79501320 of type Assignment to be executed.
+[PlexilExec:resolveResourceConflicts] Node theSpoiler 0x7fa2375008b0 has best priority.
+[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fa2375008b0 on the state change queue in position 10
+[PlexilExec:step][3:0] State change queue: theLoop 0x7fa2375005e0 theSpoiler 0x7fa2375008b0 
+[PlexilExec:step][3:0:0] Transitioning node theLoop 0x7fa2375005e0 from EXECUTING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][3:0:1] Transitioning node theSpoiler 0x7fa2375008b0 from WAITING to EXECUTING
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
+[PlexilExec:handleNeedsExecution] Storing action for node theSpoiler 0x7fa2375008b0 of type Assignment to be executed.
 [PlexilExec:performAssignments] performing 1 assignments and 0 retractions
-[Test:testOutput]Assigning (Variable Boolean quitLooping 0x7fdc79501028 [a](0)) to 1
+[Test:testOutput]Assigning (Variable Boolean quitLooping 0x7fa2375004d8 [a](0)) to 1
 [PlexilExec:cycle] ==>End cycle 3
 [PlexilExec:printPlan]
 NonLocalExit{
  State: EXECUTING (0)
- EndCondition: (AllChildrenFinished Boolean NonLocalExit0x7fdc795015c0 [a](0))
- ActionCompleteCondition: (AllChildrenWaitingOrFinished Boolean NonLocalExit0x7fdc79501530 [i](0))
- loopCount: (Variable Integer loopCount 0x7fdc795010a8 [a](2))
- quitLooping: (Variable Boolean quitLooping 0x7fdc79501028 [a](1))
+ EndCondition: (AllChildrenFinished Boolean NonLocalExit0x7fa2375003c8 [a](0))
+ ActionCompleteCondition: (AllChildrenWaitingOrFinished Boolean NonLocalExit0x7fa237500380 [i](0))
+ loopCount: (Variable Integer loopCount 0x7fa237500558 [a](2))
+ quitLooping: (Variable Boolean quitLooping 0x7fa2375004d8 [a](1))
   theLoop{
    State: ITERATION_ENDED (0)
-   ExitCondition: (Variable Boolean quitLooping 0x7fdc79501028 [a](1))
-   RepeatCondition: (LT Boolean 0x7fdc79501640 [a](1) (Variable Integer loopCount 0x7fdc795010a8 [a](2)) (Constant Integer 0x7fdc79501610 [a](5)))
-   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fdc79501270 [i](1))
-   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fdc795012b0 [i](0))
+   ExitCondition: (Variable Boolean quitLooping 0x7fa2375004d8 [a](1))
+   RepeatCondition: (LT Boolean 0x7fa237500b90 [a](1) (Variable Integer loopCount 0x7fa237500558 [a](2)) (Constant Integer 0x7fa2375007e0 [a](5)))
+   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fa237500730 [i](1))
+   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fa237500770 [i](0))
+   AssignmentConflictCondition: (Variable Boolean theLoop AssignmentConflictCondition 0x7fa237500818 [i](UNKNOWN))
   }
   theSpoiler{
    State: EXECUTING (0)
-   StartCondition: (EQ Boolean 0x7fdc79501750 [i](1) (Variable Integer loopCount 0x7fdc795010a8 [a](2)) (Constant Integer 0x7fdc795017b0 [a](2)))
-   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fdc79501460 [a](1))
-   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fdc795014a0 [i](0))
+   StartCondition: (EQ Boolean 0x7fa237500c80 [i](1) (Variable Integer loopCount 0x7fa237500558 [a](2)) (Constant Integer 0x7fa237500ce0 [a](2)))
+   ActionCompleteCondition: (InternalVariable Boolean ack 0x7fa237500a00 [a](1))
+   AbortCompleteCondition: (InternalVariable Boolean abortComplete 0x7fa237500a40 [i](0))
+   AssignmentConflictCondition: (Variable Boolean theSpoiler AssignmentConflictCondition 0x7fa237500ab8 [i](UNKNOWN))
   }
 }
 
 [PlexilExec:cycle] ==>Start cycle 4
-[PlexilExec:step][4:0] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 11
-[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fdc79501320 for state transition.
-[PlexilExec:handleConditionsChanged] Node theSpoiler 0x7fdc79501320 is an assignment node that is no longer possibly executing. Removing it from resource contention.
-[PlexilExec:removeFromResourceContention] removing node theSpoiler 0x7fdc79501320 from contention for variable (Variable Boolean quitLooping 0x7fdc79501028 [a](1))
-[PlexilExec:removeFromResourceContention] node theSpoiler 0x7fdc79501320 was only node assigning (Variable Boolean quitLooping 0x7fdc79501028 [a](1)), removing variable from contention
-[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fdc79501320 on the state change queue in position 12
-[PlexilExec:step][4:0] State change queue: theLoop 0x7fdc79501130 theSpoiler 0x7fdc79501320 
-[PlexilExec:step][4:0:0] Transitioning node theLoop 0x7fdc79501130 from ITERATION_ENDED to WAITING
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][4:0:1] Transitioning node theSpoiler 0x7fdc79501320 from EXECUTING to ITERATION_ENDED
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
-[PlexilExec:step][4:1] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fdc79501130 for state transition.
-[PlexilExec:handleConditionsChanged] Node theLoop 0x7fdc79501130 is an assignment node that is no longer possibly executing. Removing it from resource contention.
-[PlexilExec:removeFromResourceContention] no conflict set found for variable (Variable Integer loopCount 0x7fdc795010a8 [a](2))
-[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fdc79501130 on the state change queue in position 13
-[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fdc79501320 for state transition.
-[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fdc79501320 on the state change queue in position 14
-[PlexilExec:step][4:1] State change queue: theLoop 0x7fdc79501130 theSpoiler 0x7fdc79501320 
-[PlexilExec:step][4:1:0] Transitioning node theLoop 0x7fdc79501130 from WAITING to FINISHED
-[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fdc79501130
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][4:1:1] Transitioning node theSpoiler 0x7fdc79501320 from ITERATION_ENDED to FINISHED
-[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fdc79501320
-[PlexilExec:step][4:2] Check queue: theLoop 0x7fdc79501130 NonLocalExit 0x7fdc79500e50 theSpoiler 0x7fdc79501320 
-[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fdc79500e50 for state transition.
-[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fdc79500e50 on the state change queue in position 15
-[PlexilExec:step][4:2] State change queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:step][4:2:0] Transitioning node NonLocalExit 0x7fdc79500e50 from EXECUTING to FINISHING
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][4:3] Check queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fdc79500e50 for state transition.
-[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fdc79500e50 on the state change queue in position 16
-[PlexilExec:step][4:3] State change queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:step][4:3:0] Transitioning node NonLocalExit 0x7fdc79500e50 from FINISHING to ITERATION_ENDED
-[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fdc79500e50
-[PlexilExec:step][4:4] Check queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fdc79500e50 for state transition.
-[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fdc79500e50 on the state change queue in position 17
-[PlexilExec:step][4:4] State change queue: NonLocalExit 0x7fdc79500e50 
-[PlexilExec:step][4:4:0] Transitioning node NonLocalExit 0x7fdc79500e50 from ITERATION_ENDED to FINISHED
+[PlexilExec:step][4:0] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 11
+[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fa2375008b0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theSpoiler 0x7fa2375008b0 is an assignment node that is no longer possibly executing. Removing it from resource contention.
+[PlexilExec:removeFromResourceContention] removing node theSpoiler 0x7fa2375008b0 from contention for variable (Variable Boolean quitLooping 0x7fa2375004d8 [a](1))
+[PlexilExec:removeFromResourceContention] node theSpoiler 0x7fa2375008b0 was only node assigning (Variable Boolean quitLooping 0x7fa2375004d8 [a](1)), removing variable from contention
+[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fa2375008b0 on the state change queue in position 12
+[PlexilExec:step][4:0] State change queue: theLoop 0x7fa2375005e0 theSpoiler 0x7fa2375008b0 
+[PlexilExec:step][4:0:0] Transitioning node theLoop 0x7fa2375005e0 from ITERATION_ENDED to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][4:0:1] Transitioning node theSpoiler 0x7fa2375008b0 from EXECUTING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
+[PlexilExec:step][4:1] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node theLoop 0x7fa2375005e0 for state transition.
+[PlexilExec:handleConditionsChanged] Node theLoop 0x7fa2375005e0 is an assignment node that is no longer possibly executing. Removing it from resource contention.
+[PlexilExec:removeFromResourceContention] no conflict set found for variable (Variable Integer loopCount 0x7fa237500558 [a](2))
+[PlexilExec:addStateChangeNode] Placing node theLoop 0x7fa2375005e0 on the state change queue in position 13
+[PlexilExec:handleConditionsChanged] Considering node theSpoiler 0x7fa2375008b0 for state transition.
+[PlexilExec:addStateChangeNode] Placing node theSpoiler 0x7fa2375008b0 on the state change queue in position 14
+[PlexilExec:step][4:1] State change queue: theLoop 0x7fa2375005e0 theSpoiler 0x7fa2375008b0 
+[PlexilExec:step][4:1:0] Transitioning node theLoop 0x7fa2375005e0 from WAITING to FINISHED
+[PlexilExec:notifyNodeConditionChanged] for node theLoop 0x7fa2375005e0
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][4:1:1] Transitioning node theSpoiler 0x7fa2375008b0 from ITERATION_ENDED to FINISHED
+[PlexilExec:notifyNodeConditionChanged] for node theSpoiler 0x7fa2375008b0
+[PlexilExec:step][4:2] Check queue: theLoop 0x7fa2375005e0 NonLocalExit 0x7fa237500240 theSpoiler 0x7fa2375008b0 
+[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fa237500240 for state transition.
+[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fa237500240 on the state change queue in position 15
+[PlexilExec:step][4:2] State change queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:step][4:2:0] Transitioning node NonLocalExit 0x7fa237500240 from EXECUTING to FINISHING
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][4:3] Check queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fa237500240 for state transition.
+[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fa237500240 on the state change queue in position 16
+[PlexilExec:step][4:3] State change queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:step][4:3:0] Transitioning node NonLocalExit 0x7fa237500240 from FINISHING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node NonLocalExit 0x7fa237500240
+[PlexilExec:step][4:4] Check queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:handleConditionsChanged] Considering node NonLocalExit 0x7fa237500240 for state transition.
+[PlexilExec:addStateChangeNode] Placing node NonLocalExit 0x7fa237500240 on the state change queue in position 17
+[PlexilExec:step][4:4] State change queue: NonLocalExit 0x7fa237500240 
+[PlexilExec:step][4:4:0] Transitioning node NonLocalExit 0x7fa237500240 from ITERATION_ENDED to FINISHED
 [PlexilExec:performAssignments] performing 0 assignments and 0 retractions
 [PlexilExec:cycle] ==>End cycle 4
 [PlexilExec:printPlan]
 NonLocalExit{
  State: FINISHED (0)
  Outcome: SUCCESS
- loopCount: (Variable Integer loopCount 0x7fdc795010a8 [i](UNKNOWN))
- quitLooping: (Variable Boolean quitLooping 0x7fdc79501028 [i](UNKNOWN))
+ loopCount: (Variable Integer loopCount 0x7fa237500558 [i](UNKNOWN))
+ quitLooping: (Variable Boolean quitLooping 0x7fa2375004d8 [i](UNKNOWN))
   theLoop{
    State: FINISHED (0)
    Outcome: SKIPPED

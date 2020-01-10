@@ -55,12 +55,15 @@ EMPTY_SCRIPT_TESTS='AncestorReferenceTest array2 array5 array6 array9
  TestRepeatCondition TimepointVariableConstructionOrder
  UninitializedAssignment
  var-priority-with-exit var-priority-with-skip variables1
- whitespace1'
+ whitespace1
+ '
 
 # Tests requiring no external interaction, 
 # whose execution traces are compared against a "gold standard"
 EMPTY_SCRIPT_VALID_TESTS='AssignToParentInvariant AssignToParentExit
- InactiveAncestorInvariantTest NonLocalExit'
+ InactiveAncestorInvariantTest NonLocalExit
+ simultaneous-assignment-failure-simple
+'
 
 # Tests of library calls
 LIBRARY_TESTS='LibraryCall6 LibraryCallWithArray'

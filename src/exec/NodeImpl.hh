@@ -80,6 +80,8 @@ namespace PLEXIL
                          actionCompleteIdx,
                          // For all but Empty and Update nodes
                          abortCompleteIdx,
+                         // For only Assignment nodes
+                         assignmentConflictIdx,
 
                          conditionIndexMax
     };
@@ -349,6 +351,7 @@ namespace PLEXIL
     // These are for specialized node types
     Expression *getActionCompleteCondition()            { return m_conditions[actionCompleteIdx]; }
     Expression *getAbortCompleteCondition()             { return m_conditions[abortCompleteIdx]; }
+    Expression *getAssignmentConflictCondition()        { return m_conditions[assignmentConflictIdx];}
 
     // Abstracts out the issue of where the condition comes from.
     // Used internally, also by LuvListener. Non-const variant is protected.
@@ -392,6 +395,7 @@ namespace PLEXIL
     // These are for specialized node types
     void activateActionCompleteCondition();
     void activateAbortCompleteCondition();
+    void activateAssignmentConflictCondition();
 
     // Deactivate a condition
 
@@ -409,6 +413,7 @@ namespace PLEXIL
     // These are for specialized node types
     void deactivateActionCompleteCondition();
     void deactivateAbortCompleteCondition();
+    void deactivateAssignmentConflictCondition();
 
     // Specific behaviors for derived classes
     virtual void specializedCreateConditionWrappers();
@@ -427,7 +432,7 @@ namespace PLEXIL
     // Return true if the new destination state is different from the last check, false otherwise.
     // Set m_nextState, m_nextOutcome, m_nextFailureType as a side effect.
     bool getDestStateFromInactive();
-    bool getDestStateFromWaiting();
+    virtual bool getDestStateFromWaiting();
     virtual bool getDestStateFromExecuting();
     virtual bool getDestStateFromFinishing();
     bool getDestStateFromFinished();
@@ -437,7 +442,7 @@ namespace PLEXIL
     //
     // Transition out of the named current state.
     void transitionFromInactive();
-    void transitionFromWaiting();
+    virtual void transitionFromWaiting();
     virtual void transitionFromExecuting();
     virtual void transitionFromFinishing();
     void transitionFromFinished();
@@ -445,7 +450,7 @@ namespace PLEXIL
     void transitionFromIterationEnded();
 
     void transitionToInactive();
-    void transitionToWaiting();
+    virtual void transitionToWaiting();
     virtual void transitionToExecuting();
     virtual void transitionToFinishing();
     void transitionToFinished();
