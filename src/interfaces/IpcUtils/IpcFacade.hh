@@ -31,13 +31,13 @@
 #include "ipc-data-formats.h"
 
 #include "ConstantMacros.hh"
-#include "RecursiveThreadMutex.hh"
 #include "Value.hh"
 
 #include <limits>
 #include <list>
 #include <map>
 #include <string>
+#include <thread>
 #include <vector>
 
 
@@ -372,9 +372,9 @@ namespace PLEXIL {
     //* @brief The listeners registered under this facade
     LocalListenerList m_localRegisteredHandlers;
     //* @brief The handle for the message thread
-    pthread_t m_threadHandle;
+    std::thread m_threadHandle;
     //* @brief The mutex used for synchronizing initialization/shutdown methods
-    RecursiveThreadMutex m_mutex;
+    std::recursive_mutex m_mutex;
     //* @brief Cache of incomplete received message data
     IncompleteMessageMap m_incompletes;
     //* @brief Map of message type to list of listeners for that type

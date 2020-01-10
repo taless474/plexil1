@@ -31,10 +31,12 @@
 
 #include "InputQueue.hh"
 
+#ifdef PLEXIL_WITH_THREADS
+#include <mutex>
+#endif
+
 namespace PLEXIL
 {
-  // Forward reference
-  class ThreadMutex;
 
   /**
    * @class SerializedInputQueue
@@ -81,7 +83,7 @@ namespace PLEXIL
     QueueEntry *m_queuePut;
     QueueEntry *m_freeList;
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutex *m_mutex;
+    mutable std::mutex m_mutex;
 #endif
   };
 

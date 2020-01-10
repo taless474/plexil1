@@ -33,7 +33,6 @@
 
 #include "Debug.hh"
 #include "Error.hh"
-#include "ThreadSpawn.hh"
 
 #include <cerrno>
 #include <iomanip>
@@ -43,7 +42,7 @@ Simulator::Simulator(CommRelayBase* commRelay, ResponseManagerMap& map) :
   m_TimingService(),
   m_Mutex(),
   m_CmdToRespMgr(map),
-  m_SimulatorThread((pthread_t) 0),
+  m_SimulatorThread(),
   m_Started(false),
   m_Stop(false)
 {
@@ -67,7 +66,7 @@ Simulator::~Simulator()
 
 void Simulator::start()
 {
-  threadSpawn(run, this, m_SimulatorThread);
+  m_SimulatorThread = std::thread([this](){this->simulatorTopLevel();});
 }
 
 void Simulator::stop()
@@ -81,11 +80,13 @@ void Simulator::stop()
   if (m_Stop) {
 	// we tried the gentle approach already -
 	// take more drastic action
-	if (m_SimulatorThread == pthread_self()) {
+    if (m_SimulatorThread.get_id() == std::this_thread::get_id()) {
 	  errorMsg("Simulator:stop: Emergency stop!");
 	}
 	else {
-	  int pthread_errno = pthread_cancel(m_SimulatorThread);
+          auto thread = m_SimulatorThread.native_handle();
+          m_SimulatorThread.detach();
+	  int pthread_errno = pthread_cancel(thread);
 	  if (pthread_errno == ESRCH) {
 		// no such thread to cancel, i.e. it's already dead
 		m_Stop = false;
@@ -97,7 +98,7 @@ void Simulator::stop()
 	  }
 
 	  // successfully canceled, wait for it to exit
-	  pthread_errno = pthread_join(m_SimulatorThread, NULL);
+	  pthread_errno = pthread_join(thread, NULL); //How can I switch this to use std::thread::join?
 	  if (pthread_errno == 0 || pthread_errno == ESRCH) {
 		// thread joined or died before it could be joined
 		// either way we succeeded
@@ -113,12 +114,14 @@ void Simulator::stop()
 	// Usual case
 	// stop the sim thread
 	m_Stop = true;
-	if (m_SimulatorThread != pthread_self()) {
+	if (m_SimulatorThread.get_id() != std::this_thread::get_id()) {
 	  // Signal the thread to stop
-	  int pthread_errno = pthread_kill(m_SimulatorThread, SIGTERM);
+          auto thread = m_SimulatorThread.native_handle();
+          m_SimulatorThread.detach();
+          int pthread_errno = pthread_kill(thread, SIGTERM);
 	  if (pthread_errno == 0) {
 		// wait for thread to terminate
-		pthread_errno = pthread_join(m_SimulatorThread, NULL);
+            pthread_errno = pthread_join(thread, NULL);
 		if (pthread_errno == 0 || pthread_errno == ESRCH) {
 		  // thread joined or died before it could be joined
 		  // either way we succeeded
@@ -150,13 +153,6 @@ void* Simulator::run(void* this_as_void_ptr)
 
 void Simulator::simulatorTopLevel()
 {
-  // if called directly from the main() thread,
-  // record our thread ID
-  if (m_SimulatorThread == (pthread_t) 0)
-	m_SimulatorThread = pthread_self();
-  
-  assertTrue_2(m_SimulatorThread == pthread_self(),
-               "Internal error: simulatorTopLevel running in thread other than m_SimulatorThread");
 
   m_Started = true;
 
@@ -188,7 +184,7 @@ void Simulator::simulatorTopLevel()
 
   // begin critical section
   {
-	PLEXIL::ThreadMutexGuard mg(m_Mutex);
+	std::lock_guard<std::mutex> mg(m_Mutex);
 	if (!m_Agenda.empty())
 	  firstWakeup = m_Agenda.begin()->first;
   }
@@ -237,7 +233,7 @@ void Simulator::simulatorTopLevel()
   // clean up agenda
   // begin critical section
   {
-	PLEXIL::ThreadMutexGuard mg(m_Mutex);
+	std::lock_guard<std::mutex> mg(m_Mutex);
 	AgendaMap::iterator it = m_Agenda.begin();
 	while (it != m_Agenda.end()) {
 	  delete it->second;
@@ -247,7 +243,7 @@ void Simulator::simulatorTopLevel()
   }
   // end critical section
 
-  m_SimulatorThread = (pthread_t) 0;
+  m_SimulatorThread = std::thread();
 }
 
 ResponseMessageManager* Simulator::getResponseMessageManager(const std::string& cmdName) const
@@ -338,7 +334,7 @@ void Simulator::scheduleMessageAbsolute(const timeval& eventTime, ResponseMessag
 		   << timevalToDouble(eventTime));
 
   // begin critical section
-  PLEXIL::ThreadMutexGuard mg(m_Mutex);
+  std::lock_guard<std::mutex> mg(m_Mutex);
   m_Agenda.insert(std::pair<timeval, ResponseMessage*>(eventTime, msg));
   // end critical section
 }
@@ -388,7 +384,7 @@ void Simulator::handleWakeUp()
 
 	// begin critical section
 	{
-	  PLEXIL::ThreadMutexGuard mg(m_Mutex);
+	  std::lock_guard<std::mutex> mg(m_Mutex);
 	  if (!m_Agenda.empty()) {
 		AgendaMap::iterator it = m_Agenda.begin();
 		if (it->first < now) {
@@ -418,7 +414,7 @@ void Simulator::handleWakeUp()
   timeval nextWakeup;
   // begin critical section
   {
-	PLEXIL::ThreadMutexGuard mg(m_Mutex);
+	std::lock_guard<std::mutex> mg(m_Mutex);
 	if (!m_Agenda.empty()) {
 	  nextWakeup = m_Agenda.begin()->first;
 	  scheduleTimer = true;

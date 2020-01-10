@@ -30,9 +30,10 @@
 #include "CommandHandle.hh"
 #include "Debug.hh"
 #include "Error.hh"
-#include "ThreadSpawn.hh"
 
 #include <map>
+#include <mutex>
+#include <thread>
 
 #include <cstring>
 
@@ -484,11 +485,6 @@ namespace PLEXIL
     if (m_isInitialized) {
       shutdown();
     }
-    // *** why is this necessary?? ***
-    if (m_mutex.isLockedByCurrentThread()) {
-      debugMsg("IpcFacade", " destructor: unlocking mutex");
-      m_mutex.unlock();
-    }
   }
 
   const std::string& IpcFacade::getUID() {
@@ -511,7 +507,7 @@ namespace PLEXIL
 
     IPC_RETURN_TYPE result = IPC_OK;
     debugMsg("IpcFacade:initialize", " locking mutex");
-    RTMutexGuard guard(m_mutex);
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
     // perform global initialization
     // Initialize IPC
@@ -560,7 +556,7 @@ namespace PLEXIL
     if (!m_isInitialized || !IPC_isConnected())
       result = IPC_Error;
     debugMsg("IpcFacade:start", " locking mutex");
-    RTMutexGuard guard(m_mutex);
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
     //perform only when this instance is the only started instance of the class
     if (result == IPC_OK && !m_isStarted) {
       // Subscribe to messages
@@ -570,9 +566,14 @@ namespace PLEXIL
       // Spawn message thread AFTER all subscribes complete
       // Running thread in parallel with subscriptions resulted in deadlocks
       debugMsg("IpcFacade:start", " spawning IPC dispatch thread");
-      if (threadSpawn((THREAD_FUNC_PTR) myIpcDispatch, this, m_threadHandle)) {
+      try {
+        m_threadHandle = std::thread([this](){myIpcDispatch(static_cast<void*>(this));});
         debugMsg("IpcFacade:start", " succeeded");
         m_isStarted = true;
+
+      }
+      catch(std::system_error err){
+        result = IPC_Error;
       }
     }
     return result;
@@ -588,14 +589,16 @@ namespace PLEXIL
       return;
     }
     debugMsg("IpcFacade:stop", " locking mutex");
-    RTMutexGuard guard(m_mutex);
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
     // Cancel IPC dispatch thread first to prevent deadlocks
     debugMsg("IpcFacade:stop", " cancelling dispatch thread");
     m_stopDispatchThread = true;
-    int myErrno = pthread_join(m_threadHandle, NULL);
-    if (myErrno != 0) {
-      debugMsg("IpcUtil:stop", "Error in pthread_join; errno = " << myErrno);
+    try {
+      m_threadHandle.join();
+    }
+    catch (std::system_error const& syse) {
+      debugMsg("IpcUtil:stop", "Error in thread join; " << syse.what());
     }
 
     debugMsg("IpcFacade:stop", " unsubscribing from messages");
@@ -612,7 +615,7 @@ namespace PLEXIL
    */
   void IpcFacade::shutdown() {
     debugMsg("IpcFacade::shutdown", "locking mutex");
-    RTMutexGuard guard(m_mutex);
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
     if (m_isInitialized) {
       if (m_isStarted) {
         stop();
@@ -677,10 +680,10 @@ namespace PLEXIL
 
   void IpcFacade::unsubscribeAll(IpcMessageListener* listener) {
     //prevent modification and access while removing
-    RTMutexGuard guard(m_mutex);
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
     for (LocalListenerList::iterator it = m_localRegisteredHandlers.begin();
          it != m_localRegisteredHandlers.end();
-         it++)
+         ++it)
       if (it->second == listener) {
         unsubscribeGlobal(*it);
         m_localRegisteredHandlers.erase(it);
@@ -1233,14 +1236,14 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
       //send to listeners for all
       ListenerMap::iterator map_it = m_registeredListeners.find(ALL_MSG_TYPE());
       if (map_it != m_registeredListeners.end()) {
-        for (ListenerList::iterator it = (*map_it).second.begin(); it != (*map_it).second.end(); it++) {
+        for (ListenerList::iterator it = (*map_it).second.begin(); it != (*map_it).second.end(); ++it) {
           (*it)->ReceiveMessage(msgs);
         }
       }
       //send to listeners for msg type
       map_it = m_registeredListeners.find(msgs.front()->msgType);
       if (map_it != m_registeredListeners.end()) {
-        for (ListenerList::iterator it = (*map_it).second.begin(); it != (*map_it).second.end(); it++) {
+        for (ListenerList::iterator it = (*map_it).second.begin(); it != (*map_it).second.end(); ++it) {
           (*it)->ReceiveMessage(msgs);
         }
       }
@@ -1264,7 +1267,7 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
   void IpcFacade::unsubscribeGlobal(const LocalListenerRef& listener) {
     ListenerMap::iterator map_it = m_registeredListeners.find(listener.first);
     if (map_it != m_registeredListeners.end()) {
-      for (ListenerList::iterator it = (*map_it).second.begin(); it != (*map_it).second.end(); it++)
+      for (ListenerList::iterator it = (*map_it).second.begin(); it != (*map_it).second.end(); ++it)
         if (listener.second == *it) {
           *map_it->second.erase(it);
           return;

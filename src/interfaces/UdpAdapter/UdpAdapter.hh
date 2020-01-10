@@ -28,7 +28,9 @@
 #include "InterfaceAdapter.hh"
 #include "MessageQueueMap.hh"
 #include "udp-utils.hh"
-#include "ThreadSpawn.hh"
+
+#include <mutex>
+#include <thread>
 
 namespace PLEXIL
 {
@@ -68,7 +70,7 @@ namespace PLEXIL
   };
 
   typedef std::map<std::string, UdpMessage> MessageMap;
-  typedef std::map<std::string, pthread_t> ThreadMap;
+typedef std::map<std::string, std::thread> ThreadMap;
   typedef std::map<std::string, int> SocketMap;
 
   class UdpAdapter : public InterfaceAdapter
@@ -110,7 +112,7 @@ namespace PLEXIL
     // Abort the given command.  Store the abort-complete into ack
     void invokeAbort(Command *cmd);
 
-    ThreadMutex m_cmdMutex;
+    std::mutex m_cmdMutex;
 
     // Somewhere to hang the messages, default ports and peers, threads and sockets
     unsigned int m_default_local_port;

@@ -168,7 +168,7 @@ namespace PLEXIL
 
     {
 #ifdef PLEXIL_WITH_THREADS
-      RTMutexGuard guard(m_execMutex);
+      std::lock_guard<std::recursive_mutex> guard(m_execMutex);
 #endif
       g_manager->processQueue();           // for effect
       double now = g_manager->queryTime(); // update time before attempting to step
@@ -191,7 +191,7 @@ namespace PLEXIL
 
     {
 #ifdef PLEXIL_WITH_THREADS
-      RTMutexGuard guard(m_execMutex);
+      std::lock_guard<std::recursive_mutex> guard(m_execMutex);
 #endif
       return !g_exec->needsStep();
     }
@@ -208,7 +208,7 @@ namespace PLEXIL
 
     {
 #ifdef PLEXIL_WITH_THREADS
-      RTMutexGuard guard(m_execMutex);
+      std::lock_guard<std::recursive_mutex> guard(m_execMutex);
 #endif
       debugMsg("ExecApplication:stepUntilQuiescent", " Checking interface queue");
       g_manager->processQueue(); // for effect
@@ -532,7 +532,7 @@ namespace PLEXIL
   ExecApplication::runExec(bool stepFirst)
   {
 #ifdef PLEXIL_WITH_THREADS
-    RTMutexGuard guard(m_execMutex);
+    std::lock_guard<std::recursive_mutex> guard(m_execMutex);
 #endif
     if (stepFirst) {
       debugMsg("ExecApplication:runExec", " Stepping exec because stepFirst is set");
@@ -602,8 +602,6 @@ namespace PLEXIL
   {
 #ifdef PLEXIL_WITH_THREADS
     // Should never happen, but just in case...
-    assertTrueMsg(!m_execMutex.isLockedByCurrentThread(),
-                  "Internal error: waitForPlanFinished: called with Exec mutex locked!");
     bool finished = false;
     while (!finished)
       {
@@ -611,7 +609,7 @@ namespace PLEXIL
         sleep(1);
     
         // grab the exec and find out if it's finished yet
-        RTMutexGuard guard(m_execMutex);
+        std::lock_guard<std::recursive_mutex> guard(m_execMutex);
         finished = g_exec->allPlansFinished();
       }
 #else // !defined(PLEXIL_WITH_THREADS)
@@ -675,7 +673,7 @@ namespace PLEXIL
   ExecApplication::ApplicationState 
   ExecApplication::getApplicationState() {
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(m_stateMutex);
+    std::lock_guard<std::mutex> guard(m_stateMutex);
 #endif
     return m_state;
   }
@@ -696,7 +694,7 @@ namespace PLEXIL
     // variable binding context for guard -- DO NOT DELETE THESE BRACES!
     {
 #ifdef PLEXIL_WITH_THREADS
-      ThreadMutexGuard guard(m_stateMutex);
+      std::lock_guard<std::mutex> guard(m_stateMutex);
 #endif
       switch (newState) {
       case APP_INITED:
@@ -974,7 +972,8 @@ namespace PLEXIL
   ExecApplication::notifyExec()
   {
 #ifdef PLEXIL_WITH_THREADS
-    if (m_runExecInBkgndOnly || m_execMutex.isLocked()) {
+    std::unique_lock<std::recursive_mutex> lock(m_execMutex, std::try_to_lock);
+    if (m_runExecInBkgndOnly || !lock.owns_lock()) {
       // Some thread currently owns the exec. Could be this thread.
       // runExec() could notice, or not.
       // Post to semaphore to ensure event is not lost.

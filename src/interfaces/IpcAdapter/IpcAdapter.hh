@@ -33,6 +33,7 @@
 #include <ipc.h>
 
 #include <list>
+#include <mutex>
 
 // Forward declarations outside of namespace
 struct PlexilMsgBase;
@@ -342,7 +343,7 @@ namespace PLEXIL
      * @brief Mutex used to hold the processing of incoming return values while commands
      * are being sent and recorded.
      */
-    ThreadMutex m_cmdMutex;
+    std::mutex m_cmdMutex;
 
     //* @brief Place to store result of current pending LookupNow request
     Value m_pendingLookupResult;

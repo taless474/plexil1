@@ -45,10 +45,8 @@ if JNI_OPT
 endif
 
 if THREADS_OPT
-  include_HEADERS += RecursiveThreadMutex.hh ThreadMutex.hh ThreadSemaphore.hh \
- ThreadSpawn.hh
-  libPlexilUtils_la_SOURCES += RecursiveThreadMutex.cc ThreadMutex.cc ThreadSemaphore.cc \
- ThreadSpawn.cc
+  include_HEADERS +=   ThreadSemaphore.hh
+  libPlexilUtils_la_SOURCES +=   ThreadSemaphore.cc 
 endif
 
 if DEBUG_LOGGING_OPT

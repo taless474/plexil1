@@ -34,7 +34,7 @@
 #include "State.hh"
 #include "StateCacheEntry.hh"
 #ifdef PLEXIL_WITH_THREADS
-#include "ThreadSpawn.hh"
+#include <thread>
 #endif
 
 #include <cerrno>
@@ -95,7 +95,7 @@ namespace PLEXIL
     }
 
 #ifdef PLEXIL_WITH_THREADS
-    threadSpawn(timerWaitThread, (void*) this, m_waitThread);
+    m_waitThread = std::thread([this](){this->timerWaitThreadImpl();});
 #endif
 
     return true;
@@ -111,8 +111,10 @@ namespace PLEXIL
     // so we need the stopping flag to figure out which is which.
 #ifdef PLEXIL_WITH_THREADS
     m_stopping = true;
-    pthread_kill(m_waitThread, SIGUSR1);
-    pthread_join(m_waitThread, NULL);
+    auto thread = m_waitThread.native_handle();
+    m_waitThread.detach(); 
+    pthread_kill(thread, SIGUSR1);
+    pthread_join(thread, NULL);
 #endif
     m_stopping = false;
     debugMsg("TimeAdapter:stop", " complete");
@@ -155,7 +157,7 @@ namespace PLEXIL
   double TimeAdapterImpl::getCurrentTime()
       throw (InterfaceError)
   {
-    double tym;
+    double tym = 0.0;
 
     // Prefer clock_gettime() due to greater precision
 #if defined(HAVE_CLOCK_GETTIME)
@@ -255,7 +257,7 @@ namespace PLEXIL
     while (true) {
       int signalReceived = 0;
 
-      int errnum = sigwait(&waitSigset, &signalReceived);
+      errnum = sigwait(&waitSigset, &signalReceived);
       if (errnum) {
         warn("TimeAdapter: sigwait failed, result = " << errnum
              << "; exiting timer thread");

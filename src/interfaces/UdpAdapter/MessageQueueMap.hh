@@ -32,10 +32,10 @@
 #ifndef MESSAGEQUEUEMAP_H_
 #define MESSAGEQUEUEMAP_H_
 
-#include "ThreadMutex.hh"
 #include "ExecListener.hh"
 #include "AdapterExecInterface.hh"
 #include <map>
+#include <mutex>
 
 namespace PLEXIL 
 {
@@ -158,7 +158,7 @@ namespace PLEXIL
     std::map<std::string, PairingQueue*> m_map;
 
     //* @brief Semaphore for return values from LookupNow
-    ThreadMutex m_mutex;
+    std::mutex m_mutex;
 
     //* @brief The interface
     AdapterExecInterface& m_execInterface;

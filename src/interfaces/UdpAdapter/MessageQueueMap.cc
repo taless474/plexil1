@@ -58,7 +58,7 @@ namespace PLEXIL
    */
   void MessageQueueMap::addRecipient(const std::string& message, Command *cmd) {
     debugMsg("MessageQueueMap:addRecipient", " entered for \"" << message << "\"");
-    ThreadMutexGuard guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     PairingQueue* que = getQueue(message);
     que->m_recipientQueue.push_back(Recipient(cmd));
     updateQueue(que);
@@ -69,7 +69,7 @@ namespace PLEXIL
    * @brief Removes all instances of the given recipient waiting on the given message string.
    */
   void MessageQueueMap::removeRecipient(const std::string& message, Command const *cmd) {
-    ThreadMutexGuard guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     PairingQueue* pq = getQueue(message);
     for (RecipientQueue::iterator it = pq->m_recipientQueue.begin(); it != pq->m_recipientQueue.end(); it++) {
       if (it->m_cmd == cmd) {
@@ -86,7 +86,7 @@ namespace PLEXIL
    * @brief Removes all recipients waiting on the given message string.
    */
   void MessageQueueMap::clearRecipientsForMessage(const std::string& message) {
-    ThreadMutexGuard guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     PairingQueue* pq = getQueue(message);
     pq->m_recipientQueue.clear();
   }
@@ -96,7 +96,7 @@ namespace PLEXIL
    * @param message The message string to be added
    */
   void MessageQueueMap::addMessage(const std::string& message) {
-    ThreadMutexGuard guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     PairingQueue* pq = getQueue(message);
     if (!pq->m_allowDuplicateMessages)
       pq->m_messageQueue.clear();
@@ -112,7 +112,7 @@ namespace PLEXIL
    * @param params The parameters that are to be sent with the message
    */
   void MessageQueueMap::addMessage(const std::string& message, const Value& param) {
-    ThreadMutexGuard guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     PairingQueue* pq = getQueue(message);
     if (!pq->m_allowDuplicateMessages)
       pq->m_messageQueue.clear();
@@ -133,7 +133,7 @@ namespace PLEXIL
    * message. If true, duplicates are queued.
    */
   void MessageQueueMap::setAllowDuplicateMessages(bool flag) {
-    ThreadMutexGuard guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     for (std::map<std::string, PairingQueue*>::iterator it = m_map.begin(); it != m_map.end(); it++) {
       MessageQueue mq = it->second->m_messageQueue;
       //if setting flag from true to false, ensure all queues have at most one message

@@ -30,10 +30,8 @@
 #include <plexil-config.h>
 
 #ifdef PLEXIL_WITH_THREADS
-#include "ThreadMutex.hh"
-#include "RecursiveThreadMutex.hh"
 #include "ThreadSemaphore.hh"
-#include <pthread.h>
+#include <mutex>
 #endif
 
 // STL
@@ -359,10 +357,10 @@ namespace PLEXIL
     pthread_t m_execThread;
 
     // Serialize execution in exec to guarantee in-order processing of events
-    RecursiveThreadMutex m_execMutex;
+    std::recursive_mutex m_execMutex;
 
     // Mutex for application state
-    ThreadMutex m_stateMutex;
+    std::mutex m_stateMutex;
 
     // Semaphore for notifying the Exec of external events
     ThreadSemaphore m_sem;

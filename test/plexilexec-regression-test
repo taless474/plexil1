@@ -9,16 +9,16 @@ callCmd()
   echo  
 }
 
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx" 		#current or blank config should engage
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -quiet" 	#ignore unchecked warnings
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -viewer"	#allocated viewer and plan
-callCmd "plexilexec -viewer"							#should not run either, unless local config defined...
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -viewer -port" 	#require argument
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -viewer -port 0" 	#warnings although still run... otherwise block user's control
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -check" 	#check plan with static checker
-callCmd "plexilexec -plan" 							#require argument error
-callCmd "plexilexec -plan abc.plx"						#plan not found
-callCmd "plexilexec -config con"							#config not found
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -port 1000" 	#warning message that viewer is not requested so ignoring port
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -debug thatbug" #debug file does not exist
-callCmd "plexilexec -plan $PLEXIL_HOME/examples/SimpleAssignment.plx -library boo -library hoo" #library files do not exist
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx" 		#current or blank config should engage
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -quiet" 	#ignore unchecked warnings
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -viewer"	#allocated viewer and plan
+callCmd "../scripts/plexilexec -viewer"							#should not run either, unless local config defined...
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -viewer -port" 	#require argument
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -viewer -port 0" 	#warnings although still run... otherwise block user's control
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -check" 	#check plan with static checker
+callCmd "../scripts/plexilexec -plan" 							#require argument error
+callCmd "../scripts/plexilexec -plan abc.plx"						#plan not found
+callCmd "../scripts/plexilexec -config con"							#config not found
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -port 1000" 	#warning message that viewer is not requested so ignoring port
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -debug thatbug" #debug file does not exist
+callCmd "../scripts/plexilexec -plan $PLEXIL_HOME/examples/basic/SimpleAssignment.plx -library boo -library hoo" #library files do not exist

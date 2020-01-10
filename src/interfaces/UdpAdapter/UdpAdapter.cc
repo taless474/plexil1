@@ -248,8 +248,10 @@ namespace PLEXIL
       return;
     }
 
-    if ((status = pthread_cancel(thread->second))) {
-      warn("UdpAdapter:invokeAbort: pthread_cancel(" << thread->second
+    auto handle = thread->second.native_handle();
+    thread->second.detach();
+    if ((status = pthread_cancel(handle))) {
+      warn("UdpAdapter:invokeAbort: pthread_cancel(" << thread->second.get_id()
            << ") returned " << status << ", errno " << errno);
       m_execInterface.handleCommandAbortAck(cmd, false);
       m_execInterface.notifyOfExternalEvent();
@@ -257,8 +259,8 @@ namespace PLEXIL
     }
 
     // Wait for cancelled thread to finish
-    if ((status = pthread_join(thread->second, NULL))) {
-      warn("UdpAdapter:invokeAbort: pthread_join(" << thread->second
+    if ((status = pthread_join(handle, NULL))) {
+      warn("UdpAdapter:invokeAbort: pthread_join(" << thread->second.get_id()
            << ") returned " << status << ", errno " << errno);
       m_execInterface.handleCommandAbortAck(cmd, false);
       m_execInterface.notifyOfExternalEvent();
@@ -266,7 +268,7 @@ namespace PLEXIL
     }
 
     debugMsg("UdpAdapter:invokeAbort", " " << msgName
-             << " listener thread (" << thread->second << ") cancelled");
+             << " listener thread (" << thread->second.get_id() << ") cancelled");
     m_activeThreads.erase(thread); // erase the cancelled thread
     // Second, find the open socket for this message and close it
     SocketMap::iterator socket;
@@ -322,7 +324,7 @@ namespace PLEXIL
     std::string const &msgName = cmd->getName();
     debugMsg("UdpAdapter:executeDefaultCommand",
              " called for \"" << msgName << "\" with " << args.size() << " args");
-    ThreadMutexGuard guard(m_cmdMutex);
+    std::lock_guard<std::mutex> guard(m_cmdMutex);
     MessageMap::iterator msg;
     msg = m_messages.find(msgName);
     // Check for an obviously bogus port
@@ -727,7 +729,7 @@ namespace PLEXIL
   // Start a UDP Message Handler for a node waiting on a UDP message
   int UdpAdapter::startUdpMessageReceiver(const std::string& name, Command * /* cmd */)
   {
-    //ThreadMutexGuard guard(m_cmdMutex);
+    //std::lock_guard<std::mutex> guard(m_cmdMutex);
     debugMsg("UdpAdapter:startUdpMessageReceiver",
              " entered for " << name);
     // Find the message definition to get the message port and size
@@ -756,19 +758,19 @@ namespace PLEXIL
     debugMsg("UdpAdapter:startUdpMessageReceiver",
              " " << name << " socket (" << sock << ") opened");
     msg->second.sock = sock; // pass the socket descriptor to waitForUdpMessage, which will then reset it
-    pthread_t thread_handle;
-    // Spawn the listener thread
-    threadSpawn((THREAD_FUNC_PTR) waitForUdpMessage, &msg->second, thread_handle);
-    // Check to see if the thread got started correctly
-    if (thread_handle == 0) {
+    std::thread thread_handle;
+    try {
+      thread_handle = std::thread([=](){waitForUdpMessage(&msg->second);});
+    }
+    catch(std::system_error const& err) {
       warn("UdpAdapter:startUdpMessageReceiver: threadSpawn returned NULL");
       return -1;
     }
 
     debugMsg("UdpAdapter:startUdpMessageReceiver",
-             " " << name << " listener thread (" << thread_handle << ") spawned");
+             " " << name << " listener thread (" << thread_handle.get_id() << ") spawned");
     // Record the thread and socket in case they have to be cancelled and closed later (in invokeAbort)
-    m_activeThreads[name] = thread_handle;
+    m_activeThreads[name] = std::move(thread_handle);
     m_activeSockets[name] = sock;
     return 0;
   }

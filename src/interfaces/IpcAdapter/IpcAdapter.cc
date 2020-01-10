@@ -39,7 +39,6 @@
 #include "parsePlan.hh"
 #include "State.hh"
 #include "StateCacheEntry.hh"
-#include "ThreadSpawn.hh"
 #include "Update.hh"
 #include "NodeConnector.hh"
 
@@ -48,8 +47,10 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
+#include <mutex>
 #include <string>
 #include <sstream>
+#include <thread>
 
 namespace PLEXIL 
 {
@@ -248,7 +249,7 @@ namespace PLEXIL
       size_t sep_pos = stateName.find_first_of(TRANSACTION_ID_SEPARATOR_CHAR);
       //decide to direct or publish lookup
       {
-        ThreadMutexGuard g(m_cmdMutex);
+        std::lock_guard<std::mutex> g(m_cmdMutex);
         if (sep_pos != std::string::npos) {
           std::string const dest(stateName.substr(0, sep_pos));
           std::string const sentStateName = stateName.substr(sep_pos + 1);
@@ -275,7 +276,7 @@ namespace PLEXIL
 
       // Clean up
       {
-        ThreadMutexGuard g(m_cmdMutex);
+        std::lock_guard<std::mutex> g(m_cmdMutex);
         m_pendingLookupSerial = 0;
         m_pendingLookupState = State();
       }
@@ -335,7 +336,7 @@ namespace PLEXIL
       return;
     }
 
-    ThreadMutexGuard guard(m_cmdMutex);
+    std::lock_guard<std::mutex> guard(m_cmdMutex);
     uint32_t serial = m_ipcFacade.publishUpdate(name, args);
     assertTrueMsg(serial != IpcFacade::ERROR_SERIAL(),
                   "IpcAdapter::sendPlannerUpdate: IPC Error, IPC_errno = " <<
@@ -583,7 +584,7 @@ namespace PLEXIL
     assertTrueMsg(args.front().isKnown() && args.front().valueType() == STRING_TYPE,
                   "IpcAdapter: The argument to the " << UPDATE_LOOKUP_COMMAND().c_str()
                   << " command, " << args.front() << ", is not a string");
-    ThreadMutexGuard guard(m_cmdMutex);
+    std::lock_guard<std::mutex> guard(m_cmdMutex);
 
     // Extract state from command parameters
     std::string const *lookupName;
@@ -642,7 +643,7 @@ namespace PLEXIL
     size_t sep_pos = name.find_first_of(TRANSACTION_ID_SEPARATOR_CHAR);
     //lock mutex to ensure no return values are processed while the command is being
     //sent and logged
-    ThreadMutexGuard guard(m_cmdMutex);
+    std::lock_guard<std::mutex> guard(m_cmdMutex);
     //decide to direct or publish command
     if (sep_pos != std::string::npos) {
       serial = m_ipcFacade.sendCommand(name.substr(sep_pos + 1), name.substr(0, sep_pos), args);
@@ -968,7 +969,7 @@ namespace PLEXIL
 
     // Check to see if a LookupNow is waiting on this value
     {
-      ThreadMutexGuard g(m_cmdMutex);
+      std::lock_guard<std::mutex> g(m_cmdMutex);
       if (m_pendingLookupState == state) {
         m_pendingLookupResult = result;
         m_lookupSem.post();
@@ -988,7 +989,7 @@ namespace PLEXIL
   {
     const PlexilReturnValuesMsg* rv = (const PlexilReturnValuesMsg*) msgs[0];
     //lock mutex to ensure all sending procedures are complete.
-    ThreadMutexGuard guard(m_cmdMutex);
+    std::lock_guard<std::mutex> guard(m_cmdMutex);
     if (rv->requestSerial == m_pendingLookupSerial) {
       // LookupNow for which we are awaiting data
       debugMsg("IpcAdapter:handleReturnValuesSequence",
@@ -1056,7 +1057,7 @@ namespace PLEXIL
     for (size_t i = 1 ; i <= nParms ; ++i)
       lookup.setParameter(i - 1, getPlexilMsgValue(msgs[i]));
 
-    ThreadMutexGuard guard(m_cmdMutex);
+    std::lock_guard<std::mutex> guard(m_cmdMutex);
       
     ExternalLookupMap::iterator it = m_externalLookups.find(lookup);
     if (it != m_externalLookups.end()) {

@@ -26,8 +26,6 @@
 
 #include "udp-utils.hh"
 
-#include "ThreadSpawn.hh"
-
 #include <inttypes.h>  // fixed width integer formats
 
 #ifdef HAVE_NETINET_IN_H
@@ -41,6 +39,8 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>   // for usleep()
 #endif
+
+#include <thread>
 
 using namespace PLEXIL;
 
@@ -145,8 +145,7 @@ int main()
   // Socket for the thread waiting for input
   // Parameters for the thread waiting for input
   udp_thread_params the_params = { bytes2, 32, remote_port, 0, true };
-  pthread_t thread_handle;
-  threadSpawn((THREAD_FUNC_PTR) test_input_wait_thread, &the_params, thread_handle);
+  std::thread thread_handle([&](){test_input_wait_thread(&the_params);});
 
   // Wait for listener to establish socket
   do {
@@ -165,9 +164,12 @@ int main()
   }
 
   // Wait for wait_for_input to return
-  int myErrno = pthread_join(thread_handle, NULL);
-  if (myErrno != 0)
-    printf("pthread_join(thread_handle) returned %d\n", myErrno);
+  try {
+    thread_handle.join();
+  }
+  catch(std::system_error const& sys) {
+    printf("thread_handle.join() threw %s\n", sys.what());
+  }
 
   printf("\n");
   print_buffer(bytes1, 32, true);

@@ -29,7 +29,6 @@
 #include "SerializedInputQueue.hh"
 
 #include "Error.hh"
-#include "ThreadMutex.hh"
 #include "QueueEntry.hh"
 
 namespace PLEXIL
@@ -41,7 +40,7 @@ namespace PLEXIL
       m_freeList(NULL)
 #ifdef PLEXIL_WITH_THREADS
                       ,
-      m_mutex(new ThreadMutex())
+      m_mutex()
 #endif
   {
   }
@@ -49,7 +48,7 @@ namespace PLEXIL
   SerializedInputQueue::~SerializedInputQueue()
   {
 #ifdef PLEXIL_WITH_THREADS
-    m_mutex->lock();
+    std::lock_guard<std::mutex> lock(m_mutex);
 #endif
     m_queuePut = NULL;
     while (m_queueGet) {
@@ -62,16 +61,12 @@ namespace PLEXIL
       m_freeList = temp->next;
       delete temp;
     }
-#ifdef PLEXIL_WITH_THREADS
-    m_mutex->unlock();
-    delete m_mutex;
-#endif
   }
 
   bool SerializedInputQueue::isEmpty() const
   {
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(*m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
 #endif
     return m_queueGet == NULL;
   }
@@ -79,7 +74,7 @@ namespace PLEXIL
   QueueEntry *SerializedInputQueue::allocate()
   {
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(*m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
 #endif
     QueueEntry* result = m_freeList;
     if (result)
@@ -93,7 +88,7 @@ namespace PLEXIL
   {
     assertTrue_1(entry);
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(*m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
 #endif
     entry->reset(); // ??
     entry->next = m_freeList;
@@ -104,7 +99,7 @@ namespace PLEXIL
   {
     assertTrue_1(entry);
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(*m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
 #endif
     entry->next = NULL;
     if (m_queuePut)
@@ -117,7 +112,7 @@ namespace PLEXIL
   QueueEntry *SerializedInputQueue::get()
   {
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(*m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
 #endif
     if (!m_queueGet)
       return NULL; // empty
@@ -133,7 +128,7 @@ namespace PLEXIL
   void SerializedInputQueue::flush()
   {
 #ifdef PLEXIL_WITH_THREADS
-    ThreadMutexGuard guard(*m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
 #endif
     QueueEntry *temp;
     while ((temp = m_queueGet)) {

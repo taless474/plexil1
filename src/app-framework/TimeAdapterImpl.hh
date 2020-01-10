@@ -33,7 +33,7 @@
 #include <csignal> // sigset_t
 
 #ifdef PLEXIL_WITH_THREADS
-#include <pthread.h>
+#include <thread>
 #endif
 
 namespace PLEXIL
@@ -201,7 +201,7 @@ namespace PLEXIL
     //
 
     // Wait thread
-    pthread_t m_waitThread;
+    std::thread m_waitThread;
 #endif
 
     // Next scheduled wakeup

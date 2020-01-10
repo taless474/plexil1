@@ -27,10 +27,11 @@
 #define SIMULATOR_HH
 
 #include <map>
+#include <mutex>
+#include <thread>
 #include "simdefs.hh"
 #include "SimulatorScriptReader.hh"
 #include "TimingService.hh"
-#include "ThreadMutex.hh"
 
 class ResponseMessageManager;
 class ResponseMessage;
@@ -120,12 +121,12 @@ private:
 
   CommRelayBase* m_CommRelay;
   TimingService m_TimingService;
-  PLEXIL::ThreadMutex m_Mutex;
+  std::mutex m_Mutex;
 
   typedef std::multimap<timeval, ResponseMessage*> AgendaMap;
   AgendaMap m_Agenda;
   ResponseManagerMap& m_CmdToRespMgr;
-  pthread_t m_SimulatorThread;
+  std::thread m_SimulatorThread;
   bool m_Started;
   bool m_Stop;
 };
