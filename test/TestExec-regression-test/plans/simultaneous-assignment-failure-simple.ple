@@ -1,0 +1,9 @@
+SimultaneousAssignmentFailureSimple: Concurrence {
+  Integer foo = 0;
+  node1: {
+    foo = 2;
+  }
+  node2: {
+    foo = 3;
+  }
+}

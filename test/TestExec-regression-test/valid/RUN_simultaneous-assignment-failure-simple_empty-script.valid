@@ -1,0 +1,118 @@
+[PlexilExec:addPlan]Added plan: 
+SimultaneousAssignmentFailureSimple{
+ State: INACTIVE (0)
+  node1{
+   State: INACTIVE (0)
+  }
+  node2{
+   State: INACTIVE (0)
+  }
+}
+
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:cycle] ==>Start cycle 1
+[PlexilExec:step][1:0] Check queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:handleConditionsChanged] Considering node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 for state transition.
+[PlexilExec:addStateChangeNode] Placing node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 on the state change queue in position 1
+[PlexilExec:step][1:0] State change queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:step][1:0:0] Transitioning node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 from INACTIVE to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:step][1:1] Check queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:handleConditionsChanged] Considering node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 for state transition.
+[PlexilExec:addStateChangeNode] Placing node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 on the state change queue in position 2
+[PlexilExec:step][1:1] State change queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:step][1:1:0] Transitioning node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 from WAITING to EXECUTING
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:notifyNodeConditionChanged] for node node1 0x7fc51ac04d60
+[PlexilExec:notifyNodeConditionChanged] for node node2 0x7fc51ac05030
+[PlexilExec:handleNeedsExecution] Storing action for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 of type NodeList to be executed.
+[PlexilExec:step][1:2] Check queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 node1 0x7fc51ac04d60 node2 0x7fc51ac05030 
+[PlexilExec:handleConditionsChanged] Considering node node1 0x7fc51ac04d60 for state transition.
+[PlexilExec:addStateChangeNode] Placing node node1 0x7fc51ac04d60 on the state change queue in position 3
+[PlexilExec:handleConditionsChanged] Considering node node2 0x7fc51ac05030 for state transition.
+[PlexilExec:addStateChangeNode] Placing node node2 0x7fc51ac05030 on the state change queue in position 4
+[PlexilExec:step][1:2] State change queue: node1 0x7fc51ac04d60 node2 0x7fc51ac05030 
+[PlexilExec:step][1:2:0] Transitioning node node1 0x7fc51ac04d60 from INACTIVE to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node node1 0x7fc51ac04d60
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:step][1:2:1] Transitioning node node2 0x7fc51ac05030 from INACTIVE to WAITING
+[PlexilExec:notifyNodeConditionChanged] for node node2 0x7fc51ac05030
+[PlexilExec:step][1:3] Check queue: node1 0x7fc51ac04d60 SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 node2 0x7fc51ac05030 
+[PlexilExec:handleConditionsChanged] Considering node node1 0x7fc51ac04d60 for state transition.
+[PlexilExec:handleConditionsChanged] Node node1 0x7fc51ac04d60 is an assignment node that could be executing. Adding it to the resource contention list
+[PlexilExec:addToResourceContention]Adding node node1 0x7fc51ac04d60 to resource contention.
+[PlexilExec:ensureConflictSet] created new conflict set for (Variable Integer foo 0x7fc51ac04cd8 [a](0))
+[PlexilExec:handleConditionsChanged] Considering node node2 0x7fc51ac05030 for state transition.
+[PlexilExec:handleConditionsChanged] Node node2 0x7fc51ac05030 is an assignment node that could be executing. Adding it to the resource contention list
+[PlexilExec:addToResourceContention]Adding node node2 0x7fc51ac05030 to resource contention.
+[PlexilExec:ensureConflictSet] returning existing conflict set for (Variable Integer foo 0x7fc51ac04cd8 [a](0))
+[PlexilExec:resolveResourceConflicts] 2 Assignment node(s) with best priority for variable foo
+[PlexilExec:resolveResourceConflicts] Node node1 is in conflict for variable (Variable Integer foo 0x7fc51ac04cd8 [a](0)).  Failing it.
+[PlexilExec:notifyNodeConditionChanged] for node node1 0x7fc51ac04d60
+[PlexilExec:resolveResourceConflicts] Node node2 is in conflict for variable (Variable Integer foo 0x7fc51ac04cd8 [a](0)).  Failing it.
+[PlexilExec:notifyNodeConditionChanged] for node node2 0x7fc51ac05030
+[PlexilExec:resolveResourceConflicts] No eligible Assignment nodes for foo
+[PlexilExec:step][1:3] State change queue: 
+[PlexilExec:step][1:4] Check queue: node1 0x7fc51ac04d60 node2 0x7fc51ac05030 
+[PlexilExec:handleConditionsChanged] Considering node node1 0x7fc51ac04d60 for state transition.
+[PlexilExec:handleConditionsChanged] Node node1 0x7fc51ac04d60 is an assignment node that is no longer possibly executing. Removing it from resource contention.
+[PlexilExec:removeFromResourceContention] removing node node1 0x7fc51ac04d60 from contention for variable (Variable Integer foo 0x7fc51ac04cd8 [a](0))
+[PlexilExec:addStateChangeNode] Placing node node1 0x7fc51ac04d60 on the state change queue in position 5
+[PlexilExec:handleConditionsChanged] Considering node node2 0x7fc51ac05030 for state transition.
+[PlexilExec:handleConditionsChanged] Node node2 0x7fc51ac05030 is an assignment node that is no longer possibly executing. Removing it from resource contention.
+[PlexilExec:removeFromResourceContention] removing node node2 0x7fc51ac05030 from contention for variable (Variable Integer foo 0x7fc51ac04cd8 [a](0))
+[PlexilExec:removeFromResourceContention] node node2 0x7fc51ac05030 was only node assigning (Variable Integer foo 0x7fc51ac04cd8 [a](0)), removing variable from contention
+[PlexilExec:addStateChangeNode] Placing node node2 0x7fc51ac05030 on the state change queue in position 6
+[PlexilExec:step][1:4] State change queue: node1 0x7fc51ac04d60 node2 0x7fc51ac05030 
+[PlexilExec:step][1:4:0] Transitioning node node1 0x7fc51ac04d60 from WAITING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node node1 0x7fc51ac04d60
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:step][1:4:1] Transitioning node node2 0x7fc51ac05030 from WAITING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node node2 0x7fc51ac05030
+[PlexilExec:step][1:5] Check queue: node1 0x7fc51ac04d60 SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 node2 0x7fc51ac05030 
+[PlexilExec:handleConditionsChanged] Considering node node1 0x7fc51ac04d60 for state transition.
+[PlexilExec:addStateChangeNode] Placing node node1 0x7fc51ac04d60 on the state change queue in position 7
+[PlexilExec:handleConditionsChanged] Considering node node2 0x7fc51ac05030 for state transition.
+[PlexilExec:addStateChangeNode] Placing node node2 0x7fc51ac05030 on the state change queue in position 8
+[PlexilExec:step][1:5] State change queue: node1 0x7fc51ac04d60 node2 0x7fc51ac05030 
+[PlexilExec:step][1:5:0] Transitioning node node1 0x7fc51ac04d60 from ITERATION_ENDED to FINISHED
+[PlexilExec:notifyNodeConditionChanged] for node node1 0x7fc51ac04d60
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:step][1:5:1] Transitioning node node2 0x7fc51ac05030 from ITERATION_ENDED to FINISHED
+[PlexilExec:notifyNodeConditionChanged] for node node2 0x7fc51ac05030
+[PlexilExec:step][1:6] Check queue: node1 0x7fc51ac04d60 SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 node2 0x7fc51ac05030 
+[PlexilExec:handleConditionsChanged] Considering node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 for state transition.
+[PlexilExec:addStateChangeNode] Placing node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 on the state change queue in position 9
+[PlexilExec:step][1:6] State change queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:step][1:6:0] Transitioning node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 from EXECUTING to FINISHING
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:step][1:7] Check queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:handleConditionsChanged] Considering node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 for state transition.
+[PlexilExec:addStateChangeNode] Placing node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 on the state change queue in position 10
+[PlexilExec:step][1:7] State change queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:step][1:7:0] Transitioning node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 from FINISHING to ITERATION_ENDED
+[PlexilExec:notifyNodeConditionChanged] for node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20
+[PlexilExec:step][1:8] Check queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:handleConditionsChanged] Considering node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 for state transition.
+[PlexilExec:addStateChangeNode] Placing node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 on the state change queue in position 11
+[PlexilExec:step][1:8] State change queue: SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 
+[PlexilExec:step][1:8:0] Transitioning node SimultaneousAssignmentFailureSimple 0x7fc51ac04a20 from ITERATION_ENDED to FINISHED
+[PlexilExec:performAssignments] performing 0 assignments and 0 retractions
+[PlexilExec:cycle] ==>End cycle 1
+[PlexilExec:printPlan]
+SimultaneousAssignmentFailureSimple{
+ State: FINISHED (0)
+ Outcome: SUCCESS
+ foo: (Variable Integer foo 0x7fc51ac04cd8 [i](UNKNOWN))
+  node1{
+   State: FINISHED (0)
+   Outcome: FAILURE
+   Failure type: ASSIGNMENT_CONFLICT
+  }
+  node2{
+   State: FINISHED (0)
+   Outcome: FAILURE
+   Failure type: ASSIGNMENT_CONFLICT
+  }
+}
+

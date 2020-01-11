@@ -58,13 +58,7 @@ foreach my $temp (@lines2){
         last;
     }
     my $line1 = $lines1[$n];
-    #temporarily skip lines adding a print of the assignment conflict condition
-    if($line1 =~ /AssignmentConflictCondition: \(Variable Boolean .* AssignmentConflictCondition/) {
-        print "TEST ", $testName, " required skipping the AssignmentConflictCondition.\n";
-        while($line1 =~ /AssignmentConflictCondition: \(Variable Boolean .* AssignmentConflictCondition/) {
-            $line1 = $lines1[++$n];
-        }
-    }
+
     $line1 =~ s/(0x[0-9a-fA-F]{2,16})//g;
     $temp =~ s/(0x[0-9a-fA-F]{2,16})//g;
     if ($line1 ne $temp){   

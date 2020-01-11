@@ -67,7 +67,8 @@ namespace PLEXIL
      "INVARIANT_CONDITION_FAILED",
      "PARENT_FAILED",
      "EXITED",
-     "PARENT_EXITED"
+     "PARENT_EXITED",
+     "ASSIGNMENT_CONFLICT"
     };
 
   // Simple linear search
