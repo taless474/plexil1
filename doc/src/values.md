@@ -1,7 +1,7 @@
 # Values {#values}
 
 \namespace PLEXIL
-\addtogroup Value Value representations
+\addtogroup Values Value representations
 
 The PLEXIL language provides these user data types:
 
