@@ -1,0 +1,58 @@
+namespace PLEXIL {
+/*!
+\page interfacing-basics %PLEXIL Interfacing basics
+
+A %PLEXIL Exec application requires a PlexilExec instance, a *state cache*,
+an InterfaceManager instance, an ExecListenerHub
+instance, and an AdapterConfiguration instance, along with common
+interface components (e.g. for time, debug printing, etc.)  The
+ExecApplication class takes care of the necessary setup and
+interconnections between these objects.
+
+Each of these objects has a particular role to play:
+
+- ExecApplication bundles together and coordinates all the essential
+  pieces of a %PLEXIL Exec application, and runs the main loop;
+  
+- PlexilExec is responsible for interpreting plans;
+
+- The state cache is responsible for storing the most recent values of
+  lookups, and ensuring those values are not stale;
+  
+- AdapterConfiguration is responsible for constructing the interface
+  objects, and associating them with particular lookups, commands, and
+  updates;
+  
+- InterfaceManager is responsible for delegating the interface actions
+  to the appropriate objects, and handling the receipt of data from
+  the outside world for PlexilExec.
+
+At initialization, the AdapterConfiguration instance loads the *interface
+configuration file*.  This file describes the kinds of
+interface objects needed, along with any other information required to
+make them usable by a %PLEXIL plan; e.g. lists of command or lookup
+names that each such object handles, IP addresses for external
+connections, et cetera.
+
+AdapterConfiguration attempts to construct these interface objects
+through sets of *abstract factories*.  If a particular class of object
+can't be found in the existing factories, AdapterConfiguration looks
+for a shared library matching the name of the desired object, loads it
+if available, and tries again to locate the desired class.
+
+When the Exec is running, PlexilExec sends lookup queries, commands,
+and updates through the InterfaceManager.  (What actually happens with
+lookups is more complex, involving the state cache, but for our
+purposes this is accurate enough.)  PlexilExec also reports node state
+transitions through the ExecListenerHub instance.
+
+The InterfaceManager in turn queries the AdapterConfiguration instance
+to identify the objects which should receive these queries, commands
+and updates, then delegates the operations to the identified instances.
+
+[Previous](interfacing-tutorial.html) | [Up](interfacing-tutorial.html) | [Next](interface-components-roles.html)
+
+[Home](index.html)
+
+*/
+}

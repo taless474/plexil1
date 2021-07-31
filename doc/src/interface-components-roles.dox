@@ -1,0 +1,79 @@
+namespace PLEXIL {
+/*!
+
+\page interface-components-roles %PLEXIL Interface components and their roles
+
+The objects responsible for custom interface chores traditionally have
+been:
+
+- instances derived from the ExecListener abstract base class (*Exec
+  listeners*), whose intended purpose is to report node state
+  transitions to the outside world; and
+  
+- instances derived from the InterfaceAdapter abstract base class
+  (*adapters*), whose intended purpose was to perform all lookups,
+  commands, and planner updates as requested by a %PLEXIL plan.
+  
+Exec listeners haven't changed in %PLEXIL 4.6.  But the role of
+adapters has changed significantly.
+
+The %PLEXIL team had long recognized that adapters handling multiple
+commands and/or lookups were duplicating a delegation task already
+being performed by InterfaceManager.  To eliminate this redundant
+delegation step, and thereby simplify interface coding, new
+interfacing components were identified for these specific chores:
+
+- *command handlers*, specialized for a particular command;
+  
+- *lookup handlers*, which likewise can be targeted to lookups for a
+  particular state;
+  
+- *planner update handlers*, dedicated to publishing Updates.
+
+In the new interfacing model, an adapter is responsible for
+constructing and registering handlers at initialization time, and for
+maintaining any shared state required by those handlers during plan
+execution (e.g. a socket connection to an outside agent).  During
+execution, InterfaceManager now delegates commands, lookups, and
+planner updates directly to the handlers, bypassing the adapter.
+
+These handlers can be implemented as simple C++ functions, or as
+instances derived from the CommandHandler, LookupHandler, and
+PlannerUpdateHandler abstract base classes respectively.
+
+InterfaceManager passes the Command instance (or for lookups, the
+State) to the handler method, so that one handler instance can
+implement multiple commands (lookups) if desired.  This allows a
+single handler to be registered under multiple names, or to be
+designated a *default handler*.  It also facilitates writing default
+handlers as wrappers for adapters coded to the previous
+InterfaceAdapter API.
+
+The new interfacing model was implemented during the summer of 2020 by
+intern Bryce Campbell, cleaned up and tested internally, and released
+to external users in September 2020.
+
+As of %PLEXIL release 4.6, if an adapter registers itself using the
+previous AdapterConfiguration API and registers no new-style handlers,
+default handlers delegate to the old InterfaceAdapter APIs for
+lookups, commands, and planner updates.  In this way, existing
+InterfaceAdapter specializations should continue to work unmodified in
+this release.
+
+But these old InterfaceAdapter virtual functions have been marked
+deprecated.  They will be removed in the next major release, %PLEXIL
+6.
+
+Therefore this tutorial focuses on the new interfacing model.
+
+\note The %PLEXIL 6 API takes advantage of the availability of *lambdas*
+in C++11 and newer standards, making handler functions a viable
+implementation choice in more situations.  But that is beyond the
+scope of this document.
+
+[Previous](interfacing-basics.html) | [Up](interfacing-tutorial.html) | [Next](command-data-flow.html)
+
+[Home](index.html)
+
+*/
+}

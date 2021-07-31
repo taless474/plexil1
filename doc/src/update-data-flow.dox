@@ -1,0 +1,63 @@
+namespace PLEXIL {
+/*!
+\page update-data-flow Data and control flow for %PLEXIL updates
+
+This is the data and control flow for %PLEXIL updates.
+
+1. When an %Update node transitions to 'EXECUTING` state, the
+   expressions in the update are evaluated to concrete values, and the
+   node calls ExternalInterface::enqueueUpdate to enqueue the update
+   for execution.
+
+2. At the end of the macro step, the virtual member function
+   ExternalInterface::executeUpdate is called on each update in the
+   queue.  In the %PLEXIL Application Framework, this member function
+   resolves to the concrete method InterfaceManager::executeUpdate.
+   
+3. InterfaceManager::executeUpdate queries AdapterConfiguration to
+   obtain the application's *planner update handler*.  It then calls
+   the handler's operator() method with pointers to the Update
+   instance and the InterfaceManager instance (cast as a pointer to
+   the abstract base class AdapterExecInterface).
+   
+4. The planner update handler performs whatever work is necessary to
+   publish the update.  The handler can send an acknowledgement (as a
+   Boolean value) back to AdapterExecInterface immediately via the
+   member function AdapterExecInterface::handleUpdateAck, or an
+   external process can send the acknowledgement at another time.
+
+5. %Update acknowledgements are enqueued and processed by the
+   PlexilExec on the next macro cycle.
+
+6. In the absence of user-specified conditions, the %Update node
+   remains in `EXECUTING` state until an acknowledgement value of
+   `true` is received, at which time it transitions directly to
+   `ITERATION_ENDED`.
+    
+7. While the %Update node is in `EXECUTING` state, it may be *aborted*.
+   The node is aborted when an `InvariantCondition` of the
+   node or any of its ancestors evaluates to `false`, or an
+   `ExitCondition` of the node or its ancestors evaluates to `true`.
+   Unlike the %Command node, no external action is taken when the node
+   is aborted.  At the end of the macro cycle, the node transitions to
+   `FAILING` state.  The node cannot transition further to
+   `ITERATION_ENDED` until an acknowledgement value of `true` is
+   received by the AdapterExecInterface.
+
+### Key points for interface implementors
+
+- **Update handlers are called from the execution thread.**  These
+  handlers must not block indefinitely, or the PlexilExec will stall.
+  
+- **The interface must supply an update acknowledgement value of
+  `true`, or the %Update node cannot transition to
+  `ITERATION_ENDED`.**  This acknowledgement value may be sent
+  immediately when the handler is called, or later by some other
+  component of the interface, but it must be sent.
+
+[Previous](command-data-flow.html) | [Up](interfacing-tutorial.html) | [Next](lookup-data-flow.html)
+
+[Home](index.html)
+
+*/
+}

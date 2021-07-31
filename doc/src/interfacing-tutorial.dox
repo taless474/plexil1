@@ -19,109 +19,29 @@ handlers*, and *planner update handlers* tailored to the task at hand.
 
 These custom interface components can be packaged in *shared
 libraries* (or *Dynamically Loaded Libraries* in Windows terminology),
-loaded when the universalExec starts up, as directed by an *interface
-configuration file* provided by the user.
+to be loaded when the universalExec starts up, as directed by an
+*interface configuration file* provided by the user.
 
 For more dedicated applications, the user can build a custom main
 program around the ExecApplication class, build in their custom
 interface components, and hard-code the startup process to instantiate
 and register their custom interfaces.
 
-### Interfacing basics
+1. [Interfacing basics](interfacing-basics.html)
 
-A %PLEXIL Exec application requires a PlexilExec instance, a
-StateCache instance, an InterfaceManager instance, an ExecListenerHub
-instance, and an AdapterConfiguration instance, along with common
-interface components (e.g. for time, debug printing, etc.)  The
-ExecApplication class takes care of the necessary setup and
-interconnections between these objects.
+2. [Interface components and their roles](interface-components-roles.html)
 
-Each of these objects has a particular role to play:
+3. [Data and control flow for %PLEXIL commands](command-data-flow.html)
 
-* ExecApplication bundles together and coordinates all the essential
-  pieces of a %PLEXIL Exec application, and runs the main loop;
-  
-* PlexilExec is responsible for interpreting plans;
+4. [Data and control flow for %PLEXIL updates](update-data-flow.html)
 
-* StateCache is responsible for storing the most recent values of
-  lookups and ensuring they are not stale;
-  
-* AdapterConfiguration is responsible for constructing the interface
-  objects, and associating them with particular lookups, commands, and
-  updates;
-  
-* InterfaceManager is responsible for delegating the interface actions
-  to the appropriate objects, and handling the receipt of data from
-  the outside world for PlexilExec.
+5. [Data and control flow for %PLEXIL lookups](lookup-data-flow.html)
 
-At initialization, the AdapterConfiguration instance loads the
-interface configuration file.  This file describes the kinds of
-interface objects needed, along with any other information required to
-make them usable by a %PLEXIL plan, such as lists of command or lookup
-names that each such object provides, IP addresses, et cetera.
+6. [Data and control flow for %PLEXIL Exec Listeners](listener-data-flow.html)
 
-AdapterConfiguration attempts to construct these interface objects
-through sets of *abstract factories*.  If a particular class of object
-can't be found in the existing factories, AdapterConfiguration looks
-for a shared library matching the name of the desired object, loads it
-if available, and tries again to locate the desired class.
+[Next](interfacing-basics.html)
 
-When the Exec is running, PlexilExec sends lookup queries, commands,
-and updates through the InterfaceManager.  (What actually happens with
-lookups is more complex, involving the StateCache, but for our
-purposes this is accurate enough.)  PlexilExec also reports
-node state transitions through the ExecListenerHub instance.
-
-The InterfaceManager in turn queries the AdapterConfiguration instance
-to identify the objects which should receive these queries, commands
-and updates, then delegates the operations to the identified instances.
-
-### Interface components and their roles
-
-The objects responsible for custom interface chores traditionally have
-been:
-
-* instances derived from the ExecListener abstract base class
-  ("listeners"), which report node state transitions to the outside
-  world; and
-  
-* instances derived from the InterfaceAdapter abstract base class
-  ("adapters"), which handle lookups, commands, and planner updates.
-  
-In the summer of 2020, the %PLEXIL team recognized that adapters which
-handled multiple commands or lookups had to duplicate a delegation
-task which was already being handled by InterfaceManager.  To
-eliminate this redundant delegation step, new interfacing components
-were identified for these specific chores:
-
-* *command handlers*, which could be specialized to a particular
-  command;
-  
-* *lookup handlers*, which likewise could focus on lookups for a
-  particular state; and
-  
-* *planner update handlers*, dedicated to publishing Updates.
-
-These handlers can be implemented as simple C++ functions, or as
-instances derived from the CommandHandler, LookupHandler, and
-PlannerUpdateHandler abstract base classes respectively.
-
-In the new interfacing model, adapters are responsible for
-constructing and registering the handler objects at initialization
-time, and for maintaining any shared state required by their handlers
-during execution (e.g. a socket connection to an outside agent).
-
-As of %PLEXIL release 4.6, the old InterfaceAdapter APIs for lookups,
-commands, and planner updates still exist, and existing
-InterfaceAdapter specializations should continue to work unmodified.
-But these APIs will be removed in the next major release, %PLEXIL 6.
-
-This tutorial will focus on the new interfacing model.
-
-(Experienced C++ programmers will no doubt recognize that it is
-straightforward to construct a class which implements InterfaceAdapter
-and handler APIs.  This is another option for the transition to the
-new interfacing model.)
+[Home](index.html)
 
 */
 }
