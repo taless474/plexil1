@@ -17,7 +17,7 @@ Each of these objects has a particular role to play:
 - PlexilExec is responsible for interpreting plans;
 
 - The state cache is responsible for storing the most recent values of
-  lookups, and ensuring those values are not stale;
+  lookups;
   
 - AdapterConfiguration is responsible for constructing the interface
   objects, and associating them with particular lookups, commands, and
@@ -26,19 +26,6 @@ Each of these objects has a particular role to play:
 - InterfaceManager is responsible for delegating the interface actions
   to the appropriate objects, and handling the receipt of data from
   the outside world for PlexilExec.
-
-At initialization, the AdapterConfiguration instance loads the *interface
-configuration file*.  This file describes the kinds of
-interface objects needed, along with any other information required to
-make them usable by a %PLEXIL plan; e.g. lists of command or lookup
-names that each such object handles, IP addresses for external
-connections, et cetera.
-
-AdapterConfiguration attempts to construct these interface objects
-through sets of *abstract factories*.  If a particular class of object
-can't be found in the existing factories, AdapterConfiguration looks
-for a shared library matching the name of the desired object, loads it
-if available, and tries again to locate the desired class.
 
 When the Exec is running, PlexilExec sends lookup queries, commands,
 and updates through the InterfaceManager.  (What actually happens with

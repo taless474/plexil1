@@ -1,0 +1,168 @@
+namespace PLEXIL {
+/*!
+\page startup-and-configuration Startup and interface configuration
+
+This section describes how custom interface objects are constructed
+when the ExecApplication starts up.
+
+Let's say you have developed custom interface objects for your %PLEXIL
+application.  Now you need to get the Executive to use them.
+
+You could write a custom ```main()``` function which explicitly
+constructs and registers the objects.  For applications which are
+mature and stable, this can be a good choice.
+
+But what if your application is in development, and the interfaces
+aren't finalized?  Or you have several alternative implementations you
+wish to try?  Or your application needs multiple Executive instances,
+each with a different set of interfaces?
+
+The %PLEXIL Application Framework makes this easy, by allowing
+configuration of interfaces at startup time.  An *interface
+configuration file* tells the Executive which interface objects to
+construct, and optionally how to map commands and lookups to these
+objects.  It also allows additional application-specific configuration
+information to be passed to the interface objects.
+
+The Application Framework also allows custom interfaces to be loaded
+at startup time, as *shared libraries*.
+
+The universalExec application allows the configuration file to be
+specified on the command line.  In this way, universalExec can be
+application-agnostic, and can serve a variety of applications without
+having to be rebuilt for each one.
+
+### The interface configuration file
+
+At initialization, the AdapterConfiguration instance loads the
+interface configuration file.  This file describes the kinds of
+interface objects needed, along with any other information required to
+make them usable by a %PLEXIL plan; e.g. lists of command or lookup
+names that each such object handles, IP addresses for external
+connections, et cetera.
+
+### Abstract factories for interface objects
+
+AdapterConfiguration constructs interface objects by invoking a set of
+[*abstract factories*](https://en.wikipedia.org/wiki/Abstract_factory_pattern).
+
+Each kind of interface object has its own abstract factory base class.
+The concrete factory is a templated class, specialized on the
+particular class of the custom object.  E.g. for every class derived
+from InterfaceAdapter, there is a specialization of the
+ConcreteAdapterFactory class template.
+
+The abstract factory base class maintains a map associating names with
+concrete factory instantiations.  The map is implemented as a private
+static member variable.  When a concrete factory template
+specialization is instantiated, its constructor automatically enters
+the factory instance in the map by calling the base class's
+```registerFactory``` static member function.
+
+The concrete factory class template's ```create``` method simply calls
+the constructor for the adapter class, with a standardized parameter
+list.
+
+### Registering custom interface objects
+
+Registering a factory for a custom interface object is as simple as
+instantiating its concrete factory class.  Because this is a common
+need for interface implementors, convenience macros have been defined
+for this purpose:
+
+    REGISTER_ADAPTER(CLASS,NAME)
+    REGISTER_EXEC_LISTENER(CLASS,NAME)
+    REGISTER_EXEC_LISTENER_FILTER(CLASS,NAME)
+
+Each of these simply constructs an instance of the corresponding
+concrete factory class template, for effect.
+
+### An interface configuration file example
+
+AdapterConfiguration attempts to construct interface objects via the
+abstract factories.  If a particular class of object can't be found in
+the existing factories, AdapterConfiguration looks for a shared
+library matching the name of the desired object, loads it if
+available, and tries again to locate the desired class.
+
+E.g. a typical configuration file might look like:
+
+    <Interfaces>
+      <Adapter AdapterType="OSNativeTime" />
+      <Adapter AdapterType="Utility "/>
+      <Adapter AdapterType="MyAdapter" />
+      <Listener ListenerType="PlanDebugListener" />
+    </Interfaces>
+
+AdapterConfiguration reads the ```Adapter``` elements, extracts the
+```AdapterType``` attribute, and calls
+```AdapterFactory::createInstance``` on the adapter type name.  If
+there is a factory registered for the name, its ```create``` member
+function is called to construct the object.
+
+Since the ```OSNativeTime``` and ```Utility``` adapters are supplied
+as part of the Application Framework, and built into the universalExec
+application, they are pre-registered, and therefore quickly
+constructed and initialized.
+
+### Loading interfaces at startup time
+
+Now we get to ```MyAdapter```.  No factory for this adapter is
+registered in the universalExec application.  So
+```AdapterFactory::createInstance``` attempts to load a shared
+library, using the adapter type name to construct a library file name.
+In our example, it looks for a library file named
+```libMyAdapter.so``` (or, on macOS, ```libMyAdapter.dylib```) in the
+current library path.
+
+### Contents of the shared library
+
+The library file should contain the adapter class definition, and any
+additional code and data necessary to make it work.  It must also
+contain an *initialization function* which takes no arguments and
+returns void.
+
+By convention, the initialization function name is also derived from
+the adapter type name; in this case it would be ```initMyAdapter```.
+This function should invoke the ```REGISTER_ADAPTER``` macro to ensure
+the adapter class is registered.
+
+### Finishing the job
+
+If the library file is found, it is loaded, and its initialization
+function is called.  Assuming this succeeds,
+```AdapterFactory::createInstance``` tries again to locate the factory
+for ```MyAdapter```, and calls its ```create``` member function if
+found.
+
+The same process applies for other types of interface objects, such as
+Exec listeners and Exec listener filters.
+
+In this way any number of custom interface objects can be loaded at
+startup time, in any combination.
+
+### Key points for interface implementors
+
+- **An interface configuration file specifies which interfaces to
+  construct for a particular application.**
+  
+- **Custom interface objects are constructed using the AbstractFactory
+  design pattern.**
+  
+- **Each custom class to be instantiated must have a factory registered.**
+  
+- **Custom interface classes can be loaded at startup time as shared
+  libraries.**
+  
+- **Each shared library is expected to have an initialization function
+  taking no arguments and returning no value.**
+  
+- **The initialization function must register the custom classes'
+  factories.**
+
+[Previous](listener-data-flow.html) | [Up](interfacing-tutorial.html)
+
+[Home](index.html)
+
+*/
+}

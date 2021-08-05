@@ -39,6 +39,8 @@ and register their custom interfaces.
 
 6. [Data and control flow for %PLEXIL Exec Listeners](listener-data-flow.html)
 
+7. [Startup and interface configuration](startup-and-configuration.html)
+
 [Next](interfacing-basics.html)
 
 [Home](index.html)
