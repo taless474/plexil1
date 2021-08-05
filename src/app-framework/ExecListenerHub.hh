@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2018, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -34,10 +34,12 @@ namespace PLEXIL
 {
   class ExecListener;
   
-  /**
-   * @brief A central dispatcher for multiple exec listeners,
-   *        and an adapter between the old ExecListener API and the current Exec API.
-   */
+  //! \class ExecListenerHub
+  //! \brief A central dispatcher for multiple exec listeners, and an adapter between the old ExecListener API and the current Exec API.
+  //! \see ExecListener
+  //! \see PlexilListener
+  //! \ingroup App-Framework
+
   class ExecListenerHub : public PlexilListener
   {
   public:

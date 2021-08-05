@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -59,15 +59,16 @@ namespace PLEXIL
   // instance, may handle multiple state names.
   //
 
-  //*
-  //
-  // @brief A LookupNowHandler function queries the external system
-  // for the specified state, and updates the cache entry.
-  //
-  // @see StateCacheEntry::update
-  // @see StateCacheEntry::updatePtr
-  // @see StateCacheEntry::setUnknown
-  //
+  //! \typedef LookupNowHandler
+  //! Prototype for a function to implement LookupNow.
+
+  //! A LookupNowHandler function queries the external system
+  //! for the specified state, and updates the cache entry.
+  //!
+  //! \see StateCacheEntry::update
+  //! \see StateCacheEntry::updatePtr
+  //! \see StateCacheEntry::setUnknown
+  //! \ingroup App-Framework
 
   typedef void (*LookupNowHandler)(const State &state, StateCacheEntry &cacheEntry);
 
@@ -76,64 +77,75 @@ namespace PLEXIL
   // interface or PLEXIL Exec utilization.
   //
 
-  //* 
-  //
-  // @brief The PLEXIL Exec calls the SubscribeHandler to notify the
-  // interface that the Exec is interested in updates for this state.
-  //
-  // @note SubscribeHandler and UnsubscribeHandler should be
-  // registered as a pair.
-  //
-  // @see AdapterExecInterface::handleValueChange
-  //
+  //! \typedef SubscribeHandler
+  //! Prototype for a function to implement LookupOnChange.
+
+  //! The PLEXIL Exec calls the SubscribeHandler to notify the
+  //! interface that the Exec is interested in updates for this state.
+
+  //! \note SubscribeHandler and UnsubscribeHandler should be
+  //! registered as a pair.
+
+  //! \see AdapterExecInterface::handleValueChange
+
+  //! \ingroup App-Framework
 
   typedef void (*SubscribeHandler)(const State &state, AdapterExecInterface *intf);
 
-  //* 
-  //
-  // @brief The PLEXIL Exec calls the UnsubscribeHandler to notify the
-  // interface that the Exec is no longer interested in updates for
-  // this state.
-  //
-  // @note SubscribeHandler and UnsubscribeHandler should be
-  // registered as a pair.
-  //
+  //! \typedef UnsubscribeHandler
+  //! Prototype for a function to discontinue LookupOnChange.
+  
+  //! The PLEXIL Exec calls the UnsubscribeHandler to notify the
+  //! interface that the Exec is no longer interested in updates for
+  //! this state.
+
+  //! \note SubscribeHandler and UnsubscribeHandler should be
+  //! registered as a pair.
+
+  //! \ingroup App-Framework
   
   typedef void (*UnsubscribeHandler)(const State &state);
 
-  //*
-  //
-  // @brief The PLEXIL Exec calls a SetThresholds handler when the Exec
-  // activates a LookupOnChange for the named state.  It tells the
-  // interface that it need not send updates for new values within the
-  // given bounds.
-  //
-  // @note SetThresholds handlers will only be called on a state which
-  // is currently subscribed.
-  //
-  // @note SetThresholds handlers are only applicable to
-  // numeric-valued Lookups.  Only the handler corresponding to the
-  // Lookup's declared type should be implemented.
-  //
-  // @note This is primarily used for the Time state, to set alarms
-  // for the next scheduled event.
-  //
+  //! \typedef SetThresholdsHandlerReal
+  //! Prototype for a function to notify the interface of new thresholds on a state.
+  
+  //! The PLEXIL Exec calls a SetThresholds handler when the Exec
+  //! activates a LookupOnChange for the named state.  It tells the
+  //! interface that it need not send updates for new values within the
+  //! given bounds.
+
+  //! \note SetThresholds handlers will only be called on a state which
+  //! is currently subscribed.
+
+  //! \note SetThresholds handlers are only applicable to
+  //! numeric-valued Lookups.  Only the handler corresponding to the
+  //! Lookup's declared type should be implemented.
+
+  //! \note This is primarily used for the Time state, to set alarms
+  //! for the next scheduled event.
+
+  //! \ingroup App-Framework
 
   typedef void (*SetThresholdsHandlerReal)(const State &state, double hi, double lo);
+
+  //! \typedef SetThresholdsHandlerInteger
+
   typedef void (*SetThresholdsHandlerInteger)(const State &state, int32_t hi, int32_t lo);
 
-  //*
-  //
-  // @brief An extensible base class representing the API of a lookup
-  // handler object.
-  //
-  // @note The default methods for all member functions are no-ops,
-  // because doing nothing is a legal option for each member function.
-  //
-  // @note If the lookupNow method is empty, the interface is
-  // responsible for posting state updates via
-  // AdapterExecInterface::handleValueChange().
-  //
+  //! \class LookupHandler
+  //! \brief An extensible base class representing the API of a lookup handler object.
+
+  //! \note The default methods for all member functions are no-ops,
+  //! because doing nothing is a legal option for each member function.
+
+  //! \note If the lookupNow method is empty, the interface is
+  //! responsible for posting state updates via
+  //! AdapterExecInterface::handleValueChange().
+
+  //! \see AdapterExecInterface::handleValueChange
+  //! \see StateCacheEntry
+
+  //! \ingroup App-Framework
 
   class LookupHandler
   {
@@ -149,25 +161,23 @@ namespace PLEXIL
     {
     }
 
-    //*
-    //
-    // @brief Query the external system for the specified state, and
-    // update the given state cache entry.
-    // @param state The State to look up.
-    // @param cacheEntry The StateCacheEntry for the given State.
-    // Call its update(), updatePtr(), or setUnknown() member
-    // function as appropriate.
-    //
-    // @see StateCacheEntry::update
-    // @see StateCacheEntry::updatePtr
-    // @see StateCacheEntry::setUnknown
-    //
-    // @note This member function is called in the PLEXIL Exec inner
-    // loop, therefore blocking is strongly discouraged.
-    //
+    //! \brief Query the external system for the specified state, and
+    //! update the given state cache entry.
+    //! \param state The State to look up.
+    //! \param cacheEntry The StateCacheEntry for the given State.
+    //! Call its update(), updatePtr(), or setUnknown() member
+    //! function as appropriate.
 
-    virtual void lookupNow(const State & /* state */,
-                           StateCacheEntry & /* cacheEntry */)
+    //! \see StateCacheEntry::update
+    //! \see StateCacheEntry::updatePtr
+    //! \see StateCacheEntry::setUnknown
+
+    //! \note This member function is called in the PLEXIL Exec inner
+    //! loop, therefore blocking is strongly discouraged.
+
+
+    virtual void lookupNow(const State &state,
+                           StateCacheEntry &cacheEntry)
     {
     }
 
@@ -176,67 +186,55 @@ namespace PLEXIL
     // methods are no-ops, as shown here.
     //
 
-    //*
-    //
-    // @brief The subscribe() method notifies the interface that the
-    // PLEXIL Exec is interested in updates for this state.
-    //
-    // @param state The State being subscribed to.
-    // @param intf Pointer to the AdapterExecInterface, through which
-    // updates in the state's value can be sent.
-    //
-    // @see AdapterExecInterface::handleValueChange
-    //
+    //! \brief The subscribe() method notifies the interface that the
+    //! PLEXIL Exec is interested in updates for this state.
+    //! \param state The State being subscribed to.
+    //! \param intf Pointer to the AdapterExecInterface, through which
+    //! updates in the state's value can be sent.
 
-    virtual void subscribe(const State & /* state */, AdapterExecInterface * /* intf */)
+    //! \see AdapterExecInterface::handleValueChange
+
+    virtual void subscribe(const State &state, AdapterExecInterface *intf)
     {
     }
 
-    //*
-    //
-    // @brief The unsubscribe() method notifies the interface that the
-    // PLEXIL Exec is no longer interested in updates for this state.
-    // @param state The State formerly subscribed to.
-    //
+    //! \brief The unsubscribe() method notifies the interface that the
+    //! PLEXIL Exec is no longer interested in updates for this state.
+    //! \param state The State formerly subscribed to.
     
-    virtual void unsubscribe(const State & /* state */)
+    virtual void unsubscribe(const State &state)
     {
     }
 
-    //*
-    //
-    // @brief setThresholds() is called when the PLEXIL Exec activates
-    // a LookupOnChange for the named state, to notify the interface
-    // that the Exec is not interested in new values within the given
-    // bounds.
-    //
-    // @param state The state on which the bounds are being
-    // established.
-    // @param hi The value above which updates should be sent to the
-    // Exec.
-    // @param lo The value below which updates should be sent to the
-    // Exec.
-    //
-    // @note setThresholds() will only be called on a state which is
-    // currently subscribed.
-    //
-    // @note setThresholds() methods are only applicable to
-    // numeric-valued Lookups.  Only the member function corresponding
-    // to the Lookup's declared type should be implemented.
-    //
-    // @note This is primarily used for the Time state, to set alarms
-    // for the next scheduled event.
-    //
+    //! \brief Notify the handler that the Exec is not interested in
+    //! new values within the given bounds.
 
-    virtual void setThresholds(const State & /* state */,
-                               double /* hi */,
-                               double /* lo */)
+    //! \param state The state on which the bounds are being
+    //! established.
+    //! \param hi The value above which updates should be sent to the
+    //! Exec.
+    //! \param lo The value below which updates should be sent to the
+    //! Exec.
+
+    //! \note setThresholds() will only be called on a state which is
+    //! currently subscribed.
+
+    //! \note setThresholds() methods are only applicable to
+    //! numeric-valued Lookups.  Only the member function corresponding
+    //! to the Lookup's declared type should be implemented.
+
+    //! \note This is primarily used for the Time state, to set alarms
+    //! for the next scheduled event.
+
+    virtual void setThresholds(const State &state,
+                               double hi,
+                               double lo)
     {
     }
 
-    virtual void setThresholds(const State & /* state */,
-                               int32_t /* hi */,
-                               int32_t /* lo */)
+    virtual void setThresholds(const State &state,
+                               int32_t hi,
+                               int32_t lo)
     {
     }
   };

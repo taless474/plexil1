@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2017, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef PLEXIL_CACHED_VALUE_IMPL_HH
 #define PLEXIL_CACHED_VALUE_IMPL_HH
@@ -32,13 +31,22 @@
 namespace PLEXIL
 {
 
-  // Placeholder object
+  //! \class VoidCachedValue
+  //! \brief Placeholder object used by the state cache to represent
+  //!        a Lookup value whose type is not yet known.
+  //! \addtogroup External-Interface The %PLEXIL Executive core external interface
   class VoidCachedValue : public CachedValue
   {
   public:
+    //! \brief Default constructor,
     VoidCachedValue();
-    ~VoidCachedValue();
 
+    //! \brief Virtual destructor.
+    virtual ~VoidCachedValue();
+
+    //! \brief Assignment operator from CachedValue.
+    //! \param other Const reference to another CachedValue instance.
+    //! \return Reference to *this as a CachedValue.
     CachedValue &operator=(CachedValue const &other);
 
     ValueType valueType() const;
@@ -46,14 +54,6 @@ namespace PLEXIL
     bool operator==(CachedValue const &) const;
     virtual CachedValue *clone() const;
     void printValue(std::ostream &) const;
-
-    /**
-     * @brief Retrieve the cached value.
-     * @param The appropriately typed place to put the result.
-     * @return True if known, false if unknown or invalid.
-     * @note The expression value is not copied if the return value is false.
-     * @note Derived classes should implement only the appropriate methods.
-     */
 
     // Local macro
 #define DEFINE_VOID_CACHED_VALUE_GET_VALUE_METHOD(_rtype_) \
@@ -65,15 +65,6 @@ namespace PLEXIL
     DEFINE_VOID_CACHED_VALUE_GET_VALUE_METHOD(Real)
     DEFINE_VOID_CACHED_VALUE_GET_VALUE_METHOD(String)
 #undef DEFINE_VOID_CACHED_VALUE_GET_VALUE_METHOD
-
-    /**
-     * @brief Retrieve a pointer to the (const) cached value.
-     * @param ptr Reference to the pointer variable to receive the result.
-     * @return True if known, false if unknown or invalid.
-     * @note The pointer is not copied if the return value is false.
-     * @note Derived classes should implement only the appropriate method.
-     * @note Default methods return an error in every case.
-     */
 
     // Local macro
 #define DEFINE_VOID_CACHED_VALUE_GET_VALUE_POINTER_METHOD(_rtype_) \
@@ -91,32 +82,33 @@ namespace PLEXIL
 
     virtual Value toValue() const;
 
-    /**
-     * @brief Set the state to unknown.
-
-     */
+    //! \brief Set the state to unknown.
     virtual bool setUnknown(unsigned int timestamp)
     { return false; }
       
-
-    /**
-     * @brief Update the cache entry with the given new value.
-     * @param val The new value.
-     * @return True if correct type for lookup, false otherwise.
-     * @note Notifies all lookups of the new value.
-     * @note The caller is responsible for deleting the object pointed to upon return.
-     */
+    //! \brief Update the cache entry with the given new value.
+    //! \param val Reference to the new value.
+    //! \return True if correct type for lookup, false otherwise.
+    //! \note Notifies all lookups of the new value.
     virtual bool update(unsigned int timestamp, Boolean const &val);
     virtual bool update(unsigned int timestamp, Integer const &val);
     virtual bool update(unsigned int timestamp, Real const &val);
     virtual bool update(unsigned int timestamp, String const &val);
+      
+    //! \brief Update the cache entry with the given new value.
+    //! \param val Const pointer to the new value.
+    //! \return True if correct type for lookup, false otherwise.
+    //! \note Notifies all lookups of the new value.
+    //! \note The caller is responsible for deleting the object pointed to upon return.
     virtual bool updatePtr(unsigned int timestamp, String const *valPtr);
     virtual bool updatePtr(unsigned int timestamp, BooleanArray const *valPtr);
     virtual bool updatePtr(unsigned int timestamp, IntegerArray const *valPtr);
     virtual bool updatePtr(unsigned int timestamp, RealArray const *valPtr);
     virtual bool updatePtr(unsigned int timestamp, StringArray const *valPtr);
 
-    // For convenience of TestExternalInterface, others
+    //! \brief Update the entry to the given value with the given timestamp.
+    //! \param timestamp The timestamp.
+    //! \param val The new value
     virtual bool update(unsigned int timestamp, Value const &val);
 
   private:
@@ -125,7 +117,8 @@ namespace PLEXIL
 
   };
 
-  // Scalar types
+  //! \brief Template to implement CachedValue API for scalar-valued lookups.
+  //! \ingroup External-Interface
   template <typename T>
   class CachedValueImpl : public CachedValue
   {
@@ -141,29 +134,29 @@ namespace PLEXIL
     bool operator==(CachedValue const &) const;
 
     /**
-     * @brief Return the value type.
-     * @return A constant enumeration.
-     * @note May be overridden by derived classes.
+     * \brief Return the value type.
+     * \return A constant enumeration.
+     * \note May be overridden by derived classes.
      */
     ValueType valueType() const;
 
     /**
-     * @brief Determine whether the value is known or unknown.
-     * @return True if known, false otherwise.
-     * @note May be overridden by derived classes.
+     * \brief Determine whether the value is known or unknown.
+     * \return True if known, false otherwise.
+     * \note May be overridden by derived classes.
      */
     bool isKnown() const;
 
     /**
-     * @brief Get the value of this expression as a Value instance.
-     * @return The Value instance.
+     * \brief Get the value of this expression as a Value instance.
+     * \return The Value instance.
      */
     Value toValue() const;
 
     /**
-     * @brief Retrieve the value of this object in its native type.
-     * @param The appropriately typed place to put the result.
-     * @return True if known, false if unknown.
+     * \brief Retrieve the value of this object in its native type.
+     * \param result Reference to the appropriately typed place to put the result.
+     * \return True if known, false if unknown.
      */
     virtual bool getValue(T &result) const;
 
@@ -186,7 +179,9 @@ namespace PLEXIL
     bool m_known;
   };
 
-  // Integer specialized to support getValue(Real &) conversion method
+  //! \brief Specialization of CachedValueImpl class template for Integer valued lookups.
+  //! \note Specialized to support getValue(Real &) conversion method
+  //! \ingroup External-Interface
   template <>
   class CachedValueImpl<Integer> : public CachedValue
   {
@@ -218,7 +213,9 @@ namespace PLEXIL
     bool m_known;
   };
 
-  // Real specialized to support update(unsigned int, Integer const &) conversion method
+  //! \brief Specialization of CachedValueImpl class template for Real valued lookups.
+  //! \note Specialized to support update(unsigned int, Integer const &) conversion method
+  //! \ingroup External-Interface
   template <>
   class CachedValueImpl<Real> : public CachedValue
   {
@@ -250,7 +247,8 @@ namespace PLEXIL
     bool m_known;
   };
 
-  // String is special
+  //! \brief Specialization of CachedValueImpl class template for String valued lookups.
+  //! \ingroup External-Interface
   template <>
   class CachedValueImpl<String> : public CachedValue
   {
@@ -283,7 +281,8 @@ namespace PLEXIL
     bool m_known;
   };
 
-  // Specialized for arrays
+  //! \brief Specialization of CachedValueImpl class template for Array valued lookups.
+  //! \ingroup External-Interface
   template <typename T>
   class CachedValueImpl<ArrayImpl<T> > : public CachedValue
   {

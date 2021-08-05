@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -44,113 +44,92 @@ namespace PLEXIL
   class Update;
   class Value;
 
-  /**
-   * @brief An abstract base class representing the PLEXIL Exec API
-   *        from the interface implementor's point of view.
-   */
+  //! \class AdapterExecInterface
+  //! \brief An abstract base class representing the InterfaceManager API as seen by an InterfaceAdapter instance.
+  //! \see InterfaceAdapter
+  //! \see InterfaceManager
+  //! \ingroup App-Framework
 
   class AdapterExecInterface
   {
   public:
 
-    // Virtual destructor
+    //! \brief Virtual destructor
     virtual ~AdapterExecInterface()
     {
     }
 
-    /**
-     * @brief Notify of the availability of a new value for a lookup.
-     * @param state The state for the new value.
-     * @param value The new value.
-     */
+    //! \brief Notify of the availability of a new value for a lookup.
+    //! \param state The state for the new value.
+    //! \param value The new value.
     virtual void handleValueChange(State const &state, const Value& value) = 0;
 
-    /**
-     * @brief Notify of the availability of a command handle value for a command.
-     * @param cmd Pointer to the Command instance.
-     * @param value The new value.
-     */
+    //! \brief Notify of the availability of a command handle value for a command.
+    //! \param cmd Pointer to the Command instance.
+    //! \param value The new value.
     virtual void handleCommandAck(Command * cmd, CommandHandleValue value) = 0;
 
-    /**
-     * @brief Notify of the availability of a return value for a command.
-     * @param cmd Pointer to the Command instance.
-     * @param value The new value.
-     */
+    //! \brief Notify of the availability of a return value for a command.
+    //! \param cmd Pointer to the Command instance.
+    //! \param value The new value.
     virtual void handleCommandReturn(Command * cmd, Value const& value) = 0;
 
-    /**
-     * @brief Notify of the availability of a command abort acknowledgment.
-     * @param cmd Pointer to the Command instance.
-     * @param ack The acknowledgment value.
-     */
+    //! \brief Notify of the availability of a command abort acknowledgment.
+    //! \param cmd Pointer to the Command instance.
+    //! \param ack The acknowledgment value.
     virtual void handleCommandAbortAck(Command * cmd, bool ack) = 0;
 
-    /**
-     * @brief Notify of the availability of a planner update acknowledgment.
-     * @param upd Pointer to the Update instance.
-     * @param ack The acknowledgment value.
-     */
+    //! \brief Notify of the availability of a planner update acknowledgment.
+    //! \param upd Pointer to the Update instance.
+    //! \param ack The acknowledgment value.
     virtual void handleUpdateAck(Update * upd, bool ack) = 0;
 
-    /**
-     * @brief Notify the executive of a new plan.
-     * @param planXml The pugixml representation of the new plan.
-     */
+    //! \brief Notify the executive of a new plan.
+    //! \param planXml The pugixml representation of the new plan.
     virtual void handleAddPlan(pugi::xml_node const planXml) = 0;
 
-    /**
-     * @brief Notify the executive of a new library node.
-     * @param planXml The XML document containing the new library node
-     * @return true if successful, false otherwise.
-     */
+    //! \brief Notify the executive of a new library node.
+    //! \param planXml The XML document containing the new library node
+    //! \return true if successful, false otherwise.
+    //! \note The Exec takes ownership of the xml_document.
     virtual bool handleAddLibrary(pugi::xml_document *planXml) = 0;
 
-    /**
-     * @brief Notify the executive that it should run one cycle.  This should be sent after
-     each batch of lookup and command return data.
-    */
+    //! \brief Notify the executive that it should run one cycle.
+    //! \note This should be called after each batch of lookup and command return data.
     virtual void notifyOfExternalEvent() = 0;
 
 #ifdef PLEXIL_WITH_THREADS
-    /**
-     * @brief Run the exec and wait until all events in the queue have been processed.
-     */
+    //! \brief Run the exec and wait until all events in the queue have been processed.
     virtual void notifyAndWaitForCompletion() = 0;
 #endif
 
-    /**
-     * @brief Get the Exec's idea of the current time.
-     * @return Seconds since the epoch as a double float.
-     * @note Also a pure virtual member function of ExternalInterface.
-     */
+    //! \brief Get the Exec's idea of the current time.
+    //! \return Seconds since the epoch as a double float.
+    //! \note Also a pure virtual member function of ExternalInterface.
+    //! \see ExternalInterface::currentTime
     virtual double currentTime() = 0;
 
-    /**
-     * @brief Query the appropriate interface to get the current time.
-     * @return Seconds since the epoch as a double float.
-     */
+    //! \brief Query the appropriate interface to get the current time.
+    //! \return Seconds since the epoch as a double float.
     virtual double queryTime() = 0;
 
     //
     // Property list API (formerly on InterfaceManagerBase)
     //
 
-    /**
-     * @brief Associate an arbitrary object with a string.
-     * @param name The string naming the property.
-     * @param thing The property value as an untyped pointer.
-     */
+    //! \brief Associate an arbitrary object with a string.
+    //! \param name The string naming the property.
+    //! \param thing The property value as an untyped pointer.
     virtual void setProperty(const std::string& name, void * thing) = 0;
 
-    /**
-     * @brief Fetch the named property.
-     * @param name The string naming the property.
-     * @return The property value as an untyped pointer.
-     */
+    //! \brief Fetch the named property.
+    //! \param name The string naming the property.
+    //! \return The property value as an untyped pointer.
     virtual void* getProperty(const std::string& name) = 0;
   };
 
+  //! \brief The global variable pointing to the AdapterExecInterface instance.
+  //! \ingroup App-Framework
   extern AdapterExecInterface *g_execInterface;
 
 }

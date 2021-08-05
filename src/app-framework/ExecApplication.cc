@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ExecApplication.hh"
 
@@ -81,31 +80,16 @@ namespace PLEXIL
     delete m_manager;
   }
 
-  /**
-   * @brief Add the specified directory name to the end of the library node loading path.
-   * @param libdir The directory name.
-   */
   void ExecApplication::addLibraryPath(const std::string& libdir)
   {
     g_configuration->addLibraryPath(libdir);
   }
 
-  /**
-   * @brief Add the specified directory names to the end of the library node loading path.
-   * @param libdirs The vector of directory names.
-   */
   void ExecApplication::addLibraryPath(const std::vector<std::string>& libdirs)
   {
     g_configuration->addLibraryPath(libdirs);
   }
 
-  /**
-   * @brief Initialize all internal data structures and interfaces.
-   * @param configXml Configuration data to use.
-   * @return true if successful, false otherwise.
-   * @note The caller must ensure that all adapter and listener factories
-   *       have been created and registered before this call.
-   */
   bool ExecApplication::initialize(pugi::xml_node const configXml)
   {
     condDebugMsg(configXml.empty(), "ExecApplication:initialize", " configuration is NULL");
@@ -141,10 +125,6 @@ namespace PLEXIL
     return setApplicationState(APP_INITED);
   }
 
-  /**
-   * @brief Start all the interfaces prior to execution.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::startInterfaces()
   {
     if (m_state != APP_INITED)
@@ -161,11 +141,6 @@ namespace PLEXIL
     return setApplicationState(APP_READY);
   }
 
-
-  /**
-   * @brief Step the Exec once.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::step()
   {
     if (m_state != APP_READY)
@@ -202,10 +177,6 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Step the Exec until the queue is empty.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::stepUntilQuiescent()
   {
     if (m_state != APP_READY)
@@ -229,12 +200,6 @@ namespace PLEXIL
 
     return true;
   }
-
-
-  /**
-   * @brief Runs the initialized Exec.
-   * @return true if successful, false otherwise.
-   */
 
   bool ExecApplication::run()
   {
@@ -261,10 +226,6 @@ namespace PLEXIL
 #endif // PLEXIL_WITH_THREADS
   }
 
-  /**
-   * @brief Suspends the running Exec.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::suspend()
   {
     if (m_state == APP_READY)
@@ -280,10 +241,6 @@ namespace PLEXIL
     return setApplicationState(APP_READY);
   }
 
-  /**
-   * @brief Resumes a suspended Exec.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::resume()
   {
     // Can only resume if ready and suspended
@@ -297,10 +254,6 @@ namespace PLEXIL
     return setApplicationState(APP_RUNNING);
   }
 
-  /**
-   * @brief Stops the Exec.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::stop()
   {
     if (m_state != APP_RUNNING
@@ -352,11 +305,6 @@ namespace PLEXIL
     return setApplicationState(APP_STOPPED);
   }
 
-   
-  /**
-   * @brief Resets a stopped Exec so that it can be run again.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::reset()
   {
     debugMsg("ExecApplication:reset", " entered");
@@ -376,11 +324,6 @@ namespace PLEXIL
     return setApplicationState(APP_INITED);
   }
 
-
-  /**
-   * @brief Shuts down a stopped Exec.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::shutdown()
   {
     debugMsg("ExecApplication:shutdown", " entered");
@@ -397,10 +340,6 @@ namespace PLEXIL
     return setApplicationState(APP_SHUTDOWN);
   }
 
-  /**
-   * @brief Add a library as an XML document.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::addLibrary(pugi::xml_document* libraryXml)
   {
     if (m_state != APP_RUNNING && m_state != APP_READY)
@@ -417,11 +356,6 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Load the named library from the library path.
-   * @param name The name of the library.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::loadLibrary(std::string const &name)
   {
     if (m_state != APP_RUNNING && m_state != APP_READY)
@@ -447,10 +381,6 @@ namespace PLEXIL
     return result;
   }
 
-  /**
-   * @brief Add a plan as an XML document.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::addPlan(pugi::xml_document* planXml)
   {
     if (m_state != APP_RUNNING && m_state != APP_READY)
@@ -469,10 +399,6 @@ namespace PLEXIL
   }
 
 #ifdef PLEXIL_WITH_THREADS
-  /**
-   * @brief Spawns a thread which runs the exec's top level loop.
-   * @return true if successful, false otherwise.
-   */
   bool ExecApplication::spawnExecThread()
   {
     debugMsg("ExecApplication:run", " Spawning top level thread");
@@ -527,12 +453,6 @@ namespace PLEXIL
   }
 #endif // PLEXIL_WITH_THREADS
 
-  /**
-   * @brief Run the exec until the queue is empty.
-   * @param stepFirst True if the exec should be stepped before checking the queue.
-   * @note Acquires m_execMutex and holds until done.  
-   */
-
   void
   ExecApplication::runExec(bool stepFirst)
   {
@@ -565,13 +485,6 @@ namespace PLEXIL
   }
 
 #ifdef PLEXIL_WITH_THREADS
-  /**
-   * @brief Suspends the calling thread until another thread has
-   *         placed a call to notifyExec().  Can return
-   *        immediately if the call to wait() returns an error.
-   * @return true if resumed normally, false if wait resulted in an error.
-   * @note Can wait here indefinitely while the application is suspended.
-   */
   bool ExecApplication::waitForExternalEvent()
   {
 #ifndef BROKEN_ANDROID_PTHREAD_SIGMASK
@@ -599,9 +512,6 @@ namespace PLEXIL
   }
 #endif // PLEXIL_WITH_THREADS
 
-  /**
-   * @brief Suspend the current thread until the plan finishes executing.
-   */
   void
   ExecApplication::waitForPlanFinished()
   {
@@ -633,11 +543,6 @@ namespace PLEXIL
         return g_exec->allPlansFinished();
   }
 
-  /**
-   * @brief Suspend the current thread until the application reaches APP_SHUTDOWN state.
-   * @note May be called by multiple threads
-   * @note Wait can be interrupted by signal handling; calling threads should block (e.g.) SIGALRM.
-   */
   void
   ExecApplication::waitForShutdown() {
 #ifdef PLEXIL_WITH_THREADS
@@ -651,9 +556,6 @@ namespace PLEXIL
 #endif // PLEXIL_WITH_THREADS
   }
 
-  /**
-   * @brief Whatever state the application may be in, bring it down in a controlled fashion.
-   */
   void ExecApplication::terminate() {
     std::cout << "Terminating PLEXIL Exec application" << std::endl;
 
@@ -683,9 +585,6 @@ namespace PLEXIL
     std::cout << "PLEXIL Exec terminated" << std::endl;
   }
 
-  /**
-   * @brief Get the application's current state.
-   */
   ExecApplication::ApplicationState 
   ExecApplication::getApplicationState() {
 #ifdef PLEXIL_WITH_THREADS
@@ -694,10 +593,6 @@ namespace PLEXIL
     return m_state;
   }
 
-  /**
-   * @brief Transitions the application to the new state.
-   * @return true if the new state is a legal transition from the current state, false if not.
-   */ 
   bool 
   ExecApplication::setApplicationState(const ExecApplication::ApplicationState& newState) {
     debugMsg("ExecApplication:setApplicationState",
@@ -783,17 +678,12 @@ namespace PLEXIL
   // Signal handling
   //
 
-  /**
-   * @brief Dummy signal handler function for signals we process.
-   * @note This should never be called!
-   */
-  void dummySignalHandler(int /* signo */) {}
+  //! \brief Dummy signal handler function for signals we process.
+  //! \param signo Signal number (ignored)/
+  //! \note This should never be called!
+  void dummySignalHandler(int signo) {}
 
 #ifdef PLEXIL_WITH_THREADS
-  /**
-   * @brief Handler for asynchronous kill of Exec thread
-   * @param signo The signal.
-   */
   void emergencyStop(int signo) 
   {
     debugMsg("ExecApplication:stop", " Received signal " << signo);
@@ -940,12 +830,6 @@ namespace PLEXIL
   // Static helper methods
   //
 
-  /**
-   * @brief Return a human-readable name for the ApplicationState.
-   * @param state An ApplicationState.
-   * @return The name of the state as a const char*.
-   */
-
   const char* 
   ExecApplication::getApplicationStateName(ApplicationState state) {
     switch (state) {
@@ -979,11 +863,6 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Notify the executive that it should run one cycle.  
-   *        This should be sent after each batch of lookup, command
-   *        return, and function return data.
-   */
   void
   ExecApplication::notifyExec()
   {
@@ -1010,9 +889,6 @@ namespace PLEXIL
 #endif
   }
 
-  /**
-   * @brief Run the exec and wait until all events in the queue have been processed. 
-  */
   void
   ExecApplication::notifyAndWaitForCompletion()
   {
@@ -1029,9 +905,6 @@ namespace PLEXIL
 #endif // PLEXIL_WITH_THREADS
   }
 
-  /**
-   * @brief Notify the application that a queue mark was processed.
-   */
   void
   ExecApplication::markProcessed()
   {

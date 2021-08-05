@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2014, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,10 +32,11 @@
 namespace PLEXIL
 {
 
-  /**
-   * @class SimpleInputQueue
-   * @brief A simple implementation of the InputQueue API.
-   */
+  //! \class SimpleInputQueue
+  //! \brief A simple implementation of the InputQueue API for single-threaded applications.
+  //! \see InputQueue
+  //! \ingroup App-Framework
+  
   class SimpleInputQueue : public InputQueue
   {
   public:

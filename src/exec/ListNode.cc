@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ListNode.hh"
 
@@ -39,15 +38,26 @@ namespace PLEXIL
   // Condition operators only used by ListNode
   //
 
+  //! \class AllFinished
+  //! \brief A specialized NodeOperator for ListNode which returns true
+  //!        when all child nodes are in FINISHED node state.
+  //! \see ListNode::specializedCreateConditionWrappers
+  //! \ingroup Exec-Core
   class AllFinished : public NodeOperatorImpl<Boolean>
   {
   public:
-    ~AllFinished()
+    //! \brief Virtual destructor.
+    virtual ~AllFinished()
     {
     }
 
     DECLARE_NODE_OPERATOR_STATIC_INSTANCE(AllFinished);
 
+    //! \brief Calculate the function's value.
+    //! \param result Reference to a Boolean variable.
+    //! \param node Pointer to the node whose children are to be checked.
+    //! \result True if the value is known, false otherwise.
+    //! \note The result of this operator is always known.
     bool operator()(Boolean &result, NodeImpl const *node) const
     {
       std::vector<NodeImpl *> const &kids = node->getChildren();
@@ -64,6 +74,9 @@ namespace PLEXIL
       return true; // always known
     }
 
+    //! \brief Map the operator over the children of the node.
+    //! \param node Pointer to a node.
+    //! \param oper A functor of one parameter to map over the child nodes.
     void doPropagationSources(NodeImpl *node, ListenableUnaryOperator const &oper) const
     {
       std::vector<NodeImpl *> const &kids = node->getChildren();
@@ -74,6 +87,8 @@ namespace PLEXIL
 
   private:
 
+    //! \brief Default constructor.
+    //! \note Should only be called from instance() static member function.
     AllFinished()
       : NodeOperatorImpl<Boolean>("AllChildrenFinished")
     {
@@ -84,15 +99,28 @@ namespace PLEXIL
     AllFinished &operator=(AllFinished const &);
   };
 
+  
+  //! \class AllFinished
+  //! \brief A specialized NodeOperator for ListNode which returns true
+  //!        when all child nodes are in either WAITING or FINISHED node state.
+  //! \see ListNode::specializedCreateConditionWrappers
+  //! \ingroup Exec-Core
+  //! \ingroup Expression
   class AllWaitingOrFinished : public NodeOperatorImpl<Boolean>
   {
   public:
-    ~AllWaitingOrFinished()
+    //! \brief Virtual destructor.
+    virtual ~AllWaitingOrFinished()
     {
     }
 
     DECLARE_NODE_OPERATOR_STATIC_INSTANCE(AllWaitingOrFinished);
 
+    //! \brief Calculate the function's value.
+    //! \param result Reference to a Boolean variable.
+    //! \param node Pointer to the node whose children are to be checked.
+    //! \result True if the value is known, false otherwise.
+    //! \note The result of this operator is always known.
     bool operator()(Boolean &result, NodeImpl const *node) const
     {
       std::vector<NodeImpl *> const &kids = node->getChildren();
@@ -114,6 +142,9 @@ namespace PLEXIL
       return true; // always known
     }
 
+    //! \brief Map the operator over the children of the node.
+    //! \param node Pointer to a node.
+    //! \param oper A functor of one parameter to map over the child nodes.
     void doPropagationSources(NodeImpl *node, ListenableUnaryOperator const &oper) const
     {
       std::vector<NodeImpl *> const &kids = node->getChildren();
@@ -123,7 +154,9 @@ namespace PLEXIL
     }
 
   private:
-    // Should only be called from instance() static member function
+
+    //! \brief Default constructor.
+    //! \note Should only be called from instance() static member function.
     AllWaitingOrFinished()
       : NodeOperatorImpl<Boolean>("AllChildrenWaitingOrFinished")
     {
@@ -145,10 +178,6 @@ namespace PLEXIL
   {
   }
 
-  /**
-   * @brief Alternate constructor.
-   * Used only by Exec test module, where all conditions are guaranteed to exist.
-   */
   ListNode::ListNode(const std::string& type,
                      const std::string& name, 
                      NodeState state,
@@ -309,9 +338,6 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Destructor.  Cleans up this entire part of the node tree.
-   */
   ListNode::~ListNode()
   {
     debugMsg("ListNode:~ListNode", " destructor for " << m_nodeId);
@@ -381,11 +407,6 @@ namespace PLEXIL
     m_children.reserve(n);
   }
 
-  /**
-   * @brief Sets the state variable to the new state.
-   * @param newValue The new node state.
-   * @note This method notifies the children of a change in the parent node's state.
-   */
   void ListNode::setState(NodeState newValue, double tym)
   {
     NodeImpl::setState(newValue, tym);

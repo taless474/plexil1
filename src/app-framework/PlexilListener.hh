@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2018, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,12 @@ namespace pugi
 namespace PLEXIL
 {
 
+  //! \class PlexilListener
+  //! \brief Abstract base class for listeners reporting plan loading and execution events.
+  //! \see ExecListenerBase
+  //! \see ExecListener
+  //! \see ExecListenerHub
+  //! \ingroup App-Framework
   class PlexilListener : public ExecListenerBase
   {
   public:

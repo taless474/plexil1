@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Lookup.hh"
 
@@ -278,10 +277,6 @@ namespace PLEXIL
 
 #undef DEFINE_LOOKUP_GET_VALUE_POINTER_METHOD
 
-  /**
-   * @brief Get the value of this expression as a Value instance.
-   * @return The Value instance.
-   */
   Value Lookup::toValue() const
   {
     if (!this->isActive() || !m_entry || !m_entry->cachedValue())
@@ -311,66 +306,76 @@ namespace PLEXIL
 
   // Internal class used only by LookupOnChange
   // Presumes both lookup value and tolerance value are known.
+
+  //! \class ThresholdCache
+  //! \brief Abstract base class defining the LookupOnChange threshold caching API.
+  //! \ingroup External-Interface
   class ThresholdCache
   {
   public:
+    //! \brief Default constructor.
     ThresholdCache() {}
+
+    //! \brief Virtual destructor.
     virtual ~ThresholdCache() {}
 
-    /**
-     * @brief Check whether the threshold value itself has changed.
-     * @param tolerance Tolerance expression.
-     * @return True if changed.
-     */
+    //! \brief Check whether the threshold value itself has changed.
+    //! \param tolerance Const pointer to tolerance expression.
+    //! \return True if changed, false otherwise.
     virtual bool toleranceChanged(Expression const *tolerance) const = 0;
 
-    /**
-     * @brief Check whether the current value is beyond the thresholds.
-     * @param entry Pointer to the value.
-     * @return True if exceeded, false otherwise.
-     */
+    //! \brief Check whether the current value is beyond the thresholds.
+    //! \param value Const pointer to the CachedValue instance for the state.
+    //! \return True if exceeded, false if not.
     virtual bool thresholdsExceeded(CachedValue const *value) const = 0;
 
-    /**
-     * @brief Set the thresholds based on the given cached value.
-     * @param entry Pointer to state cache entry.
-     */
+    //! \brief Set the thresholds based on the given cached value.
+    //! \param value Const pointer to the CachedValue instance for the state.
+    //! \param tolerance Const pointer to the tolerance expression.
     virtual void setThresholds(CachedValue const *value, Expression const *tolerance) = 0;
 
-
-    /**
-     * @brief Get the current thresholds.
-     * @param high Place to store the current high threshold.
-     * @param low Place to store the current low threshold.
-     * @note Default methods.
-     */
-
-    virtual void getThresholds(Integer & /* high */, Integer & /* low */)
+    //! \brief Get the current thresholds as Integer values.
+    //! \param high Reference to the current high threshold.
+    //! \param low Reference to the current low threshold.
+    //! \note The base class method throws an exception.
+    virtual void getThresholds(Integer &high, Integer &low)
     {
       errorMsg("LookupOnChange:getThresholds: "
-               "attempt to get Integer thresholds from non-Integer");
+               "attempt to get Integer thresholds from non-Integer value");
     }
 
-    virtual void getThresholds(Real & /* high */, Real & /* low */)
+    //! \brief Get the current thresholds as Real values.
+    //! \param high Reference to the current high threshold.
+    //! \param low Reference to the current low threshold.
+    //! \note The base class method throws an exception.
+    virtual void getThresholds(Real &high, Real &low)
     {
       errorMsg("LookupOnChange:getThresholds: "
-               "attempt to get Real thresholds from non-Real");
+               "attempt to get Real thresholds from non-Real value");
     }
 
   };
 
+  //! \brief Class template for LookupOnChange threshold caching implementation,
+  //!        specialized on number type.
+  //! \ingroup External-Interface
   template <typename NUM>
   class ThresholdCacheImpl : public ThresholdCache
   {
   public:
+    //! \brief Default constructor.
     ThresholdCacheImpl()
       : ThresholdCache(),
       m_wasKnown(false)
     {
     }
 
-    ~ThresholdCacheImpl() {}
+    //! \brief Virtual destructor.
+    virtual ~ThresholdCacheImpl() {}
 
+    //! \brief Check whether the threshold value itself has changed.
+    //! \param tolerance Const pointer to tolerance expression.
+    //! \return True if changed, false otherwise.
     virtual bool toleranceChanged(Expression const *tolerance) const
     {
       check_error_1(tolerance); // paranoid check
@@ -389,9 +394,12 @@ namespace PLEXIL
       return true;
     }
 
-    // See below for implementations of this method.
+    // See below for implementations of this method specialized by number type.
     virtual bool thresholdsExceeded(CachedValue const *value) const;
 
+    //! \brief Set the thresholds based on the given cached value.
+    //! \param value Const pointer to the CachedValue instance for the state.
+    //! \param tolerance Const pointer to the tolerance expression.
     virtual void setThresholds(CachedValue const *value, Expression const *tolerance)
     {
       debugMsg("LookupOnChange:setThresholds", " entered");
@@ -415,6 +423,9 @@ namespace PLEXIL
       }
     }
 
+    //! \brief Get the current thresholds.
+    //! \param high Reference to the current high threshold.
+    //! \param low Reference to the current low threshold.
     virtual void getThresholds(NUM &high, NUM &low)
     {
       high = m_high;
@@ -422,13 +433,23 @@ namespace PLEXIL
     }
 
   private:
+
+    //! \brief Current value of the low threshold.
     NUM m_low;
+
+    //! \brief Current value of the low threshold.
     NUM m_high;
+
+    //! \brief Current value of the tolerance.
     NUM m_tolerance;
+
+    //! \brief True if the lookup value was known when setThresholds was called.
     bool m_wasKnown;
   };
 
-  // Threshold check for Integer-valued lookups
+  //! \brief Check whether the current value is beyond the thresholds for Integer-valued lookups.
+  //! \param value Const pointer to the CachedValue instance for the state.
+  //! \return True if exceeded, false if not.
   template <>
   bool ThresholdCacheImpl<Integer>::thresholdsExceeded(CachedValue const *value) const
   {
@@ -439,8 +460,10 @@ namespace PLEXIL
     return m_wasKnown; 
   }
 
-  // Threshold check for Real-valued lookups
-  // Covers up a horde of sins, notably timers returning early (!)
+  //! \brief Check whether the current value is beyond the thresholds for Real-valued lookups.
+  //! \param value Const pointer to the CachedValue instance for the state.
+  //! \return True if exceeded, false if not.
+  //! \note Covers up a horde of sins, notably timers returning early (!).
   template <>
   bool ThresholdCacheImpl<Real>::thresholdsExceeded(CachedValue const *value) const
   {
@@ -466,6 +489,10 @@ namespace PLEXIL
     return false;
   }
 
+  //! \brief Construct a ThresholdCache instance for the given value type.
+  //! \param typ The value type.
+  //! \return Pointer to a newly constructed ThresholdCache object.
+  //! \ingroup External-Interface
   static ThresholdCache * ThresholdCacheFactory(ValueType typ)
   {
     switch (typ) {
@@ -517,8 +544,8 @@ namespace PLEXIL
   }
 
   /**
-   * @brief Query whether this expression is a source of change events.
-   * @return True if the value may change independently of any subexpressions, false otherwise.
+   * \brief Query whether this expression is a source of change events.
+   * \return True if the value may change independently of any subexpressions, false otherwise.
    */
   bool Lookup::isPropagationSource() const
   {
@@ -739,10 +766,6 @@ namespace PLEXIL
 
 #undef DEFINE_CHANGE_LOOKUP_GET_VALUE_METHOD
 
-  /**
-   * @brief Get the value of this expression as a Value instance.
-   * @return The Value instance.
-   */
   Value LookupOnChange::toValue() const
   {
     if (!this->isActive() || !m_entry || !m_entry->cachedValue())

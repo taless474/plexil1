@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "AdapterFactory.hh"
 
@@ -34,15 +33,12 @@
 
 namespace PLEXIL
 {
-  /**
-   * @brief Creates a new InterfaceAdapter instance as specified by
-   *        the given configuration XML.
-   * @param name The registered name for the factory.
-   * @param xml The configuration XML to be passed to the InterfaceAdapter constructor.
-   * @param execInterface Reference to the parent InterfaceManager instance.
-   * @return The Id for the new InterfaceAdapter.  May not be unique.
-   */
 
+  //! \brief Creates a new InterfaceAdapter instance as specified by
+  //!        the given configuration XML.
+  //! \param xml The configuration XML to be passed to the InterfaceAdapter constructor.
+  //! \param execInterface Reference to the parent InterfaceManager instance.
+  //! \return Pointer to the InterfaceAdapter.  May not be unique.
   InterfaceAdapter *
   AdapterFactory::createInstance(pugi::xml_node const xml,
                                  AdapterExecInterface& execInterface)
@@ -66,15 +62,12 @@ namespace PLEXIL
     return createInstance(adapterType, xml, execInterface, dummy);
   }
 
-  /**
-   * @brief Creates a new InterfaceAdapter instance with the type associated with the name and
-   *        the given configuration XML.
-   * @param name The registered name for the factory.
-   * @param xml The configuration XML to be passed to the InterfaceAdapter constructor.
-   * @param execInterface Reference to the parent InterfaceManager instance.
-   * @return The Id for the new InterfaceAdapter.  May not be unique.
-   */
-
+  //! \brief Creates a new InterfaceAdapter instance with the type associated with the name and
+  //!        the given configuration XML.
+  //! \param name The registered name for the factory.
+  //! \param xml The configuration XML to be passed to the InterfaceAdapter constructor.
+  //! \param execInterface Reference to the parent InterfaceManager instance.
+  //! \return Pointer to the InterfaceAdapter.  May not be unique.
   InterfaceAdapter *
   AdapterFactory::createInstance(std::string const& name,
                                  pugi::xml_node const xml,
@@ -85,16 +78,14 @@ namespace PLEXIL
   }
 
 
-  /**
-   * @brief Creates a new InterfaceAdapter instance with the type associated with the name and
-   *        the given configuration XML.
-   * @param name The registered name for the factory.
-   * @param xml The configuration XML to be passed to the InterfaceAdapter constructor.
-   * @param wasCreated Reference to a boolean variable;
-   *                   variable will be set to true if new object created, false otherwise.
-   * @return The Id for the new InterfaceAdapter.  If wasCreated is set to false, is not unique.
-   */
-
+  //! \brief Creates a new InterfaceAdapter instance with the type associated with the name and
+  //!        the given configuration XML.
+  //! \param name The registered name for the factory.
+  //! \param xml The configuration XML to be passed to the InterfaceAdapter constructor.
+  //! \param execInterface Reference to the parent InterfaceManager instance.
+  //! \param wasCreated Reference to a bool variable;
+  //!                   variable will be set to true if new object created, false otherwise.
+  //! \return Pointer to the InterfaceAdapter.  If wasCreated is set to false, is not unique.
   InterfaceAdapter *
   AdapterFactory::createInstance(std::string const& name,
                                  pugi::xml_node const xml,
@@ -132,10 +123,16 @@ namespace PLEXIL
     return retval;
   }
 
+  //! \brief Checks whether or not the given AdapterFactory is registered.
+  //! \param name The registered name for the factory
+  //! \return True if the factory is registered, false otherwise
   bool AdapterFactory::isRegistered(std::string const& name) {
     return factoryMap().find(name) != factoryMap().end();
   }
 
+  //! \brief The map from names to concrete AdapterFactory instances.
+  //! \note This pattern of wrapping static data in a static method is to ensure proper loading
+  //!       when used as a shared library.
   std::map<std::string, AdapterFactory*>& AdapterFactory::factoryMap() 
   {
     static std::map<std::string, AdapterFactory*> sl_map;
@@ -147,9 +144,7 @@ namespace PLEXIL
     return sl_map;
   }
 
-  /**
-   * @brief Deallocate all factories
-   */
+  //! \brief Deallocate all factories
   void AdapterFactory::purge()
   {
     for (std::map<std::string, AdapterFactory*>::iterator it = factoryMap().begin();
@@ -159,11 +154,9 @@ namespace PLEXIL
     factoryMap().clear();
   }
 
-  /**
-   * @brief Registers an AdapterFactory with the specific name.
-   * @param name The name by which the Adapter shall be known.
-   * @param factory The AdapterFactory instance.
-   */
+  //! \brief Registers an AdapterFactory with the specific name.
+  //! \param name The name by which the Adapter shall be known.
+  //! \param factory The AdapterFactory instance.
   void AdapterFactory::registerFactory(std::string const& name, AdapterFactory* factory)
   {
     assertTrue_1(factory != NULL);

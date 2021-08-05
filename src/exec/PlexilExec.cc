@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+//  All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PlexilExec.hh"
 
@@ -44,6 +43,9 @@ namespace PLEXIL
   // Initialization of global variable
   PlexilExec *g_exec = NULL;
 
+  //! \class PlexilExecImpl
+  //! \brief Implements the PlexilExec API.
+  //! \addtogroup Exec-Core The %PLEXIL Executive core
   class PlexilExecImpl:
     public PlexilExec
   {
@@ -69,6 +71,7 @@ namespace PLEXIL
     // Public API
     //
     
+    //! \brief Default constructor.
     PlexilExecImpl()
       : PlexilExec(),
         m_candidateQueue(),
@@ -84,6 +87,7 @@ namespace PLEXIL
         m_finishedRootNodesDeleted(false)
     {}
 
+    //! \brief Virtual destructor.
     virtual ~PlexilExecImpl() 
     {
       // Every node on this list is also in m_plan
@@ -108,9 +112,6 @@ namespace PLEXIL
       return m_listener;
     }
 
-    /**
-     * @brief Get the list of active plans.
-     */
     std::list<Node *> const &getPlans() const
     {
       return m_plan;
@@ -125,11 +126,6 @@ namespace PLEXIL
       root->activateNode();
       return true;
     }
-
-    /**
-     * @brief Queries whether all plans are finished.
-     * @return true if all finished, false otherwise.
-     */
 
     bool allPlansFinished() const
     {
@@ -187,93 +183,14 @@ namespace PLEXIL
       return !m_candidateQueue.empty();
     }
 
-    /**
-     * @brief Schedule this assignment for execution.
-     */
     void enqueueAssignment(Assignment *assign)
     {
       m_assignmentsToExecute.push(assign);
     }
 
-    /**
-     * @brief Schedule this assignment for retraction.
-     */
     void enqueueAssignmentForRetraction(Assignment *assign)
     {
       m_assignmentsToRetract.push(assign);
-    }
-
-    /**
-     * @brief Removes a node from consideration for resource contention.  This is usually because some condition has changed that makes the node no longer
-     * eligible for execution.
-     * @param node The assignment node.
-     */
-
-    void removeFromResourceContention(Node *node) 
-    {
-      Expression *exp = node->getAssignmentVariable();
-      assertTrue_1(exp);
-      exp = exp->asAssignable()->getBaseVariable();
-      assertTrue_1(exp);
-
-      // Remove node from the variable's conflict set.
-      VariableConflictSet *conflictNodes = getConflictSet(exp);
-      if (!conflictNodes) {
-        debugMsg("PlexilExec:removeFromResourceContention",
-                 " no conflict set found for variable " << *exp);
-        return; // not found
-      }
-
-      debugMsg("PlexilExec:removeFromResourceContention",
-               " removing node " << node->getNodeId() << ' ' << node
-               << " from contention for variable " << *exp);
-      conflictNodes->remove(node);
-
-      // If deleted node was only one in conflict set,
-      // remove variable from conflicts list.
-      if (conflictNodes->empty()) {
-        debugMsg("PlexilExec:removeFromResourceContention",
-                 " node " << node->getNodeId() << ' ' << node
-                 << " was only node assigning " << *exp << ", removing variable from contention");
-        if (m_resourceConflicts == conflictNodes)
-          // First on list, just point past it
-          m_resourceConflicts = m_resourceConflicts->next();
-        else {
-          // Delete from middle or end
-          VariableConflictSet *prev = m_resourceConflicts;
-          VariableConflictSet *curr = prev->next();
-          while (curr) {
-            if (curr == conflictNodes) {
-              prev->setNext(curr->next());
-              break;
-            }
-            prev = curr;
-            curr = curr->next();
-          }
-          // didn't find it
-          assertTrueMsg(curr, "Internal error: Active conflict set not on active list");
-        }
-        // give it back
-        VariableConflictSet::release(conflictNodes);
-      }
-    }
-
-    /**
-     * @brief Adds a node to consideration for resource contention.  The node must be an assignment node and it must be eligible to transition to EXECUTING.
-     * @param node The assignment node.
-     */
-
-    void addToResourceContention(Node *node)
-    {
-      Expression *exp = node->getAssignmentVariable();
-      assertTrue_1(exp);
-      exp = exp->asAssignable()->getBaseVariable();
-      assertTrue_1(exp);
-
-      debugMsg("PlexilExec:addToResourceContention",
-               "Adding node " << node->getNodeId() << ' ' << node << " to resource contention.");
-      VariableConflictSet *conflict = ensureConflictSet(exp);
-      conflict->push(node);
     }
 
     void step(double startTime) 
@@ -378,11 +295,8 @@ namespace PLEXIL
     // Implementation details
     //
     
-    /**
-     * @brief Prepare for a potential state transition of this eligible node.
-     * @param node Pointer to the node.
-     */
-
+    //! \brief Prepare for a potential state transition of this eligible node.
+    //! \param node Pointer to the node.
     void handleConditionsChanged(Node *node)
     {
       debugMsg("PlexilExec:handleConditionsChanged",
@@ -442,6 +356,9 @@ namespace PLEXIL
     // Variable conflict sets
     //
 
+    //! \brief Get the conflict set for this variable.
+    //! \param Pointer to the Expression (variable).
+    //! \return A pointer to the conflict set, if it exists, or null.
     VariableConflictSet *getConflictSet(Expression *a)
     {
       VariableConflictSet *result = m_resourceConflicts;
@@ -453,6 +370,9 @@ namespace PLEXIL
       return NULL;
     }
 
+    //! \brief Get or construct a conflict set for this variable.
+    //! \param Pointer to the Expression (variable).
+    //! \return A non-null pointer to the conflict set. 
     VariableConflictSet *ensureConflictSet(Expression *a)
     {
       VariableConflictSet *result = m_resourceConflicts;
@@ -475,6 +395,7 @@ namespace PLEXIL
       return result;
     }
 
+    //! \brief Perform all assignments and/or assignment retractions for this step.
     void performAssignments() 
     {
       debugMsg("PlexilExec:performAssignments",
@@ -493,10 +414,73 @@ namespace PLEXIL
       m_variablesToRetract.clear();
     }
 
-    /**
-     * @brief Resolve conflicts among potentially executing assignment variables.
-     */
+    //! \brief Remove an Assignment node from consideration for resource contention.
+    //! \param node Pointer to the node.
+    void removeFromResourceContention(Node *node) 
+    {
+      Expression *exp = node->getAssignmentVariable();
+      assertTrue_1(exp);
+      exp = exp->asAssignable()->getBaseVariable();
+      assertTrue_1(exp);
 
+      // Remove node from the variable's conflict set.
+      VariableConflictSet *conflictNodes = getConflictSet(exp);
+      if (!conflictNodes) {
+        debugMsg("PlexilExec:removeFromResourceContention",
+                 " no conflict set found for variable " << *exp);
+        return; // not found
+      }
+
+      debugMsg("PlexilExec:removeFromResourceContention",
+               " removing node " << node->getNodeId() << ' ' << node
+               << " from contention for variable " << *exp);
+      conflictNodes->remove(node);
+
+      // If deleted node was only one in conflict set,
+      // remove variable from conflicts list.
+      if (conflictNodes->empty()) {
+        debugMsg("PlexilExec:removeFromResourceContention",
+                 " node " << node->getNodeId() << ' ' << node
+                 << " was only node assigning " << *exp << ", removing variable from contention");
+        if (m_resourceConflicts == conflictNodes)
+          // First on list, just point past it
+          m_resourceConflicts = m_resourceConflicts->next();
+        else {
+          // Delete from middle or end
+          VariableConflictSet *prev = m_resourceConflicts;
+          VariableConflictSet *curr = prev->next();
+          while (curr) {
+            if (curr == conflictNodes) {
+              prev->setNext(curr->next());
+              break;
+            }
+            prev = curr;
+            curr = curr->next();
+          }
+          // didn't find it
+          assertTrueMsg(curr, "Internal error: Active conflict set not on active list");
+        }
+        // give it back
+        VariableConflictSet::release(conflictNodes);
+      }
+    }
+
+    //! \brief Add an Assignment node to consideration for resource contention.
+    //! \param node Pointer to the node.
+    void addToResourceContention(Node *node)
+    {
+      Expression *exp = node->getAssignmentVariable();
+      assertTrue_1(exp);
+      exp = exp->asAssignable()->getBaseVariable();
+      assertTrue_1(exp);
+
+      debugMsg("PlexilExec:addToResourceContention",
+               "Adding node " << node->getNodeId() << ' ' << node << " to resource contention.");
+      VariableConflictSet *conflict = ensureConflictSet(exp);
+      conflict->push(node);
+    }
+
+    //! \brief Resolve assignment conflicts among potentially executing Assignment nodes.
     void resolveResourceConflicts()
     {
       VariableConflictSet *c = m_resourceConflicts;
@@ -506,10 +490,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief Resolve conflicts for this variable.
-     * @note Subroutine of resolveResourceConflicts() above.
-     */
+    //! \brief Resolve assignment conflicts for one variable.
+    //! \note Subroutine of resolveResourceConflicts() above.
     void resolveVariableConflicts(VariableConflictSet *conflict)
     {
       Expression const *var = conflict->getVariable();
@@ -627,10 +609,8 @@ namespace PLEXIL
 
     // N.B. A node can be in only one queue at a time.
 
-    /**
-     * @brief Dequeue a node from the candidate queue.
-     * @return Pointer to the top node in the queue, or NULL if queue empty.
-     */
+    //! \brief Dequeue a node from the candidate queue.
+    //! \return Pointer to the top node in the queue, or NULL if queue empty.
     Node *getCandidateNode() {
       Node *result = m_candidateQueue.front();
       if (!result)
@@ -641,6 +621,8 @@ namespace PLEXIL
       return result;
     }
 
+    //! \brief Dequeue a node from the state change queue.
+    //! \return Pointer to the top node in the queue, or NULL if queue empty.
     Node *getStateChangeNode() {
       Node *result = m_stateChangeQueue.front();
       if (!result)
@@ -654,6 +636,8 @@ namespace PLEXIL
       return result;
     }
 
+    //! \brief Add a node to the state change queue.
+    //! \param node Pointer to the node.
     void addStateChangeNode(Node *node) {
       switch (node->getQueueStatus()) {
       case QUEUE_NONE:
@@ -687,6 +671,8 @@ namespace PLEXIL
       }
     }
 
+    //! \brief Get the first node in the finished root node queue, if any.
+    //! \return Pointer to the first such node, or NULL if queue is empty.
     Node *getFinishedRootNode() {
       Node *result = m_finishedRootNodes.front();
       if (!result)
@@ -697,6 +683,8 @@ namespace PLEXIL
       return result;
     }
   
+    //! \brief Add a node to the finished root node queue.
+    //! \param node Pointer to the node.
     void addFinishedRootNode(Node *node) {
       switch (node->getQueueStatus()) {
       
@@ -720,6 +708,9 @@ namespace PLEXIL
       }
     }
 
+    //! \brief Get a printed representation of the candidate queue.
+    //! \return The printed representation as a string.
+    //! \note Intended for debugging or regression testing.
     std::string conditionCheckQueueStr() const {
       std::ostringstream retval;
       Node *node = m_candidateQueue.front();
@@ -730,6 +721,9 @@ namespace PLEXIL
       return retval.str();
     }
 
+    //! \brief Get a printed representation of the state change queue.
+    //! \return The printed representation as a string.
+    //! \note Intended for debugging or regression testing.
     std::string stateChangeQueueStr() const {
       std::ostringstream retval;
       Node *node = m_stateChangeQueue.front();

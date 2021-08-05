@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2014, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -36,10 +36,10 @@ namespace PLEXIL
   // Forward reference
   class ThreadMutex;
 
-  /**
-   * @class SerializedInputQueue
-   * @brief A simple implementation of the InputQueue API.
-   */
+  //! \class SerializedInputQueue
+  //! \brief An implementation of the InputQueue API which serializes accesses to the queue.
+  //! \see InputQueue
+  //! \ingroup App-Framework
   class SerializedInputQueue : public InputQueue
   {
   public:

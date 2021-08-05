@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "AdapterConfiguration.hh"
 
@@ -100,13 +99,8 @@ namespace PLEXIL {
 
 ///////////////////////// Handler Implementations //////////////////////////
 
-  //*
-  //
-  // @brief The DefaultLookupHandler class does nothing more than
-  // print debug messages (when enabled) when one of its methods is
-  // called.
-  //
-  
+  //! \class DefaultLookupHandler
+  //! \brief Dummy class. Its methods only print debug messages (when enabled) when called..
   class DefaultLookupHandler : public LookupHandler
   {
   public:
@@ -123,7 +117,7 @@ namespace PLEXIL {
       debugMsg("DefaultLookupHandler:lookupNow", ' ' << state << " returning UNKNOWN");
     }
 
-    virtual void subscribe(const State &state, AdapterExecInterface * /* intf */)
+    virtual void subscribe(const State &state, AdapterExecInterface *intf)
     {
       debugMsg("DefaultLookupHandler:subscribe", ' ' << state);
     }
@@ -134,28 +128,24 @@ namespace PLEXIL {
     }
 
     virtual void setThresholds(const State &state,
-                               double /* hi */,
-                               double /* lo */)
+                               double hi,
+                               double lo)
     {
       debugMsg("DefaultLookupHandler:setThresholds",
                ' ' << state << " (Real)");
     }
 
     virtual void setThresholds(const State &state,
-                               int32_t /* hi */,
-                               int32_t /* lo */)
+                               int32_t hi,
+                               int32_t lo)
     {
       debugMsg("DefaultLookupHandler:setThresholds",
                ' ' << state << " (Integer)");
     }
   };
 
-  //*
-  //
-  // @brief A wrapper class for user-provided lookup handler
-  // functions.
-  //
-
+  //! \class LookupHandlerWrapper
+  //! \brief A wrapper class for user-provided lookup handler functions.
   struct LookupHandlerWrapper : public LookupHandler
   {
     LookupNowHandler m_lookupNowFn;
@@ -213,13 +203,9 @@ namespace PLEXIL {
     }
   };
 
-  //*
-  //
-  // @brief The DefaultCommandHandler class prints debug messages
-  // (when enabled) and responds with the appropriate
-  // CommandHandleValue when one of its methods is called.
-  //
-
+  //! \class DefaultCommandHandler
+  //! \brief Methods for this class print debug messages (when
+  //         enabled) and respond with the appropriate CommandHandleValue.
   class DefaultCommandHandler : public CommandHandler
   {
   public:
@@ -248,12 +234,8 @@ namespace PLEXIL {
     }
   };
 
-  //*
-  //
-  // @brief A wrapper class for user-provided command handler
-  // functions.
-  //
-
+  //! \class CommandHandlerWrapper
+  //! \brief A wrapper class for user-provided command handler functions.
   class CommandHandlerWrapper : public CommandHandler
   {
   private:
@@ -394,11 +376,8 @@ namespace PLEXIL {
   };
 
 
-  //*
-  // @class AdapterConfigurationImpl
-  // @brief Implementation class for AdapterConfiguration
-  //
-
+  //! \class AdapterConfigurationImpl
+  //! \brief Concrete implementation of AdapterConfiguration API.
   class AdapterConfigurationImpl : public AdapterConfiguration
   {
   private:

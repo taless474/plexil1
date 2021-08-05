@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ExecListenerFilterFactory.hh"
 #include "Debug.hh"
@@ -33,12 +32,6 @@
 
 namespace PLEXIL
 {
-  /**
-   * @brief Creates a new ExecListenerFilter instance with the type associated with the name and
-   *        the given configuration XML.
-   * @param xml The configuration XML specifying the ExecListenerFilter.
-   * @return The new ExecListenerFilter.
-   */
 
   ExecListenerFilter * 
   ExecListenerFilterFactory::createInstance(pugi::xml_node const xml)
@@ -62,15 +55,6 @@ namespace PLEXIL
     // Make it
     return createInstance(std::string(filterType), xml);
   }
-
-
-  /**
-   * @brief Creates a new ExecListenerFilter instance with the type associated with the name and
-   *        the given configuration XML.
-   * @param name The registered name for the factory.
-   * @param xml The configuration XML to be passed to the ExecListenerFilter constructor.
-   * @return The new ExecListenerFilter.
-   */
 
   ExecListenerFilter *
   ExecListenerFilterFactory::createInstance(std::string const &name,
@@ -123,9 +107,6 @@ namespace PLEXIL
     return sl_map;
   }
 
-  /**
-   * @brief Deallocate all factories
-   */
   void ExecListenerFilterFactory::purge()
   {
     for (FactoryMap::iterator it = factoryMap().begin();
@@ -135,11 +116,6 @@ namespace PLEXIL
     factoryMap().clear();
   }
 
-  /**
-   * @brief Registers an ExecListenerFilterFactory with the specific name.
-   * @param name The name by which the Exec Listener shall be known.
-   * @param factory The ExecListenerFilterFactory instance.
-   */
   void ExecListenerFilterFactory::registerFactory(std::string const &name,
                                                   ExecListenerFilterFactory* factory)
   {

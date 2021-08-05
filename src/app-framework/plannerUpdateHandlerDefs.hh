@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -39,11 +39,20 @@ namespace PLEXIL
   // Type aliases for functions and objects which perform PlannerUpdates in PLEXIL
   //
 
+  //! \typedef PlannerUpdateHandlerBase
+  //! \brief Abstraction for a function signature.
+
 #if __cplusplus >= 201103L
   typedef std::function<void(Update *, AdapterExecInterface *)> PlannerUpdateHandlerBase;
 #else
   typedef std::binary_function<Update *, AdapterExecInterface *, void> PlannerUpdateHandlerBase;
 #endif
+
+  //! \struct PlannerUpdateHandler
+  //! \brief A functor whose operator() method should implement publication of an Update.
+  //! \see Update
+
+  //! \ingroup App-Framework
 
   struct PlannerUpdateHandler : public PlannerUpdateHandlerBase
   {
@@ -51,28 +60,37 @@ namespace PLEXIL
     {
     }
 
+    //! \brief Publish an Update to the outside world.
+
+    //! Sends the contents of the Update to an external recipient,
+    //! typically (but not always) a planner.  It reports success or
+    //! failure back to the AdapterExecInterface.
+
+    //! \see Update
+    //! \see AdapterExecInterface::handleUpdateAck
+
     virtual void operator()(Update *, AdapterExecInterface *) = 0;
   };
 
 
-  //*
-  //
-  // @brief A PlannerUpdateFn function sends the contents of the
-  // Update to an external recipient, typically (but not always) a
-  // planner.  It reports success or failure back to the
-  // AdapterExecInterface.
-  //
-  // @see AdapterExecInterface::handleUpdateAck
-  //
-  // @note This interface has largely been superseded by the
-  // ExecListener abstract base class.
-  // @see ExecListener
-  //
+  //! \typedef PlannerUpdateFn
+  //! \brief Prototype of a function to publish an Update to the outside world.
+
+  //! A PlannerUpdateFn function sends the contents of the Update to
+  //! an external recipient, typically (but not always) a planner.  It
+  //! reports success or failure back to the AdapterExecInterface.
+  
+  //! \see AdapterExecInterface::handleUpdateAck
+  //! \see Update
+
+  //! \ingroup App-Framework
 
   typedef void (*PlannerUpdateFn)(Update *upd, AdapterExecInterface *intf);
 
-  // A default function for this purpose
-  // Function is defined in InterfaceManager.cc.
+  //! \brief A default function for use as a PlannerUpdateFn.
+  //! \note Function is defined in InterfaceManager.cc.
+  //! \ingroup App-Framework
+  
   void defaultPlannerUpdateFn(Update *upd, AdapterExecInterface *intf);
   
 }

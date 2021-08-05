@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2017, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,11 @@ namespace PLEXIL
   //
   // ArrayImpl
   //
+
+  //! \class ArrayImpl
+  //! \brief Class template for the internal representation of a PLEXIL Array.
+  //! \ingroup Values
+
   template <typename T>
   class ArrayImpl : public Array
   {
@@ -99,6 +104,10 @@ namespace PLEXIL
   // So we have to duplicate every blasted member function.
   //
 
+  //! \class ArrayImpl<String>
+  //! \brief Specialized internal representation for a PLEXIL Array of String.
+  //! \ingroup Values
+
   template <>
   class ArrayImpl<String> : public Array
   {
@@ -160,21 +169,33 @@ namespace PLEXIL
     std::vector<String> m_contents;
   };
 
+  //! \brief Inequality operator function template for ArrayImpl.
+  //! \ingroup Values
   template <typename T>
   bool operator!=(ArrayImpl<T> const &, ArrayImpl<T> const &);
 
+  //! \brief Less-than operator function template for ArrayImpl.
+  //! \ingroup Values
   template <typename T>
   bool operator<(ArrayImpl<T> const &, ArrayImpl<T> const &);
 
+  //! \brief Less-than-or-equal operator function template for ArrayImpl.
+  //! \ingroup Values
   template <typename T>
   bool operator<=(ArrayImpl<T> const &, ArrayImpl<T> const &);
 
+  //! \brief Greater-than operator function template for ArrayImpl.
+  //! \ingroup Values
   template <typename T>
   bool operator>(ArrayImpl<T> const &, ArrayImpl<T> const &);
 
+  //! \brief Greater-than-or-equal operator function template for ArrayImpl.
+  //! \ingroup Values
   template <typename T>
   bool operator>=(ArrayImpl<T> const &, ArrayImpl<T> const &);
 
+  //! \brief Formatted output operator function template for ArrayImpl.
+  //! \ingroup Values
   template <typename T>
   std::ostream &operator<<(std::ostream &, ArrayImpl<T> const &);
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -36,11 +36,11 @@ namespace PLEXIL
   // Forward references
   class Value;
 
-  /**
-   * @class Array
-   * @brief Abstract base class representing the PLEXIL API of an Array.
-   * @note This is an initial implementation, internals subject to change.
-   */
+  //! \class Array
+  //! \brief Abstract base class representing the PLEXIL API of an Array.
+  //! \note This is an initial implementation, internals subject to change.
+  //! \ingroup Values
+
   class Array
   {
   public:
@@ -124,10 +124,16 @@ namespace PLEXIL
     std::vector<bool> m_known;
   };
 
+  //! \ingroup Values
   std::ostream &operator<<(std::ostream &s, Array const &a);
 
+  //! \ingroup Values
   template <> char *serialize<Array>(Array const &o, char *b);
+
+  //! \ingroup Values
   template <> char const *deserialize<Array>(Array &o, char const *b);
+
+  //! \ingroup Values
   template <> size_t serialSize(Array const &o);
 
 } // namespace PLEXIL
