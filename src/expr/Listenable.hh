@@ -38,7 +38,7 @@ namespace PLEXIL
   //! \brief An abstract base class for a functor called by Listenable::doSubexprs.
   //! \see Listenable::doSubexprs
   //! \note This class is deleted in PLEXIL 6, replaced by a typedef based on std::function.
-  //! \addtogroup Expression The %PLEXIL Expression subsystem
+  //! \ingroup Expressions
   class ListenableUnaryOperator
   {
   public:
@@ -54,11 +54,25 @@ namespace PLEXIL
   };
 
   //! \class Listenable
-  //! \brief Defines the API for objects to which an ExpressionListener may wish to listen.
-  //! \note The base class methods do nothing. 
+  //! \brief Base class defining the API for objects to which an
+  //!        ExpressionListener instance may be attached.
+
+  //! The Listenable base class defines the API for change
+  //! notification sources in the %PLEXIL Executive expression
+  //! subsystem.  Listenable itself has no state.  Its member
+  //! functions can all be overridden by derived classes.  The default
+  //! methods on the base class do nothing.
+
+  //! Expression implementations whose values cannot change can derive
+  //! from Listenable directly.  Expressions whose values can change
+  //! should derive from the Notifier class.  Expressions whose values
+  //! are dependent upon other expressions should derive from the
+  //! Propagator class.
+
+  //! \see ExpressionListener
   //! \see Notifier
   //! \see Propagator
-  //! \ingroup Expression
+  //! \ingroup Expressions
   class Listenable
   {
   public:
@@ -82,19 +96,21 @@ namespace PLEXIL
     {
     }
 
-    //! \brief Make this object active in the notification network.
+    //! \brief Make this object active if it is not already.
     //! \note The default method does nothing.
+    //! \see Notifier::activate
     virtual void activate()
     {
     }
 
-    //! \brief Make this object inactive in the notification network.
+    //! \brief Request that this object become inactive if it is not already.
     //! \note The default method does nothing.
+    //! \see Notifier::deactivate
     virtual void deactivate()
     {
     }
 
-    //! \brief Query whether this object is active in the notification network.
+    //! \brief Query whether this object is active.
     //! \return true if active, false if not.
     //! \note The default method returns true.
     virtual bool isActive() const
@@ -107,22 +123,52 @@ namespace PLEXIL
     // Mostly support for listener network setup and teardown
     //
 
-    //! \brief Query whether an object can generate change notifications.
-    //! \return True if so, false if not.
+    //! \brief Call a function on all subexpressions of this object.
+
+    //! The doSubexprs method is essential to setting up and tearing
+    //! down the change notification network.  In combination with the
+    //! ListenableUnaryOperator base class, it is used to implement a
+    //! recursive depth-first traversal of the expression graph.
+
+    //! Methods on derived classes must call the oper argument on
+    //! every subexpression.
+
+    //! \param oper A functor; it must implement an operator() method
+    //!             of one argument, a pointer to Listenable,
+    //!             returning void.
+    //! \note The default method does nothing.
+    //! \note The ListenableUnaryOperator base class is replaced with
+    //!       a typedef based on std::function in the PLEXIL 6 release.
+
+    //! \see ListenableUnaryOperator
+    //! \see Listenable::isPropagationSource
+    virtual void doSubexprs(ListenableUnaryOperator const &oper)
+    {
+    }
+
+    //! \brief Query whether an object can generate its own change
+    //!        notifications independent of other objects in the
+    //!        notification graph.
+
+    //! This member function helps minimize the count of nodes and
+    //! arcs in the expression change notification network.  If an
+    //! expression cannot create its own notifications, it can be
+    //! bypassed, in favor of its inputs (subexpressions).  In this
+    //! way the depth of the notification network can be minimized;
+    //! the ultimate listeners can connect directly to the ultimate
+    //! sources.
+
+    //! Methods for this member function should generally return true
+    //! for leaf nodes in the expression network which are not
+    //! constant (e.g. variables); however, some interior nodes
+    //! (e.g. Lookups, random number generators) may also
+    //! generate changes of their own accord.
+
+    //! \return True if the object can change of its own accord, false if not.
     //! \note The default method returns false.
-    //! \note This is generally true for leaf nodes which are not constant; however,
-    //!       some interior nodes (e.g. Lookup, random generator) may also generate changes
-    //!       of their own accord.
     virtual bool isPropagationSource() const
     {
       return false;
-    }
-
-    //! \brief Call a function on all subexpressions of this object.
-    //! \param oper A functor; it must implement an operator() method of one argument, a Listenable, returning void.
-    //! \note The default method does nothing.
-    virtual void doSubexprs(ListenableUnaryOperator const &oper)
-    {
     }
  
   protected:
