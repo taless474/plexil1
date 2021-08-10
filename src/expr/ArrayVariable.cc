@@ -102,21 +102,6 @@ namespace PLEXIL
   // Essential Expression API
   //
 
-  bool ArrayVariable::isAssignable() const
-  {
-    return true;
-  }
-
-  Assignable const *ArrayVariable::asAssignable() const
-  {
-    return static_cast<Assignable const *>(this);
-  }
-
-  Assignable *ArrayVariable::asAssignable()
-  {
-    return static_cast<Assignable *>(this);
-  }
-
   char const *ArrayVariable::getName() const
   {
     if (m_name)
