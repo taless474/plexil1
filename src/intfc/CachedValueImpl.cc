@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "CachedValueImpl.hh"
 
@@ -36,7 +35,11 @@
 
 namespace PLEXIL
 {
+
+  //
   // Placeholder object
+  //
+
   VoidCachedValue::VoidCachedValue()
     : CachedValue()
   {
@@ -46,15 +49,14 @@ namespace PLEXIL
   {
   }
 
-
   CachedValue &VoidCachedValue::operator=(CachedValue const &other)
   {
     errorMsg("This method should never be called");
   }
 
-  ValueType VoidCachedValue::valueType() const
+  CachedValue *VoidCachedValue::clone() const
   {
-    return UNKNOWN_TYPE;
+    return new VoidCachedValue();
   }
 
   bool VoidCachedValue::isKnown() const
@@ -62,9 +64,9 @@ namespace PLEXIL
     return false;
   }
 
-  CachedValue *VoidCachedValue::clone() const
+  ValueType VoidCachedValue::valueType() const
   {
-    return new VoidCachedValue();
+    return UNKNOWN_TYPE;
   }
 
   bool VoidCachedValue::operator==(CachedValue const &other) const
@@ -82,13 +84,9 @@ namespace PLEXIL
     str << "UNKNOWN"; 
   }
 
-  /**
-   * @brief Update the cache entry with the given new value.
-   * @param timestamp Sequence number.
-   * @param val The new value.
-   * @note The caller is responsible for deleting the object pointed to upon return.
-   */
 
+  //! \brief Local macro to define update methods for VoidCachedValue.
+  //! \param _type_ The type of the argument to the update method.
 #define DEFINE_UPDATE_METHOD(_type_)                                    \
   bool VoidCachedValue::update(unsigned int /* timestamp */, _type_ const & /* val */) \
   {                                                                     \
@@ -103,6 +101,8 @@ namespace PLEXIL
 
 #undef DEFINE_UPDATE_METHOD
 
+  //! \brief Local macro to define updatePtr methods for VoidCachedValue.
+  //! \param _type_ The type of the argument to the updatePtr method.
 #define DEFINE_UPDATE_PTR_METHOD(_type_)                                \
   bool VoidCachedValue::updatePtr(unsigned int /* timestamp */, _type_ const * /* valPtr */) \
   {                                                                     \
@@ -629,7 +629,7 @@ namespace PLEXIL
     return new CachedValueImpl<ArrayImpl<T> >(*this);
   }
 
-  // Only implemented for scalar types (and string)
+  // Only implemented for Boolean, Integer, Real, String.
   template <typename T>
   bool CachedValueImpl<T>::update(unsigned int timestamp, T const &val)
   {
@@ -755,7 +755,7 @@ namespace PLEXIL
   // updatePtr
   //
 
-  bool CachedValueImpl<String>::updatePtr(unsigned int timestamp, std::string const *ptr)
+  bool CachedValueImpl<String>::updatePtr(unsigned int timestamp, String const *ptr)
   {
     if (!m_known || m_value != *ptr) {
       m_value = *ptr;
