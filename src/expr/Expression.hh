@@ -44,7 +44,31 @@ namespace PLEXIL
 
   //! \class Expression
   //! \brief Abstract base class for expressions in the %PLEXIL language.
-  //! \addtogroup Expression The %PLEXIL Expression subsystem
+
+  //! The Expression class is the basis for expressions in the %PLEXIL
+  //! Executive.  It defines an API for querying an expression.  The
+  //! Expression class does not support modifying the value of an
+  //! expression; the API that functionality is on a separate mixin
+  //! class, Assignable.
+
+  //! Expression derives from Listenable, therefore every class
+  //! derived from Expression must implement the Listenable API.
+  //! Expression classes whose value will not change can simply use
+  //! the default methods on Listenable.  Expression classes whose
+  //! values can change should also derive from Notifier, and may wish
+  //! to override some of its protected member functions.  Classes for
+  //! interior nodes in the expression graph (e.g. arithmetic
+  //! functions) should derive from Propagator; it inherits behavior
+  //! from both ExpressionListener and Notifier, and as the name
+  //! implies, it propagates change notifications.
+
+  //! \see Assignable
+  //! \see ExpressionListener
+  //! \see Listenable
+  //! \see Notifier
+  //! \see Propagator
+  //! \ingroup Expressions
+
   class Expression : virtual public Listenable
   {
   protected:
@@ -70,7 +94,7 @@ namespace PLEXIL
 
     //! \brief Return the name of this expression.
     //! \return Pointer to const character string.
-    //! \note Default method returns a pointer to an empty string.
+    //! \note The default method returns a pointer to an empty string.
     virtual char const *getName() const;
 
     //! \brief Return a print name for the expression type.
@@ -131,7 +155,7 @@ namespace PLEXIL
     virtual std::string valueString() const;
 
     //
-    // GetValue API
+    // Value access
     //
 
     //! \brief Return the type of the expression's value.
@@ -219,7 +243,7 @@ namespace PLEXIL
   //! \param s Reference to the output stream.
   //! \param e Const reference to an Expression.
   //! \return Reference to the output stream.
-  //! \ingroup Expression
+  //! \ingroup Expressions
   std::ostream& operator<<(std::ostream& s, const Expression &e);
 
 }
