@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -92,11 +92,6 @@ namespace PLEXIL
     return m_array->isConstant() && m_index->isConstant();
   }
 
-  bool ArrayReference::isAssignable() const
-  {
-    return false;
-  }
-
   Expression const *ArrayReference::getBaseExpression() const
   {
     return m_array->getBaseExpression();
@@ -174,12 +169,6 @@ namespace PLEXIL
     return ary->getElement(idx, result);
   }
 
-  bool ArrayReference::getValue(uint16_t &result) const
-  {
-    reportPlanError("Array references not implemented for internal values");
-    return false;
-  }
-
   bool ArrayReference::getValuePointer(String const *&ptr) const
   {
     Array const *ary;
@@ -188,23 +177,6 @@ namespace PLEXIL
       return false;
     return ary->getElementPointer(idx, ptr);
   }
-
-  // Error for arrays and any other types we can think of.
-#define DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD(_type_) \
-  bool ArrayReference::getValuePointer(_type_ const *&ptr) const \
-  { \
-    errorMsg("getValuePointer: trying to get a " << PlexilValueType<_type_>::typeName \
-             << " pointer value from an ArrayReference"); \
-    return false; \
-  }
-
-  DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD(Array)
-  DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD(BooleanArray)
-  DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD(IntegerArray)
-  DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD(RealArray)
-  DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD(StringArray)
-
-#undef DEFINE_AREF_GET_VALUE_PTR_ERROR_METHOD
 
   Value ArrayReference::toValue() const
   {
@@ -250,21 +222,6 @@ namespace PLEXIL
 
   MutableArrayReference::~MutableArrayReference()
   {
-  }
-
-  bool MutableArrayReference::isAssignable() const
-  {
-    return true;
-  }
-
-  Assignable const *MutableArrayReference::asAssignable() const
-  {
-    return static_cast<Assignable const *>(this);
-  }
-
-  Assignable *MutableArrayReference::asAssignable()
-  {
-    return static_cast<Assignable *>(this);
   }
 
   bool MutableArrayReference::mutableSelfCheck(size_t &idx)
