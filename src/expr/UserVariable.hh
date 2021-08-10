@@ -33,8 +33,13 @@
 namespace PLEXIL 
 {
 
-  //! \brief Class template for user-created plan variables of scalar types.
-  //! \addtogroup Expression The %PLEXIL Expression subsystem
+  //! \brief Templatized class for user-created variables of scalar types.
+
+  //! UserVariable is a template class whose template parameter is the
+  //! type which the variable stores.
+
+  //! \ingroup Expressions
+  
   template <typename T>
   class UserVariable :
     public Assignable,
@@ -50,7 +55,7 @@ namespace PLEXIL
     //! \param initVal Const reference to the initial value.
     UserVariable(T const &initVal);
 
-    //! \brief Constructor with name.
+    //! \brief Constructor with variable name.
     //! \param name Pointer to const character string representing the name of this
     //!             variable in the parent node.
     //! \note Used by the plan parser.
@@ -71,65 +76,53 @@ namespace PLEXIL
     // Essential Expression API
     //
 
-    //! \brief Query whether this expression is assignable in the %PLEXIL language.
-    //! \return True if assignable, false otherwise.
-    bool isAssignable() const;
-
-    //! \brief Get a const pointer to this expression as an instance of Assignable.
-    //! \return The pointer. Will be NULL if the expression does not permit assignment.
-    Assignable const *asAssignable() const;
-
-    //! \brief Get a pointer to this expression as an instance of Assignable.
-    //! \return The pointer. Will be NULL if the expression does not permit assignment.
-    Assignable *asAssignable();
-
     //! \brief Return the name of this expression.
     //! \return Pointer to const character string.
-    char const *getName() const;
+    virtual char const *getName() const;
 
     //! \brief Return a print name for the expression type.
     //! \return Pointer to const character string.
-    char const *exprName() const;
+    virtual char const *exprName() const;
 
     //
-    // GetValueImpl API
+    // GetValue API
     //
 
     //! \brief Determine whether the value of this expression is known or unknown.
     //! \return True if known, false otherwise.
-    bool isKnown() const;
+    virtual bool isKnown() const;
 
     //! \brief Copy the value of this object to a result of the same type.
     //! \param result Reference to an appropriately typed place to store the value.
     //! \return True if the value is known, false if unknown or the value cannot be
     //!         represented as the desired type.
     //! \note The value is not copied if the return value is false.
-    bool getValue(T &result) const;
+    virtual bool getValue(T &result) const;
 
     //
     // Assignable API
     //
 
     //! \brief Set the value of this expression to unknown.
-    void setUnknown();
+    virtual void setUnknown();
 
     //! \brief Temporarily store the previous value of this variable.
-    void saveCurrentValue();
+    virtual void saveCurrentValue();
 
     //! \brief Restore the value set aside by saveCurrentValue.
-    void restoreSavedValue();
+    virtual void restoreSavedValue();
 
     //! \brief Read the saved value of this variable as a Value instance.
     //! \return The saved value.
-    Value getSavedValue() const;
+    virtual Value getSavedValue() const;
     
     //! \brief Get the real variable for which this may be a proxy.
     //! \return Pointer to the base variable.
-    Assignable *getBaseVariable();
+    virtual Assignable *getBaseVariable();
 
     //! \brief Get the real variable for which this may be a proxy.
     //! \return Const pointer to the base variable.
-    Assignable const *getBaseVariable() const;
+    virtual Assignable const *getBaseVariable() const;
 
     //! \brief Set the expression from which this object gets its initial value.
     //! \param expr Pointer to an Expression.
@@ -144,21 +137,37 @@ namespace PLEXIL
     //! \param val Const reference to the expression providing the new value for this object.
     virtual void setValue(Expression const &val);
 
-    void handleActivate();
-
-    void handleDeactivate();
-
-    void printSpecialized(std::ostream &s) const;
-
   protected:
-    
+
+    //
+    // Method overrides
+    //
+
+    //! \brief Print additional specialized information about an expression to a stream.
+    //! \param s Reference to the output stream.
+    virtual void printSpecialized(std::ostream &s) const;
+
+    //! \brief Perform any necessary actions to enter the active state.
+    virtual void handleActivate();
+
+    //! \brief Perform any necessary actions to enter the inactive state.
+    virtual void handleDeactivate();
+
+  private:
+
+    //
+    // Implementation details
+    //
+
     //! \brief Assign a new value.
     //! \param value Const reference to the value to assign.
     void setValueImpl(T const &value);
 
-  private:
+    //
+    // Member variables
+    //
 
-    // N.B. Ordering is suboptimal for bool because of required padding;
+    // N.B. Ordering is suboptimal for Boolean because of required padding;
     // fine for Integer and Real
 
     //! \brief The current value.
@@ -184,7 +193,7 @@ namespace PLEXIL
   };
 
   //! \brief Class template for user-created plan variables, specialized for String type.
-  //! \ingroup Expression
+  //! \ingroup Expressions
   template <>
   class UserVariable<String> :
     public Assignable,
@@ -221,86 +230,63 @@ namespace PLEXIL
     // Essential Expression API
     //
 
-    //! \brief Query whether this expression is assignable in the %PLEXIL language.
-    //! \return True if assignable, false otherwise.
-    bool isAssignable() const;
-
-    //! \brief Get a const pointer to this expression as an instance of Assignable.
-    //! \return The pointer. Will be NULL if the expression does not permit assignment.
-    Assignable const *asAssignable() const;
-
-    //! \brief Get a pointer to this expression as an instance of Assignable.
-    //! \return The pointer. Will be NULL if the expression does not permit assignment.
-    Assignable *asAssignable();
-
     //! \brief Return the name of this expression.
     //! \return Pointer to const character string.
-    char const *getName() const;
+    virtual char const *getName() const;
 
     //! \brief Return a print name for the expression type.
     //! \return Pointer to const character string.
-    char const *exprName() const;
-
-    //
-    // GetValueImpl API
-    //
+    virtual char const *exprName() const;
 
     //! \brief Determine whether the value of this expression is known or unknown.
     //! \return True if known, false otherwise.
-    bool isKnown() const;
+    virtual bool isKnown() const;
 
     //! \brief Copy the value of this object to a result of the same type.
     //! \param result Reference to an appropriately typed place to store the value.
     //! \return True if the value is known, false if unknown or the value cannot be
     //!         represented as the desired type.
     //! \note The value is not copied if the return value is false.
-    bool getValue(String &result) const;
+    virtual bool getValue(String &result) const;
 
     //! \brief Retrieve a pointer to the (const) value of this Expression.
     //! \param ptr Reference to the pointer variable to receive the result.
     //! \return True if the value is known, false if unknown or the value cannot be
     //!         represented as the desired type.
     //! \note The value is not copied if the return value is false.
-    bool getValuePointer(String const *&ptr) const;
+    virtual bool getValuePointer(String const *&ptr) const;
     template <typename U>
     bool getValuePointer(U const *&ptr) const;
-
-    // *** FIXME: Why is this member function public? ***
-
-    //! \brief Assign a new value.
-    //! \param value The value to assign.
-    //! \note Type conversions must go on derived classes.
-    void setValueImpl(String const &value);
 
     //
     // Assignable API
     //
 
     //! \brief Set the value of this expression to unknown.
-    void setUnknown();
+    virtual void setUnknown();
 
     //! \brief Temporarily store the previous value of this variable.
-    void saveCurrentValue();
+    virtual void saveCurrentValue();
 
     //! \brief Restore the value set aside by saveCurrentValue.
-    void restoreSavedValue();
+    virtual void restoreSavedValue();
 
     //! \brief Read the saved value of this variable as a Value instance.
     //! \return The saved value.
-    Value getSavedValue() const;
+    virtual Value getSavedValue() const;
 
     //! \brief Get the real variable for which this may be a proxy.
     //! \return Pointer to the base variable.
-    Assignable *getBaseVariable();
+    virtual Assignable *getBaseVariable();
 
     //! \brief Get the real variable for which this may be a proxy.
     //! \return Const pointer to the base variable.
-    Assignable const *getBaseVariable() const;
+    virtual Assignable const *getBaseVariable() const;
 
     //! \brief Set the expression from which this object gets its initial value.
     //! \param expr Pointer to an Expression.
     //! \param garbage True if the expression should be deleted with this object, false otherwise.
-    void setInitializer(Expression *expr, bool garbage);
+    virtual void setInitializer(Expression *expr, bool garbage);
 
     //! \brief Set the value for this object.
     //! \param val The new value for this object.
@@ -310,13 +296,36 @@ namespace PLEXIL
     //! \param val Const reference to the expression providing the new value for this object.
     virtual void setValue(Expression const &val);
 
-    void handleActivate();
+  protected:
 
-    void handleDeactivate();
+    //
+    // Method overrides
+    //
 
-    void printSpecialized(std::ostream &s) const;
+    //! \brief Print additional specialized information about an expression to a stream.
+    //! \param s Reference to the output stream. 
+    virtual void printSpecialized(std::ostream &s) const;
+
+    //! \brief Perform any necessary actions to enter the active state.
+    virtual void handleActivate();
+
+    //! \brief Perform any necessary actions to enter the inactive state.
+    virtual void handleDeactivate();
 
   private:
+
+    //
+    // Implementation details
+    //
+
+    //! \brief Assign a new value.
+    //! \param value The value to assign.
+    //! \note Type conversions must go on derived classes.
+    void setValueImpl(String const &value);
+
+    //
+    // Member variables
+    //
 
     //! \brief The current value.
     String m_value;
@@ -344,17 +353,18 @@ namespace PLEXIL
   // Convenience typedefs 
   //
 
-  //! \ingroup Expression
+  //! \ingroup Expressions
   typedef UserVariable<Boolean>     BooleanVariable;
 
-  //! \ingroup Expression
+  //! \ingroup Expressions
   typedef UserVariable<Integer>     IntegerVariable;
 
-  //! \ingroup Expression
+  //! \ingroup Expressions
   typedef UserVariable<Real>        RealVariable;
 
-  //! \ingroup Expression
+  //! \ingroup Expressions
   typedef UserVariable<String>      StringVariable;
+
 } // namespace PLEXIL
 
 #endif // PLEXIL_USER_VARIABLE_HH
