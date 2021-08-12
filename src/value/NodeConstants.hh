@@ -39,6 +39,7 @@ namespace PLEXIL {
   //
 
   //! \brief Internal representation of node states.
+  //! \note Order must be consistent with ALL_STATE_NAMES array.
   //! \see ALL_STATE_NAMES
   //! \ingroup Values
   enum NodeState {
@@ -54,7 +55,7 @@ namespace PLEXIL {
   };
 
   //! \brief Table of state names.
-  //! \note Must be in same order as NodeState enum above.
+  //! \note Order must be consistent with NodeState enum.
   //! \see NodeState
   //! \ingroup Values
   extern std::string const ALL_STATE_NAMES[];
@@ -84,6 +85,7 @@ namespace PLEXIL {
   extern bool isNodeStateValid(unsigned int val);
 
   //! \brief Outcome enumeration.
+  //! \note Order must be consistent with ALL_OUTCOME_NAMES array.
   //! \see ALL_OUTCOME_NAMES
   //! \ingroup Values
   enum NodeOutcome {
@@ -96,7 +98,7 @@ namespace PLEXIL {
   };
 
   //! \brief Table of outcome name strings.
-  //! \note Must be in same order as NodeOutcome enum above.
+  //! \note Order must be consistent with NodeOutcome enum.
   //! \see NodeOutcome
   //! \ingroup Values
   extern std::string const ALL_OUTCOME_NAMES[];
@@ -126,6 +128,7 @@ namespace PLEXIL {
   extern bool isNodeOutcomeValid(unsigned int val);
 
   //! \brief Node failure type enumeration.
+  //! \note Order must be consistent with ALL_FAILURE_TYPE_NAMES array.
   //! \see ALL_FAILURE_TYPE_NAMES
   //! \ingroup Values
   enum FailureType {
@@ -140,7 +143,7 @@ namespace PLEXIL {
   };
 
   //! \brief Table of failure type names.
-  //! \note Must be in same order as FailureType enum.
+  //! \note Order mst be consistent with FailureType enum.
   //! \see FailureType
   //! \ingroup Values
   extern std::string const ALL_FAILURE_NAMES[];
