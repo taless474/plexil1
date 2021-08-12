@@ -377,7 +377,7 @@ namespace PLEXIL {
 
 
   //! \class AdapterConfigurationImpl
-  //! \brief Concrete implementation of AdapterConfiguration API.
+  //! \brief Implementation of AdapterConfiguration abstract base class interface.
   class AdapterConfigurationImpl : public AdapterConfiguration
   {
   private:
@@ -437,6 +437,7 @@ namespace PLEXIL {
       m_commandHandlers.insert(m_defaultCommandHandler);
       m_lookupHandlers.insert(m_defaultLookupHandler);
 
+      // Copy the default handler in case the default is overridden
       m_telemetryLookupHandler = m_defaultLookupHandler;
 
       // Every application has access to the utility and launcher adapters
@@ -512,6 +513,7 @@ namespace PLEXIL {
       m_commandMap.clear();
       m_lookupMap.clear();
 
+      // *** FIXME Memory leak ***
       m_defaultCommandHandler = NULL;
       m_defaultLookupHandler = NULL;
       m_telemetryLookupHandler = NULL;
