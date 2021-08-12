@@ -32,8 +32,9 @@ namespace PLEXIL
 {
 
   //! \brief Command handle state enumeration.
+  //! \note Order must be consistent with ALL_COMMAND_HANDLE_NAMES array.
   //! \see ALL_COMMAND_HANDLE_NAMES
-  //! \ingroup Value
+  //! \ingroup Values
   enum CommandHandleValue
     {NO_COMMAND_HANDLE = 48,
      COMMAND_SENT_TO_SYSTEM,
@@ -51,24 +52,24 @@ namespace PLEXIL
   //! \brief Parse the given string as a command handle name.
   //! \param name Const reference to the string.
   //! \return The CommandHandle value, or NO_COMMAND_HANDLE if not found.
-  //! \ingroup Value
+  //! \ingroup Values
   extern CommandHandleValue parseCommandHandleValue(std::string const &name);
 
   //! \brief Table of command handle value names.
-  //! \note Must be in same order as CommandHandleValue enum.
+  //! \note Order must be consistent with CommandHandleValue enum.
   //! \see CommandHandleValue
-  //! \ingroup Value
+  //! \ingroup Values
   extern std::string const ALL_COMMAND_HANDLE_NAMES[];
 
   //! \brief Get the name of this command handle value.
   //! \return Const reference to the name string.
-  //! \ingroup Value
+  //! \ingroup Values
   extern std::string const &commandHandleValueName(unsigned int c);
 
   //! \brief Test whether the value is a valid CommandHandle value.
   //! \param val The value to check.
   //! \return True if valid, false otherwise.
-  //! \ingroup Value
+  //! \ingroup Values
   extern bool isCommandHandleValid(unsigned int val);
 
 } // namespace PLEXIL
