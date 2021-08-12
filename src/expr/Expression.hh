@@ -42,6 +42,8 @@ namespace PLEXIL
   class Assignable;
   class Value;
 
+  //! \defgroup Expressions The PLEXIL Expression subsystem
+
   //! \class Expression
   //! \brief Abstract base class for expressions in the %PLEXIL language.
 
@@ -123,6 +125,7 @@ namespace PLEXIL
     //! \brief Query whether this expression is constant, i.e. incapable of change.
     //! \return True if the expression will never change value, false otherwise.
     //! \note The default method returns false.
+    //! \note Constant expressions cannot generate change notifications.
     virtual bool isConstant() const;
 
     //! \brief Get a pointer to the expression for which this may be an alias or reference.
@@ -142,17 +145,9 @@ namespace PLEXIL
     //! \see Expression::printSubexpressions
     virtual void print(std::ostream& s) const;
 
-    //
-    // Convenience methods which may be overridden or extended
-    //
-
-    //! \brief Get a string representation of this Expression.
-    //! \return The string representation.
+    //! \brief Get the printed representation of this Expression as a string.
+    //! \return The string.
     virtual std::string toString() const;
-
-    //! \brief Get a string representation of the value of this Expression.
-    //! \return The string representation.
-    virtual std::string valueString() const;
 
     //
     // Value access
@@ -165,7 +160,7 @@ namespace PLEXIL
     //! \brief Determine whether the value of this expression is known or unknown.
     //! \return True if known, false otherwise.
     virtual bool isKnown() const = 0;
-
+ 
     //! \brief Get the value of this expression as a Value instance.
     //! \return The value.
     virtual Value toValue() const = 0;
@@ -173,6 +168,10 @@ namespace PLEXIL
     //! \brief Print the expression's value to a stream.
     //! \param s Reference to the stream.
     virtual void printValue(std::ostream& s) const = 0;
+
+    //! \brief Get a string representation of the value of this Expression.
+    //! \return The string representation.
+    virtual std::string valueString() const;
 
     //
     // The base class has to explicitly name all the potential types;
