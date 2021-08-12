@@ -5,8 +5,8 @@ namespace PLEXIL {
 This is the data and control flow for %PLEXIL updates.
 
 1. When an %Update node transitions to 'EXECUTING` state, the
-   expressions in the update are evaluated to concrete values, and the
-   node calls ExternalInterface::enqueueUpdate to enqueue the update
+   expressions in the update are evaluated to concrete values, and
+   ExternalInterface::enqueueUpdate is called to schedule the update
    for execution.
 
 2. At the end of the macro step, the virtual member function
@@ -48,6 +48,7 @@ This is the data and control flow for %PLEXIL updates.
 
 - **Update handlers are called from the execution thread.**  These
   handlers must not block indefinitely, or the PlexilExec will stall.
+  (This restriction may be removed in a future release.)
   
 - **The interface must supply an update acknowledgement value of
   `true`, or the %Update node cannot transition to
@@ -55,7 +56,7 @@ This is the data and control flow for %PLEXIL updates.
   immediately when the handler is called, or later by some other
   component of the interface, but it must be sent.
 
-[Previous](command-data-flow.html) | [Up](interfacing-tutorial.html) | [Next](lookup-data-flow.html)
+[Previous](\ref command-data-flow) | [Up](\ref interfacing-tutorial) | [Next](\ref lookup-data-flow)
 
 [Home](index.html)
 

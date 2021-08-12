@@ -1,12 +1,12 @@
 namespace PLEXIL {
 /*!
 
-@page listener-data-flow Data and control flow for %PLEXIL Exec Listeners
+\page listener-data-flow Data and control flow for %PLEXIL Exec Listeners
 
 To be supplied.
 
 
-[Previous](lookup-data-flow.html) | [Up](interfacing-tutorial.html) | [Next](startup-and-configuration.html)
+[Previous](\ref lookup-data-flow) | [Up](\ref interfacing-tutorial) | [Next](\ref startup-and-configuration)
 
 [Home](index.html)
 

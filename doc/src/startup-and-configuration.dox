@@ -8,7 +8,7 @@ when the ExecApplication starts up.
 Let's say you have developed custom interface objects for your %PLEXIL
 application.  Now you need to get the Executive to use them.
 
-You could write a custom ```main()``` function which explicitly
+You could write a custom `main()` function which explicitly
 constructs and registers the objects.  For applications which are
 mature and stable, this can be a good choice.
 
@@ -17,15 +17,15 @@ aren't finalized?  Or you have several alternative implementations you
 wish to try?  Or your application needs multiple Executive instances,
 each with a different set of interfaces?
 
-The %PLEXIL Application Framework makes this easy, by allowing
-configuration of interfaces at startup time.  An *interface
-configuration file* tells the Executive which interface objects to
+The %PLEXIL Executive Application Framework makes this easy, by
+allowing configuration of interfaces at startup time.  An *interface
+configuration file* tells the application which interface objects to
 construct, and optionally how to map commands and lookups to these
-objects.  It also allows additional application-specific configuration
+objects.  It also allows custom implementation-dependent configuration
 information to be passed to the interface objects.
 
-The Application Framework also allows custom interfaces to be loaded
-at startup time, as *shared libraries*.
+The Application Framework also supports loading custom interfaces at
+startup time, as *shared libraries*.
 
 The universalExec application allows the configuration file to be
 specified on the command line.  In this way, universalExec can be
@@ -57,9 +57,9 @@ concrete factory instantiations.  The map is implemented as a private
 static member variable.  When a concrete factory template
 specialization is instantiated, its constructor automatically enters
 the factory instance in the map by calling the base class's
-```registerFactory``` static member function.
+`registerFactory` static member function.
 
-The concrete factory class template's ```create``` method simply calls
+The concrete factory class template's `create` method simply calls
 the constructor for the adapter class, with a standardized parameter
 list.
 
@@ -94,45 +94,44 @@ E.g. a typical configuration file might look like:
       <Listener ListenerType="PlanDebugListener" />
     </Interfaces>
 
-AdapterConfiguration reads the ```Adapter``` elements, extracts the
-```AdapterType``` attribute, and calls
-```AdapterFactory::createInstance``` on the adapter type name.  If
-there is a factory registered for the name, its ```create``` member
-function is called to construct the object.
+AdapterConfiguration reads the `Adapter` elements, extracts the
+`AdapterType` attribute, and calls AdapterFactory::createInstance on
+the adapter type name.  If there is a factory registered for the name,
+its `create` member function is called to construct the object.
 
-Since the ```OSNativeTime``` and ```Utility``` adapters are supplied
-as part of the Application Framework, and built into the universalExec
-application, they are pre-registered, and therefore quickly
-constructed and initialized.
+Since the `OSNativeTime` and `Utility` adapters are included in the
+%PLEXIL distribution, and built into the universalExec application,
+they are pre-registered, and therefore quickly constructed and
+initialized.
 
 ### Loading interfaces at startup time
 
-Now we get to ```MyAdapter```.  No factory for this adapter is
+Now we get to `MyAdapter`.  No factory for this adapter is
 registered in the universalExec application.  So
-```AdapterFactory::createInstance``` attempts to load a shared
+AdapterFactory::createInstance attempts to load a shared
 library, using the adapter type name to construct a library file name.
 In our example, it looks for a library file named
-```libMyAdapter.so``` (or, on macOS, ```libMyAdapter.dylib```) in the
+`libMyAdapter.so` (or, on macOS, `libMyAdapter.dylib`) in the
 current library path.
 
 ### Contents of the shared library
 
-The library file should contain the adapter class definition, and any
+The library file should contain the adapter implementation, and any
 additional code and data necessary to make it work.  It must also
 contain an *initialization function* which takes no arguments and
 returns void.
 
 By convention, the initialization function name is also derived from
-the adapter type name; in this case it would be ```initMyAdapter```.
-This function should invoke the ```REGISTER_ADAPTER``` macro to ensure
+the adapter type name; in this case it would be `initMyAdapter`.
+This function should invoke the REGISTER_ADAPTER macro to ensure
 the adapter class is registered.
 
 ### Finishing the job
 
 If the library file is found, it is loaded, and its initialization
 function is called.  Assuming this succeeds,
-```AdapterFactory::createInstance``` tries again to locate the factory
-for ```MyAdapter```, and calls its ```create``` member function if
+AdapterFactory::createInstance tries again to locate the factory
+for `MyAdapter`, and calls its `create` member function if
 found.
 
 The same process applies for other types of interface objects, such as
@@ -160,7 +159,7 @@ startup time, in any combination.
 - **The initialization function must register the custom classes'
   factories.**
 
-[Previous](listener-data-flow.html) | [Up](interfacing-tutorial.html)
+[Previous](\ref listener-data-flow) | [Up](\ref interfacing-tutorial)
 
 [Home](index.html)
 

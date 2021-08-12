@@ -3,12 +3,16 @@ namespace PLEXIL {
 \page command-data-flow Data and control flow for %PLEXIL commands
 
 Here is a simplified explanation of the data and control flow for
-%PLEXIL commands.
+%PLEXIL commands.  We start with a simple case, a Command node with no
+result variable and no user defined `EndCondition`, executing without
+interruption.
+
+## Simple Command node data and control flow
 
 1. When a %Command node transitions to `EXECUTING` state, the command
-   name and parameter expressions are evaluated to concrete values,
-   and the node calls ExternalInterface::enqueueCommand to enqueue the
-   command for execution.
+   name and parameter expressions are evaluated to fixed values, and
+   ExternalInterface::enqueueCommand is called to schedule the command
+   for execution.
    
 2. At the end of the macro step, the virtual member function
    ExternalInterface::executeCommand is called on each command in the
@@ -24,41 +28,37 @@ Here is a simplified explanation of the data and control flow for
    
 4. The command handler performs whatever work is necessary to initiate
    the command.  The handler can send a *command handle* (status)
-   value back to the AdapterExecInterface immediately via the member
-   function AdapterExecInterface::handleCommandAck, or an external
-   process can send the command handle at another time.
+   value back to the AdapterExecInterface via the member function
+   AdapterExecInterface::handleCommandAck, or an external process can
+   send the command handle at another time.  In either case, the
+   command handle will be processed in a subsequent macro cycle.
    
 5. In the absence of user-specified conditions, the %Command node
    transitions from `EXECUTING` to `FINISHING` state on the next macro
    cycle.
 
-6. While the %Command node is in `EXECUTING` or `FINISHING` state, it
-   may be *aborted*.  A command is aborted when an
-   `InvariantCondition` of the %Command node or any of its ancestors
-   evaluates to `false`, or an `ExitCondition` of the node or its
-   ancestors evaluates to `true`.  At the end of the macro cycle, the
-   command handler's abortCommand method is called, and the node
-   transitions to `FAILING` state.  The node cannot transition further
-   to `ITERATION_ENDED` until an acknowledgement of the abortCommand
-   call is received by the AdapterExecInterface.
-
-7. If (when) a command handle is received, it is enqueued, and
-   processed by the PlexilExec on its next macro cycle.  If a return
-   value is received, it too is enqueued, and processed by the
-   PlexilExec on the next macro cycle.
+6. If (when) a command handle is received, it is enqueued, and
+   processed by the Executive on its next macro cycle.
    
-8. On that next macro cycle -- assuming the %Command node has not yet
-   transitioned to `ITERATION_ENDED` state -- the received command
-   handle value is stored in the %Command node, and any conditions
-   which reference the command handle will be evaluated to determine
-   the node's next state transition.  In the absence of user-specified
+7. On that next macro cycle, the received command handle value is
+   stored in the %Command node, and any conditions which reference the
+   command handle will be evaluated to determine the node's next state
+   transition.  In the simplest case, absent user-specified
    conditions, the %Command node will transition from `FINISHING`
    state to `ITERATION_ENDED` upon receipt of a command handle value.
 
-9. When a command return value is processed, if the %Command node has
-   not yet transitioned to `ITERATION_ENDED`, and it has a return
-   variable, the variable is set to the returned value.  Any
-   conditions which reference that variable will then be evaluated.
+## Command node with result variable
+
+The addition of a result variable to a Command node changes the above
+description as follows:
+
+- At step 6 above, if a return value is received, it too is enqueued,
+  and processed by the PlexilExec on the next macro cycle.
+
+- When a command return value is processed, if the %Command node has
+  not yet transitioned to `ITERATION_ENDED`, the variable is set to
+  the returned value.  Any conditions which reference that variable
+  will then be re-evaluated.
 
 ### Details, details
 
@@ -66,17 +66,27 @@ The above description left out several details for the sake of
 clarity:
   
 - If a %Command node has a user-specified `EndCondition`, the node
-  transitions to `FINISHING` when the condition expression evaluates
-  to `true`, or when a command handle is received with one of the values
+  transitions to `FINISHING` when the end condition evaluates to
+  `true`, or when a command handle is received with one of the values
   `COMMAND_DENIED`, `COMMAND_INTERFACE_ERROR`, or `COMMAND_FAILED`.
 
 - A %Command node can only transition from `FINISHING` to
-  `ITERATION_ENDED` after a command handle value has been received.
-  The outcome of the node will be set to `SUCCESS`.
+  `ITERATION_ENDED` after a command handle has been received.  The
+  outcome of the node will be set to `SUCCESS`.
 
-- Any command handle or return value sent when the %Command node is in
-  a state other than `EXECUTING`, `FINISHING`, or `FAILING` is
+- Any command handle or return value received when the %Command node
+  is in a state other than `EXECUTING`, `FINISHING`, or `FAILING` is
   ignored.
+
+- While the %Command node is in `EXECUTING` or `FINISHING` state, it
+  may be *aborted*.  A command is aborted when an `InvariantCondition`
+  of the %Command node or any of its ancestors evaluates to `false`,
+  or an `ExitCondition` of the node or its ancestors evaluates to
+  `true`.  At the end of the macro cycle, the command handler's
+  abortCommand method is called, and the node transitions to `FAILING`
+  state.  The node cannot transition further to `ITERATION_ENDED`
+  until an acknowledgement of the abortCommand call is received by the
+  AdapterExecInterface.
 
 - This description completely ignores *command resource arbitration*.
   Several significant issues with the current design of command
@@ -88,13 +98,18 @@ clarity:
 
 - **CommandHandler methods are called from the execution thread.**
   These methods must not block indefinitely, or the PlexilExec will
-  stall.
+  stall.  (This restriction may be removed in a future release.)
 
 - **The interface must supply a command handle for each command it
   implements.  A %Command node cannot transition to `ITERATION_ENDED`
   until a command handle is received.**  The handle can be sent by the
   command handler's executeCommand method, or some other component of
   the custom interface, but it must be sent.
+
+- **If a command returns a result value, that value must be sent
+  before the command handle is sent.**  If the return value follows
+  the command handle, the %Command node will have transitioned to
+  `ITERATION_ENDED`, and the return value will be ignored.
   
 - **The interface must acknowledge aborted commands.  A %Command node
   cannot transition out of `FAILING` until an acknowledgement is
@@ -103,8 +118,7 @@ clarity:
   interface, but it must be sent.  The built-in function
   defaultAbortCommandHandler is provided for this purpose.
 
-[Previous](interface-components-roles.html) |
-[Up](interfacing-tutorial.html) | [Next](update-data-flow.html)
+[Previous](\ref interface-components-roles) | [Up](\ref interfacing-tutorial) | [Next](\ref update-data-flow)
 
 [Home](index.html)
 

@@ -2,42 +2,41 @@ namespace PLEXIL {
 /*!
 \page interfacing-basics %PLEXIL Interfacing basics
 
-A %PLEXIL Exec application requires a PlexilExec instance, a *state cache*,
-an InterfaceManager instance, an ExecListenerHub
-instance, and an AdapterConfiguration instance, along with common
-interface components (e.g. for time, debug printing, etc.)  The
-ExecApplication class takes care of the necessary setup and
-interconnections between these objects.
+Broadly, a %PLEXIL Executive application is composed of:
 
-Each of these objects has a particular role to play:
+- the PLEXIL Executive engine;
+- interfaces to the external world;
+- a main program which drives the Executive and its interfaces.
+
+The %PLEXIL Executive Application Framework delegates the various
+responsibilities into these component classes:
 
 - ExecApplication bundles together and coordinates all the essential
-  pieces of a %PLEXIL Exec application, and runs the main loop;
-  
-- PlexilExec is responsible for interpreting plans;
+  pieces of a %PLEXIL Executive application, and runs the main loop;
 
-- The state cache is responsible for storing the most recent values of
-  lookups;
+- PlexilExec is the Executive engine, which manages and executes
+  plans;
   
 - AdapterConfiguration is responsible for constructing the interface
   objects, and associating them with particular lookups, commands, and
   updates;
   
-- InterfaceManager is responsible for delegating the interface actions
-  to the appropriate objects, and handling the receipt of data from
-  the outside world for PlexilExec.
+- InterfaceManager is responsible for managing the input queue for
+  data from the outside world, and delegating interface actions to the
+  appropriate objects;
 
-When the Exec is running, PlexilExec sends lookup queries, commands,
-and updates through the InterfaceManager.  (What actually happens with
-lookups is more complex, involving the state cache, but for our
-purposes this is accurate enough.)  PlexilExec also reports node state
-transitions through the ExecListenerHub instance.
+- User-defined *interface adapters*, derived from the InterfaceAdapter
+  abstract base class, set up external commanding and data input;
 
-The InterfaceManager in turn queries the AdapterConfiguration instance
-to identify the objects which should receive these queries, commands
-and updates, then delegates the operations to the identified instances.
+- User-defined *handlers* perform the actual I/O;
 
-[Previous](interfacing-tutorial.html) | [Up](interfacing-tutorial.html) | [Next](interface-components-roles.html)
+- ExecListenerHub monitors plan execution events and distributes them
+  to listeners;
+  
+- User-defined *listeners*, derived from ExecListener, report the
+  execution events to the outside world.
+
+[Previous](\ref interfacing-tutorial) | [Up](\ref interfacing-tutorial) | [Next](\ref exec-algorithm)
 
 [Home](index.html)
 

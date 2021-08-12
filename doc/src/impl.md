@@ -5,9 +5,10 @@
 ## Overview
 
 This document presents the internal workings of the %PLEXIL Executive.
-The Executive is primarily coded in C++, specifically in the C++98
-standard dialect.  It is broken into sections which roughly correspond
-to the source code directory structure.
+The Executive is primarily coded in C++; in release 4.6 earlier,
+specifically in the C++98 standard dialect.  It is broken into
+sections which roughly correspond to the source code directory
+structure.
 
 * [Utilities](group___utils.html)
 
@@ -17,9 +18,9 @@ These are generally low-level facilities for common tasks.
 
 How the %PLEXIL Executive represents values internally.
 
-* [Expressions](@ref expressions)
+* [Expressions](group___expressions.html)
 
-How expressions in the plan are represented.
+How expressions are represented internally.
 
 * [An internal look at external interfaces](@ref commands-lookups)
 

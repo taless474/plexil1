@@ -5,73 +5,180 @@ namespace PLEXIL {
 
 The objects responsible for custom interface chores traditionally have
 been:
+  
+- instances derived from the InterfaceAdapter abstract base class
+  (*adapters*), whose intended purpose was to perform lookups,
+  commands, and/or planner updates as requested by a %PLEXIL plan; and
 
 - instances derived from the ExecListener abstract base class (*Exec
   listeners*), whose intended purpose is to report node state
-  transitions to the outside world; and
+  transitions to the outside world.
   
-- instances derived from the InterfaceAdapter abstract base class
-  (*adapters*), whose intended purpose was to perform all lookups,
-  commands, and planner updates as requested by a %PLEXIL plan.
-  
-Exec listeners haven't changed in %PLEXIL 4.6.  But the role of
-adapters has changed significantly.
+Exec listeners haven't changed in %PLEXIL 4.6.  But adapters have some
+new allies.
 
 The %PLEXIL team had long recognized that adapters handling multiple
 commands and/or lookups were duplicating a delegation task already
-being performed by InterfaceManager.  To eliminate this redundant
-delegation step, and thereby simplify interface coding, new
-interfacing components were identified for these specific chores:
+performed by InterfaceManager.
 
-- *command handlers*, specialized for a particular command;
+In this old interfacing model, when an adapter was initialized, it was
+responsible for registering itself with AdapterConfiguration for the
+commands, lookups, and/or updates it was intended to handle.
+
+During execution, InterfaceManager would query AdapterConfiguration
+for the appropriate adapter to perform a command or lookup with a
+particular name, then delegate the task to that adapter.  The adapter
+would then have to discriminate on the command (lookup) name to
+perform the requested function.
+
+In complex applications, adapter executeCommand and lookupNow methods
+would either have long if-then-elseif statements to dispatch the
+command (lookup) by name, or would use a table lookup specific to that
+adapter.  This was redundant at best, and a maintenance headache.
+
+No such problems were encountered with planner updates.  But the team
+recognized that the InterfaceAdapter class had a kitchen-sink API, and
+dividing its responsibilities among multiple classes made more sense.
+
+## New interfacing objects
+
+To eliminate the redundant delegation step, and hopefully simplify
+interface coding, new interfacing components were defined for these
+specific chores:
+
+- *command handlers*, which may be specialized for a particular
+  command;
   
-- *lookup handlers*, which likewise can be targeted to lookups for a
+- *lookup handlers*, which likewise may be targeted to lookups for a
   particular state;
   
 - *planner update handlers*, dedicated to publishing Updates.
 
+New functions were added to AdapterConfiguration to register and look
+up these handlers.
+
+## Overview of the new interfacing API
+
 In the new interfacing model, an adapter is responsible for
-constructing and registering handlers at initialization time, and for
-maintaining any shared state required by those handlers during plan
-execution (e.g. a socket connection to an outside agent).  During
-execution, InterfaceManager now delegates commands, lookups, and
-planner updates directly to the handlers, bypassing the adapter.
+registering *handlers* at initialization time, and optionally for
+maintaining any shared state required by those handlers at runtime
+(e.g. a socket connection to an outside agent).
 
-These handlers can be implemented as simple C++ functions, or as
-instances derived from the CommandHandler, LookupHandler, and
-PlannerUpdateHandler abstract base classes respectively.
+During plan execution, InterfaceManager now queries
+AdapterConfiguration for the appropriate handler to perform commands,
+lookups, or planner updates, and delegates directly to these handlers.
 
-InterfaceManager passes the Command instance (or for lookups, the
-State) to the handler method, so that one handler instance can
-implement multiple commands (lookups) if desired.  This allows a
-single handler to be registered under multiple names, or to be
-designated a *default handler*.  It also facilitates writing default
-handlers as wrappers for adapters coded to the previous
+The handler-centric API allows interface implementors to specialize
+command and lookup handlers for one specific command (lookup) name,
+bypassing the name-to-function mapping which adapter implementations
+were required to perform.
+
+While the handler registration API facilitates implementing
+single-purpose command or lookup handling, it does not *require*
+handlers to be this specialized.
+
+The handler registration API also allows a single command or lookup
+handler instance to be registered for multiple command (lookup) names,
+and use the Command (State) name passed to it to distinguish between
+the assigned roles.  This is conceptually similar to the old
 InterfaceAdapter API.
 
+A command or lookup handler can also be registered as a *default
+handler*, to implement any command (lookup) names for which no handler
+is explicitly registered.  This likewise corresponds to the notion of
+a *default adapter* in the old adapter-centric API.
+
+Whether to target handlers to a single command or lookup name, or
+implement generalized handlers, is a choice left to the interface
+implementor.
+
+## Convenience wrappers
+
+Interface implementors can choose to implement handlers as ordinary
+C++ functions, or as classes derived from the CommandHandler,
+LookupHandler, and PlannerUpdateHandler abstract base classes
+respectively.
+
+\note The addition of *lambdas* in C++11 and newer standards makes
+*closures* a viable choice for handlers in the forthcoming %PLEXIL 6
+release.  But that is beyond the scope of this document.
+
+Internally, InterfaceManager uses instances of the handler classes
+exclusively.  AdapterConfiguration registration functions construct
+wrapper objects when functions are registered for interface handlers,
+and register the wrapper objects instead.
+
+- The CommandHandlerWrapper class adapts the CommandHandler class's
+  API to the ExecuteCommandHandler and AbortCommandHandler function
+  typedefs.
+
+- The LookupHandlerWrapper class adapts the LookupHandler API to the
+  LookupNowHandler, SubscribeHandler, UnsubscribeHandler,
+  SetThresholdsHandlerReal, and SetThresholdsHandlerInteger function
+  typedefs.
+
+- The PlannerUpdateHandlerWrapper class adapts the (trivial)
+  PlannerUpdateHandler API to the PlannerUpdateFn function typedef.
+
+## Compatibility wrappers
+
+Additional wrapper classes have been implemented to adapt the new
+handler-centric APIs to the previous InterfaceAdapter API.  When the
+old adapter-centric AdapterConfiguration registration member functions
+are invoked, handler objects are constructed to map the new handler
+member functions onto the old InterfaceAdapter APIs for lookups,
+commands, and planner updates.  (See the AdapterCommandHandler,
+AdapterLookupHandler, and AdapterPlannerUpdateHandler classes
+respectively.)  In this way, existing InterfaceAdapter implementations
+should continue to work unmodified in this release.
+
+The existence of these wrapper objects should be transparent to the
+interface implementor.  We mention it here as an implementation detail
+in the event a user needs to debug command and lookup dispatching, and
+wonders, "Where are my handler functions?"
+
+## Default default handlers
+
+As will be seen in forthcoming sections on 
+[command](\ref command-data-flow) and 
+[update](\ref update-data-flow) control and data flow, unhandled
+commands and planner updates cannot simply be ignored, lest the plan
+invoking them never complete.
+
+Previous %PLEXIL releases included a DummyAdapter class to provide the
+necessary handshaking for unhandled commands and updates.  But to use
+it, a user had to specifically request 
+`<Adapter AdapterType="dummy"/>`
+in the interface configuration file.
+
+The behavior of DummyAdapter is now provided by *default default handlers*:
+
+- The DefaultCommandHandler class prints debug statements (if enabled)
+  when any of its member functions are called.  Its executeCommand
+  method posts a command handle value of `COMMAND_SUCCESS`, and its
+  abortCommand method posts a command abort acknowledgement value of
+  `true`, to complete the necessary handshaking for these member
+  functions.
+
+- The DefaultLookupHandler class only prints debug statements (if
+  enabled) when its member functions are called.  `Lookup` names
+  mapped to DefaultLookupHandler always return **UNKNOWN**.
+  
+- The function defaultPlannerUpdateFn prints a debug statement (if
+  enabled) and sends a planner update acknowledgement value of `true`
+  to complete the handshaking.
+
+The default default handlers are automatically registered when the
+AdapterConfiguration instance is constructed.  They can be explicitly
+overridden if the application requires it.
+
+## Credits
+
 The new interfacing model was implemented during the summer of 2020 by
-intern Bryce Campbell, cleaned up and tested internally, and released
-to external users in September 2020.
+intern Bryce Campbell, cleaned up and tested internally by the %PLEXIL
+team, and released to external users in September 2020.
 
-As of %PLEXIL release 4.6, if an adapter registers itself using the
-previous AdapterConfiguration API and registers no new-style handlers,
-default handlers delegate to the old InterfaceAdapter APIs for
-lookups, commands, and planner updates.  In this way, existing
-InterfaceAdapter specializations should continue to work unmodified in
-this release.
-
-But these old InterfaceAdapter virtual functions have been marked
-deprecated.  They will be removed in the next major release, %PLEXIL
-6.
-
-Therefore this tutorial focuses on the new interfacing model.
-
-\note The %PLEXIL 6 API takes advantage of the availability of *lambdas*
-in C++11 and newer standards, making handler functions a viable
-implementation choice in more situations.  But that is beyond the
-scope of this document.
-
-[Previous](interfacing-basics.html) | [Up](interfacing-tutorial.html) | [Next](command-data-flow.html)
+[Previous](\ ref exec-algorithm) | [Up](\ref interfacing-tutorial) | [Next](\ref command-data-flow)
 
 [Home](index.html)
 

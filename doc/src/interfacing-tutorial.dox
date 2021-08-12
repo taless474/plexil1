@@ -27,21 +27,23 @@ program around the ExecApplication class, build in their custom
 interface components, and hard-code the startup process to instantiate
 and register their custom interfaces.
 
-1. [Interfacing basics](interfacing-basics.html)
+1. [The PLEXIL Executive algorithm](\ref exec-algorithm)
 
-2. [Interface components and their roles](interface-components-roles.html)
+2. [Interfacing basics](\ref interfacing-basics)
 
-3. [Data and control flow for %PLEXIL commands](command-data-flow.html)
+3. [Interface components and their roles](\ref interface-components-roles)
 
-4. [Data and control flow for %PLEXIL updates](update-data-flow.html)
+4. [Data and control flow for PLEXIL commands](\ref command-data-flow)
 
-5. [Data and control flow for %PLEXIL lookups](lookup-data-flow.html)
+5. [Data and control flow for PLEXIL updates](\ref update-data-flow)
 
-6. [Data and control flow for %PLEXIL Exec Listeners](listener-data-flow.html)
+6. [Data and control flow for PLEXIL lookups](\ref lookup-data-flow)
 
-7. [Startup and interface configuration](startup-and-configuration.html)
+7. [Data and control flow for PLEXIL Exec Listeners](\ref listener-data-flow)
 
-[Next](interfacing-basics.html)
+8. [Startup and interface configuration](\ref startup-and-configuration)
+
+[Next](\ref exec-algorithm)
 
 [Home](index.html)
 

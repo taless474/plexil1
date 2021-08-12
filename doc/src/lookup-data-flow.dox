@@ -3,239 +3,204 @@ namespace PLEXIL {
 
 \page lookup-data-flow Data and control flow for %PLEXIL lookups
 
-*Please note that this document describes APIs for lookup handlers
-which exist in this form only in %PLEXIL 4.6.  This is one of the
-areas in which the %PLEXIL Executive implementation has evolved
+*Please be aware that this document describes APIs for lookup handlers
+which only apply to the %PLEXIL 4.6 release.  This is one of the areas
+in which the %PLEXIL Executive implementation has evolved
 significantly over time.  However, the general concepts should be
-applicable to all %PLEXIL versions since release 4.0.*
+applicable to all %PLEXIL releases since release 4.0.*
 
-To understand how lookups work in %PLEXIL, it is necessary to
-understand (in broad strokes) the execution algorithm as implemented in
-the Application Framework.
+## Two approaches to acquiring data from a controlled system
 
-### The PLEXIL execution algorithm
+The %PLEXIL Executive Application Framework supports two approaches to
+acquire data from external systems:
 
-Here is a simplified view of the plan execution algorithm in the
-%PLEXIL Executive Application Framework:
+1. The *event-driven* approach: The application publishes external
+   data to the Executive as it arrives by calling
+   AdapterExecInterface::handleValueChange.  When it is time to act on
+   that data, the application calls
+   AdapterExecInterface::notifyOfExternalEvent, the data received is
+   processed, and execution commences.
 
-1. The current time is queried and cached, and any data in the
-   Executive's *input queue* is processed.  This could include
-   external data for lookups, the results of command execution, and/or
-   new plans to execute.
+2. The *demand-pull* approach: A Lookup expression in the plan queries
+   the system from the Executive's inner loop, via user-defined
+   handlers.
 
-2. The updates from step 1 may trigger *change notifications*, which
-   propagate throughout the plan(s).  Nodes which receive change
-   notifications become candidates for a *node state transition*.  If
-   there are no candidate nodes, skip directly to step 8.
-   
-3. (Start of the *quiescence loop*) The Executive examines the
-   candidate nodes and decides which ones will transition, as dictated
-   by node state transition rules and conflict resolution logic.
-   
-4. The legal node state transitions are performed
-   (pseudo-)simultaneously.  The state transitions in turn trigger new
-   change notifications, which again will make some nodes candidates
-   for transition, but those candidates are not processed immediately.
-   Steps 3 and 4 together constitute a *micro step*.
+Experience shows that the event-driven approach is generally superior
+in practice.
 
-5. If the transitions processed in step 4 do not result in any side
-   effects (commands, updates, or assignments), but there are
-   candidates for state transition, the process repeats from step 3,
-   until no further transitions are possible (quiescence is achieved).
-   
-6. If the transitions in step 4 result in side effects, those actions
-   are performed.
-   
-7. If a micro step completes and there are no further candidates for
-   state transition, or if side effects were performed in step 6, a
-   *macro step* has been completed.  This is the end of the quiescence
-   loop.  Go back to step 1 and repeat the cycle.
+The event-driven approach has these advantages:
 
-8. When a macro step is complete, no nodes are candidates for
-   transition, and the input queue is empty, the Executive sleeps
-   until the next time it is awakened (e.g. by a timer or external
-   event), at which time the process repeats from step 1.
+- The %PLEXIL execution algorithm itself is event-driven.
 
-### Two ways to acquire data from a controlled system
-
-The %PLEXIL Executive acquires data from external systems in two ways:
-
-1. The application periodically publishes new data to the Executive by
-   calling the virtual function
-   AdapterExecInterface::handleValueChange, which enqueues that data
-   on the input queue, where it is subsequently processed in step 1 of
-   the execution algorithm above.
-
-2. A Lookup expression in the plan queries the system during the
-   quiescence loop, as the Executive determines which nodes to
-   transition in step 3.  Applications taking this approach must
-   implement custom *lookup handlers*.
-
-The periodic publication approach (#1) should be preferred, for these
-reasons:
-
-- Approach #2 calls user-developed interface functions from inside the
-  most time-critical section of the Executive.  Delays within those
-  functions will seriously degrade the responsiveness of the
-  Executive.
-
-- Approach #2 exposes some of the more volatile interfacing APIs of
-  the %PLEXIL Executive.
-
-- Approach #1 does not require writing lookup handler code, only code
-  to scale the data as required, and to reformat the data into
-  %PLEXIL's internal representation.  This code would be required in
-  either approach.
-
-- Many systems and subsystems publish state data in blocks at regular
-  intervals (e.g. telemetry).  Approach #1 is a natural fit for this
-  common scenario.
-
-- The APIs for implementing approach #1 are much more likely to be
-  stable in subsequent %PLEXIL releases.  We may add convenience
-  wrappers for common use cases, but we are unlikely to change the
-  existing method prototypes.
+- Many systems to be controlled or monitored publish state data in
+  fixed size batches at regular intervals (e.g. telemetry).  The
+  event-driven approach is a natural fit for this common scenario.
   
-### Does this application require lookup handlers?
+- Publishing state updates to the Exec in batches is more efficient
+  than acquiring them one at a time on demand.
 
-Probably not.
+- The interfacing APIs for event-driven applications are stable.  The
+  member functions have been stable since the initial %PLEXIL 4
+  release, and are not expected to change significantly in future
+  releases.
 
-### What happens if a state name is not associated with a lookup handler?
+The demand-pull approach has these disadvantages:
 
-If a state name has no associated lookup handler, the Executive uses
-the last value posted to the state cache.
+- It calls user-developed interface code from a time-critical routine
+  in the Executive core.  Delays within that code will seriously
+  degrade the responsiveness of the application.
 
-Periodically posting data for that state to the Executive via
-AdapterExecInterface::handleValueChange will enqueue the new data, and
-input queue processing will subsequently update the cached value.
+- External state changes can be missed if the lookupNow handler is not
+  called at the appropriate times.  Even %PLEXIL team members have
+  been perplexed when plans don't work as expected under this
+  approach.
 
-### When are lookup handlers a valid choice?
+- `LookupOnChange` is extremely unlikely to work as expected in the
+  demand-pull approach
 
-User-developed lookup handlers are particularly appropriate:
+- The interfacing APIs are volatile.  The APIs for the demand-pull
+  approach have evolved numerous times, including between %PLEXIL
+  releases 4.5 and 4.6, and will change again in %PLEXIL 6.
+
+## When is demand-pull an appropriate choice?
+
+The demand-pull approach to implementing lookups is an appropriate
+choice:
 
 - When implementing a time interface which schedules wakeups for the
-  Executive at intervals determined by a plan.  E.g. the TimeAdapter
-  interface provided in the %PLEXIL distribution interprets the upper
-  threshold on the 'time' state as the next time at which to wake up
-  the Executive.  The TimeAdapterImpl source code can be modified for
-  use in enviroments which lack POSIX timer APIs.
+  Executive at intervals determined by a plan.  **This requirement
+  dictated the design of the current lookup handler API.**
+  
+  The TimeAdapter interface provided in the %PLEXIL distribution
+  interprets the upper threshold on the 'time' state as the next time
+  to wake up the Executive.  The TimeAdapterImpl source code can be
+  modified for use in enviroments which lack POSIX timer APIs.
+  
+  (The TimeAdapter is reimplemented in a different form in PLEXIL 6.)
 
-- When the system state being queried is particularly volatile and
-  time-sensitive.  The Executive queries the handler no more than
-  once per macro-step, which limits how rapidly it can track changes
-  of an external quantity.  (%PLEXIL is not intended for hard
-  real-time control, and cannot guarantee any bounds on response
-  time.)
+- When the application only looks up a particular combination of state
+  name and parameters once.
   
 - When lookups are used to implement functions not available in
-  %PLEXIL (e.g. string processing).
-  
-This should not be considered an exhaustive list.  There may be other
-situations in which a periodic state update is difficult to implement,
-inappropriate, or performs suboptimally, and a lookup handler would be
-the better choice.
+  %PLEXIL, and Lookup calls with the same name and parameters will
+  always return the same value (e.g. string processing).
 
-### If you must write lookup handlers
+This should not be considered an exhaustive list.  But in general,
+there are very few cases where the demand-pull approach is a better
+fit than the event-driven approach.
+
+## If you must implement the demand-pull approach
+
+%Lookup functionality is implemented by defining methods on classes
+derived from the LookupHandler abstract base class, or by defining
+handler functions.  The discussion below uses 'handler' as a shorthand
+for 'method of a class derived from LookupHandler, or a handler
+function'.
 
 Be aware of these points as you develop lookup handlers for your
 application:
 
-- LookupHandler methods are called from within the time-critical
-  quiescence loop.  Shorter is better.  If at all possible, keep all
-  operations within the Executive's process, and ideally within the
-  current thread.  Operations which could incur unbounded delays,
+- Handler methods and/or functions are called from within the
+  plan execution loop.  Shorter is better.  If at all possible, keep
+  all operations within the Executive's process, and ideally within
+  the current thread.  Operations which could incur unbounded delays,
   e.g. remote procedure calls across a wide area network, are
-  particularly dangerous in this context.
+  particularly dangerous in this context and should be avoided.
+  
+- Handlers are not required for any state published to the Executive
+  on a periodic basis.  This can be confirmed easily by commenting out
+  the body of the corresponding lookupNow method.
+  
+- Users need not implement methods for *any* of the virtual member
+  functions defined by LookupHandler.  All have empty default methods
+  on the base class.  Threshold exceedance detection is built into
+  `LookupOnChange`.
+  
+- There are two ways to implement `LookupOnChange` in the demand-pull
+  approach.  Both require a hybrid approach, using the event-driven
+  API as well.
+  
+  The first is to implement a setThresholds handler, *and* when the
+  threshold is exceeded, the interface pushes an updated value by
+  calling AdapterExecInterface::handleValueChange and
+  AdapterExecInterface::notifyOfExternalEvent.
+  
+  The second, and simpler, approach, is to simply push that state
+  value on a periodic basis.  Threshold exceedance detection is built
+  into `LookupOnChange`.  There may be scenarios where a threshold
+  violation needs to be detected and dealt with between periodic
+  updates; however, %PLEXIL is likely the wrong tool for those
+  applications.
+  
+- Given the above, one of the few application scenarios which would
+  **require** a setThresholds handler is using `LookupOnChange(time,
+  delta)` to schedule Executive wakeups, when the Executive is not
+  also awakened on a periodic basis.  In this situation, the upper
+  threshold would be interpreted as a timer setting.
 
-- Custom handler classes need not implement methods for **any** of the
-  virtual member functions defined by LookupHandler.  All have empty
-  default methods on the base class.
+- setThresholds handlers are only relevant to numeric-valued lookups,
+  and are ignored by the Executive for all other data types.
   
-- if a quantity is being published to the Executive on a periodic
-  basis, it likely does not need a lookup handler at all.  This is
-  easily tested by commenting out the body of the corresponding
-  lookupNow method.
-  
-- setThresholds methods are only applicable to numeric-valued lookups,
-  and are ignored for all other data types.
-  
-- Lookups which require a setThresholds method usually need either a
-  Real or an Integer method, but not both.
-  
-- Even if the application uses LookupOnChange with thresholds, and
-  would seem to require setThresholds functionality, activation on
-  crossing a threshold is implemented internally in the state cache.
-  There may be scenarios where a threshold violation needs to be
-  detected and dealt with between periodic updates; however, %PLEXIL
-  is likely the wrong tool for those applications.
-  
-- The only states to date observed to truly require a setThresholds
-  method are time states, where the upper threshold is interpreted as
-  a timer setting for waking up the Executive.
+- %Lookups which require a setThresholds handler will need either a
+  Real or an Integer variant, but not both.
 
 - Very few, if any, applications will require subscribe and
-  unsubscribe methods.  This is part of the reason the virtual
-  functions are not included in %PLEXIL 6 and later releases.
+  unsubscribe methods.  This is part of the reason these functions are
+  omitted in the %PLEXIL 6 release.
 
-- The original motivation for subscribe and unsubscribe methods was
-  for use with publish/subscribe interfaces like Data Distribution
-  Systems.  Even in that scenario, they may not be appropriate.  These
-  methods are generally called in pairs in quick succession, and may
-  be called rather frequently if the lookup is in a loop with a short
-  cycle time.  Unless bandwidth is a particular concern, or the set of
-  states to monitor grows dynamically, it's probably better for the
-  application to subscribe to all the data likely to be needed at
-  startup, and unsubscribe at shutdown.
+  The original motivation for subscribe and unsubscribe methods was
+  for use with publish/subscribe interfaces (e.g. implementations of
+  the OMG DDS standard).  Even then, they may not be appropriate.
+  These methods are likely to be called in pairs in quick succession,
+  and may be called rather frequently if the node with the lookup is
+  in a loop with a short cycle time.
   
-- Consequently, most applications which use custom lookup handlers
-  will only need to implement lookupNow methods or functions.
+  Unless bandwidth is a particular concern, or the set of states to
+  monitor grows dynamically, it's probably better for the application
+  to subscribe at startup for all the data likely to be needed, and
+  unsubscribe at shutdown.
 
-### Notes and caveats for the periodic update approach
+### Notes and caveats for the event-driven approach
 
-- The AdapterExecInterface API allows for batching of input data.  If
-  the application does not run on a fixed cycle time, every batch of
-  input data published via AdapterExecInterface::handleValueChange
-  should be followed by a call to
+Keep these points in mind when implementing event-driven interfaces:
+
+- AdapterExecInterface::handleValueChange only enqueues data.  It does
+  not wake up the Executive.  This was a deliberate design choice to
+  allow batching of input data for efficiency.  If the application
+  needs to act on data received at irregular intervals, publication of
+  that data should be immediately followed by a call to
   AdapterExecInterface::notifyOfExternalEvent.
 
 - Conversely, if the application wakes up the Executive at regular
   intervals, and should not perform any work between those intervals,
   it will not be necessary or appropriate for the interface to call
-  AdapterExecInterface::notifyOfExternalEvent after data batches; that
-  function should be called by the periodic wakeup code instead.
+  AdapterExecInterface::notifyOfExternalEvent after data batches.
+  That function should be called by the periodic wakeup code instead.
 
-- Publishing large numbers of unique State values to the Executive in
-  excess of application requirements may result in memory bloat and
-  runtime performance issues.  The internal state cache data structure
-  uses standard C++ library templates, and has not been particularly
-  optimized for space or speed; nor are unused or no-longer-used
-  entries deleted during plan execution.
-
-- There is a one-time performance penalty the first time a new State
-  is received by the Executive, as the internal representation is
-  constructed.  This should only be a concern if the application uses
-  many unique State values and/or presumes a particular response time
-  bound at startup.
+- Try to limit pushing external state data not actually used by the
+  application's plans.  Publishing many unique states, in excess of
+  the application's requirements, may result in memory bloat and
+  runtime performance issues.  The state cache as currently
+  implemented uses C++ standard library templates, and has not been
+  particularly optimized for space or speed, nor is it garbage
+  collected.
 
 ### Key points for interface implementors
 
-- **LookupHandler methods are called from the most time-critical
-  sections of the PlexilExec.**  They should return as quickly as
-  practicable.  They must not block indefinitely.  Any delays will
-  lengthen the response time of the PlexilExec.
+- **The demand-pull approach is rarely the appropriate approach for an
+  application.**  Resist the temptation to use this approach unless
+  absolutely necessary.
 
-- **%Lookup handlers are rarely the most appropriate approach for an
-  application.**  Resist the temptation to develop custom lookup
-  handlers unless absolutely necessary.
+- **Demand-pull lookup handlers are called from a time-critical
+  routine in the Executive core.**  They *should* return as quickly as
+  practicable.  They **must not** block indefinitely.  Any delays will
+  lengthen the application's response time.
 
-- **It is much safer, and much more efficient, for the controlled
-  system to publish periodic state updates, and for the interface to
-  periodically pass them to the Executive by calling
-  AdapterExecInterface::handleValueChange.**  This approach is a
-  natural fit for many control applications.  It has the additional
-  advantage that no lookup handlers need be implemented.
+- **If at all possible, use the event-driven approach for
+  applications.**  It will ensure more predictable behavior, and is a
+  natural fit for many control applications.
 
-[Previous](command-data-flow.html) | [Up](interfacing-tutorial.html) | [Next](listener-data-flow.html)
+[Previous](\ref command-data-flow) | [Up](\ref interfacing-tutorial) | [Next](\ref listener-data-flow)
 
 [Home](index.html)
 
