@@ -205,7 +205,7 @@ namespace PLEXIL {
 
   //! \class DefaultCommandHandler
   //! \brief Methods for this class print debug messages (when
-  //         enabled) and respond with the appropriate CommandHandleValue.
+  ///        enabled) and respond with the appropriate CommandHandleValue.
   class DefaultCommandHandler : public CommandHandler
   {
   public:
