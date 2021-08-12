@@ -39,7 +39,7 @@
 namespace PLEXIL
 {
 
-  //! \addtogroup Values Value representations
+  //! \defgroup Values Value representations
 
   //
   // Type aliases
@@ -233,25 +233,25 @@ namespace PLEXIL
   template <typename T>
   void printValue(T const &val, std::ostream &s);
 
-  //! \brief Function template to parse one value from an incoming stream.
-  //! \param s Input string, as a const pointer to char.
-  //! \param result Reference to the place to store the result.
-  //! \return True if known, false if unknown.
-  //! \note If false, the result variable will not be modified.
+  //! \brief Function template to parse one value from a character string.
+  //! \param str Input string, as a const pointer to char.
+  //! \param result Reference to the result variable.
+  //! \return True if known, false if unknown or unparseable as the desired type.
+  //! \note If the return value is false, the result variable was not modified.
   //! \ingroup Values
   template <typename T>
-  bool parseValue(char const *s, T &result);
+  bool parseValue(char const *str, T &result);
 
-  //! \brief Function template to parse one value from an incoming stream.
-  //! \param s Input string, as a const reference to std::string.
-  //! \param result Reference to the place to store the result.
-  //! \return True if known, false if unknown.
-  //! \note If false, the result variable will not be modified.
+  //! \brief Function template to parse one value from a std::string.
+  //! \param str Const reference to the string
+  //! \param result Reference to the result variable.
+  //! \return True if known, false if unknown or unparseable as the desired type.
+  //! \note If the return value is false, the result variable was not modified.
   //! \ingroup Values
   template <typename T>
-  bool parseValue(std::string const &s, T &result)
+  bool parseValue(std::string const &str, T &result)
   {
-    return parseValue<T>(s.c_str(), result);
+    return parseValue<T>(str.c_str(), result);
   }
 
   //! \brief Function template to write a binary representation of the object to the given buffer.
