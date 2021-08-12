@@ -33,12 +33,6 @@ namespace PLEXIL {
   // Assignable
   //
 
-  /**
-   * @brief Set the expression from which this object gets its initial value.
-   * @param expr Pointer to an Expression.
-   * @param garbage True if the expression should be deleted with this object, false otherwise.
-   * @note Default method.
-   */
   void Assignable::setInitializer(Expression * /* expr */, bool /* garbage */)
   {
     errorMsg("setInitializer() called on Assignable that doesn't have an initializer");
