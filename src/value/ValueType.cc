@@ -407,14 +407,7 @@ namespace PLEXIL
     str << val;
   }
 
-  /**
-   * @brief Parse one value from the incoming stream.
-   * @param s Input stream.
-   * @param result Reference to the place to store the result.
-   * @return True if known, false if unknown.
-   * @note If false, the result variable will not be modified.
-   */
-
+  // Specializations of parseValue template.
   template <>
   bool parseValue(char const *str, Boolean &result)
   {
