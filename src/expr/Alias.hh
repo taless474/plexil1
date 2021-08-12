@@ -98,11 +98,11 @@ namespace PLEXIL
     //! \param result Reference to an appropriately typed place to store the value.
     //! \return True if the value is known, false if unknown or the value cannot be
     //!         represented as the desired type.
-    virtual bool getValue(Boolean &var) const;
-    virtual bool getValue(uint16_t &var) const;
-    virtual bool getValue(Integer &var) const;
-    virtual bool getValue(Real &var) const;
-    virtual bool getValue(String &var) const;
+    virtual bool getValue(Boolean &result) const;
+    virtual bool getValue(uint16_t &result) const;
+    virtual bool getValue(Integer &result) const;
+    virtual bool getValue(Real &result) const;
+    virtual bool getValue(String &result) const;
 
     //! \brief Copy a pointer to the (const) value of this object to a resut variable.
     //! \param ptr Reference to an appropriately typed pointer variable.
@@ -118,10 +118,10 @@ namespace PLEXIL
   protected:
 
     //! \brief Call a function on all subexpressions of this object.
-    //! \param oper A functor; it must implement an operator() method
+    //! \param func A functor; it must implement an operator() method
     //!             of one argument, a pointer to Listenable,
     //!             returning void.
-    virtual void doSubexprs(ListenableUnaryOperator const &f);
+    virtual void doSubexprs(ListenableUnaryOperator const &func);
 
     //! \brief The expression being aliased.
     Expression *m_exp;
