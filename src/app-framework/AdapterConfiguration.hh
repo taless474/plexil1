@@ -105,9 +105,10 @@ namespace PLEXIL
 
     //! \brief Register this state name as a telemetry-only lookup.
     //! \param stateName The name of the state
-    //! \note "Telemetry-only" means that there is no lookupNow method
+    //! \note "Telemetry-only" means that there is no lookupNow handler
     //!      for this state.  Use AdapterExecInterface::handleValueChange()
     //!      to publish updates for the state.
+    //! \deprecated This functionality is now provided by default, without registration.
     //! \see AdapterExecInterface::handleValueChange
     virtual void registerTelemetryLookup(std::string const &stateName) = 0;
 
