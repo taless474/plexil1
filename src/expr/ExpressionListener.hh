@@ -29,8 +29,6 @@
 namespace PLEXIL
 {
 
-  //! \defgroup Expressions The PLEXIL Expression subsystem
-
   //! \class ExpressionListener
   //! \brief Pure virtual base class for listeners in the change notification graph.
 
@@ -44,6 +42,7 @@ namespace PLEXIL
 
   //! \see Listenable::addListener
   //! \see Listenable::removeListener
+  //! \ingroup Expressions
 
   class ExpressionListener
   {
