@@ -33,7 +33,7 @@ namespace PLEXIL
 
   //! \class Assignable
   //! \brief Pure virtual mixin class for all expressions which can be assigned to by a plan.
-  //! \note Examples include variables, array references, aliases for InOut variables, etc.
+  //! \note Examples include variables, array references used as assignment targets, etc.
   //! \ingroup Expressions
 
   class Assignable : virtual public Expression
