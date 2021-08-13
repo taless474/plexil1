@@ -26,15 +26,11 @@
 #ifndef PLEXIL_VALUE_TYPE_HH
 #define PLEXIL_VALUE_TYPE_HH
 
-#include "ArrayFwd.hh"
-
-#ifdef HAVE_CSTDDEF
-#include <cstddef>  // size_t
-#elif HAVE_STDDEF_H
-#include <stddef.h> // size_t
-#endif
+#include "ArrayFwd.hh" // includes plexil-stdint.h
 
 #include <iosfwd> // std::ostream
+
+#include "plexil-stddef.h" // size_t
 
 namespace PLEXIL
 {

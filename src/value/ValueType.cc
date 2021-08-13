@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "plexil-config.h"
-
 #include "ValueType.hh"
 
 #include "ArrayImpl.hh"
@@ -40,29 +38,10 @@
 #include <limits>
 #include <sstream>
 
-#if defined(HAVE_CERRNO)
-#include <cerrno>
-#elif defined(HAVE_ERRNO_H)
-#include <errno.h>
-#endif
-
-#if defined(HAVE_CMATH)
-#include <cmath>   // for HUGE_VAL
-#elif defined(HAVE_MATH_H)
-#include <math.h>
-#endif
-
-#if defined(HAVE_CSTDLIB)
-#include <cstdlib> // for strtod(), strtol()
-#elif defined(HAVE_STDLIB_H)
-#include <stdlib.h>
-#endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring> // strlen(), strcmp() etc.
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-errno.h"
+#include "plexil-math.h" // HUGE_VAL
+#include "plexil-stdlib.h" // strtod(), strtol()
+#include "plexil-string.h" // strlen(), strcmp() etc.
 
 namespace PLEXIL
 {
