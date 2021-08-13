@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of errno.h */
-
 #ifndef PLEXIL_ERRNO_H
 #define PLEXIL_ERRNO_H
+
+/**
+ * \file plexil-errno.h
+ * \brief Selects the C or C++ version of the standard errno.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

@@ -1,49 +1,58 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-#include "plexil-config.h"
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+//  All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Error.hh"
 
 #include <bitset>
-#if defined(HAVE_CLIMITS)
-#include <climits>
-#elif defined(HAVE_LIMITS_H)
-#include <limits.h>
-#endif
+
+#include "plexil-limits.h"
 
 namespace PLEXIL
 {
 
-  // O(1) via binary search
+  //! \brief Find the rightmost 1 bit in an unsigned long value.
+  //! \param b The value to search.
+  //! \return The bit number (from 0) of the rightmost bit;
+  //!         if not found, returns -1.
+  //! \note O(1) via binary search
+  //! \ingroup Utils
   extern int findFirstOne(unsigned long const b);
 
+  //! \brief Find the rightmost 0 bit in an unsigned long value.
+  //! \param b The value to search.
+  //! \return The bit number (from 0) of the rightmost bit;
+  //!         if not found, returns -1.
+  //! \ingroup Utils
   extern int findFirstZero(unsigned long const b);
 
-  // O(n) via iterative search
+  //! \brief Find the rightmost 1 bit in a bitset.
+  //! \param b Const reference to the bitset to search.
+  //! \return The bit number (from 0) of the rightmost bit;
+  //!         if not found, returns -1.
+  //! \note  O(n) via iterative search
+  //! \ingroup Utils
   template <size_t N_ENTRIES>
   int findFirstOne(std::bitset<N_ENTRIES> const &b)
   {
@@ -71,7 +80,12 @@ namespace PLEXIL
     return -1;
   }
 
-  // O(n) via iterative search
+  //! \brief Find the rightmost 0 bit in a bitset.
+  //! \param b Const reference to the bitset to search.
+  //! \return The bit number (from 0) of the rightmost bit;
+  //!         if not found, returns -1.
+  //! \note  O(n) via iterative search
+  //! \ingroup Utils
   template <size_t N_ENTRIES>
   int findFirstZero(std::bitset<N_ENTRIES> const &b)
   {

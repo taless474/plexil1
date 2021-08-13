@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2011, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,18 @@
 namespace PLEXIL
 {
 
-  // Derived from http://stackoverflow.com/questions/4753153/redirecting-stdcout
+  //! \class ScopedOstreamRedirect
+  //! \brief Redirects output sent to a std::ostream instance to
+  //!        another std::ostream instance.  Redirection ends when the
+  //!        ScopedOstreamRedirect instance is destroyed.
+  //! \note Based on http://stackoverflow.com/questions/4753153/redirecting-stdcout
+  //! \ingroup Utils
   class ScopedOstreamRedirect
   {
   public:
 
 	/**
-	 * @brief Construct a redirection for the named output stream.
+	 * @brief Construct a redirection for the given output stream.
 	 * @param inOriginal Reference to the output stream being redirected.
 	 * @param inDirect Reference to the output stream receiving the redirection.
 	 */
@@ -48,7 +53,7 @@ namespace PLEXIL
     {}
 
 	/**
-	 * @brief Cancel the redirection.
+	 * @brief Destructor. Cancels the redirection.
 	 */
     ~ScopedOstreamRedirect()
     {
@@ -56,16 +61,16 @@ namespace PLEXIL
     }
 
   private:
+
 	// Not implemented
 	ScopedOstreamRedirect();
     ScopedOstreamRedirect(const ScopedOstreamRedirect&);
     ScopedOstreamRedirect& operator=(const ScopedOstreamRedirect&);
 
-    std::ostream & mOriginal;
-    std::streambuf * mOldBuffer;
+    std::ostream & mOriginal; //!< The stream being redirected.
+    std::streambuf * mOldBuffer; //!< The original buffer of the redirected stream.
   };
 
 }
 
 #endif // SCOPED_OSTREAM_REDIRECT_HH
-

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -27,81 +27,80 @@
 #ifndef JNI_HELPER_H
 #define JNI_HELPER_H
 
-#include "plexil-config.h"
-
 #include <jni.h>
 
-#if defined(HAVE_CSTDDEF)
-#include <cstddef> // for NULL
-#elif defined(HAVE_STDDEF_H)
-#include <stddef.h>
-#endif
+#include "plexil-stddef.h" // NULL
 
 /**
- * @brief A class which helps provide access to key JNI pointers.
- * Declare a JNIHelper stack-allocated variable at the start of a JNI-called function,
- * and any code called by that function will have access to the JNI.
- * @note Will only work in single-threaded applications!
+ * \class JNIHelper
+ * \brief A class which helps provide access to key JNI pointers.
+ *
+ * Declares a JNIHelper stack-allocated variable at the start of a
+ * JNI-called function, and any code called by that function will have
+ * access to the JNI.
+ *
+ * \note Will only work in single-threaded applications!
+ *
+ * \ingroup Utils
  */
 class JNIHelper
 {
 public:
   /**
-   * @brief Constructor.
-   * @param env Pointer to the JNIEnv object.
-   * @param java_this The JNI pointer to the Java "this" object.
+   * \brief Constructor.
+   * \param env Pointer to the JNIEnv object.
+   * \param java_this The JNI pointer to the Java "this" object.
    */
   JNIHelper(JNIEnv* env, jobject java_this);
 
   /**
-   * @brief Destructor.
+   * \brief Virtual destructor.
    */
   virtual ~JNIHelper();
 
   /**
-   * @brief Instance accessor.
+   * \brief Instance accessor.
    */
   JNIHelper& getInstance() { return *s_instance; }
 
   /**
-   * @brief Get the pointer to the JNIEnv object.
-   * @return The JNIEnv pointer.
+   * \brief Get the pointer to the JNIEnv object.
+   * \return The JNIEnv pointer.
    */
   static JNIEnv* getJNIEnv();
 
   /**
-   * @brief Get the pointer to the Java object from the currently active JNI call.
-   * @return The object pointer.
+   * \brief Get the pointer to the Java object from the currently active JNI call.
+   * \return The object pointer.
    */
   static jobject getJavaThis();
 
   /**
-   * @brief Get the pointer to the JNIEnv object.
-   * @return The JNIEnv pointer.
+   * \brief Get the pointer to the JNIEnv object.
+   * \return The JNIEnv pointer.
    */
   JNIEnv* getEnv() { return m_env; }
   
-
   /**
-   * @brief Get the Java class java.lang.Class.
-   * @return The class pointer.
+   * \brief Get the Java class java.lang.Class.
+   * \return The class pointer.
    */
   jclass getClassClass();
 
   /**
-   * @brief Return true if the object is an array, false otherwise.
+   * \brief Return true if the object is an array, false otherwise.
    */
   bool isArray(jobject object);
 
   /**
-   * @brief Return true if the class is an array class, false otherwise.
+   * \brief Return true if the class is an array class, false otherwise.
    */
   bool isArrayClass(jclass klass);
 
   /**
-   * @brief Get the class's name from the JNI.
-   * @return Freshly allocated copy of the class name.
-   * @note Caller owns the return value and is responsible to delete it.
+   * \brief Get the class's name from the JNI.
+   * \return Freshly allocated copy of the class name.
+   * \note Caller owns the return value and is responsible to delete it.
    */
   char* getClassName(jclass klass);
 
@@ -145,22 +144,37 @@ protected:
 };
 
 /**
- * @class JavaObject
- * @brief Helper class for Java object references, automatically releases reference when the instance goes out of scope.
- * @note Use as a stack-allocated variable.
+ * \class JavaObject
+ * \brief Wrapper class for Java object references.  Automatically
+ *        releases the reference when the instance is destroyed.
+ *
+ * \note Intended to be used as a stack-allocated variable.  The
+ *       destructor will be called automatically when the variable
+ *       goes out of scope.
+ *
+ * \ingroup Utils
  */
 class JavaObject
 {
 public:
+  //! \brief Default constructor.
   JavaObject() : m_jobj(NULL) {}
+
+  //! \brief Constructor from a Java object reference.
+  //! \param obj Java object reference.
   JavaObject(jobject obj) : m_jobj(obj) {}
 
+  //! \brief Virtual destructor.
   virtual ~JavaObject()
   {
 	if (m_jobj != NULL)
 	  JNIHelper::getJNIEnv()->DeleteLocalRef(m_jobj);
   }
 
+  //! \brief Assignment operator from Java object reference.
+  //! \param obj Java object reference.
+  //! \return Reference to *this.
+  //! \note Releases any Java object reference held prior to the call.
   JavaObject& operator=(const jobject& obj)
   {
  	if (m_jobj != NULL) {
@@ -170,8 +184,12 @@ public:
  	return *this;
   }
 
+  //! \brief Overloaded dereference operator.
+  //! \return Reference to the object.
   _jobject& operator->() { return *m_jobj; }
 
+  //! \brief Accessor.
+  //! \return The wrapped object reference.
   jobject get_jobject() { return m_jobj; }
 
 private:
@@ -180,34 +198,56 @@ private:
   JavaObject& operator=(const JavaObject&);
 
 protected:
-  // Shared with derived classes
-  jobject m_jobj;
+  jobject m_jobj; //!< The object reference.
 };
 
 /**
- * @class JavaClass
- * @brief Helper class for Java class references, automatically releases reference when the instance goes out of scope.
- * @note Use as a stack-allocated variable.
+ * \class JavaClass
+ * \brief Wrapper class for references to Java classes.  Automatically
+ *        releases the reference when the instance is destroyed.
+ *
+ * \note Intended to be used as a stack-allocated variable.  The
+ *        destructor is called automatically when the variable goes
+ *        out of scope.
+ *
+ * \ingroup Utils
  */
 class JavaClass : public JavaObject
 {
 public:
+  //! \brief Default constructor.
   JavaClass() : JavaObject() {}
+
+  //! \brief Constructor from a Java class reference.
+  //! \param The Java class reference.
   JavaClass(jclass cls) : JavaObject((jobject) cls) {}
-  ~JavaClass() {}
 
-  _jclass& operator->()
-  {
-	return (_jclass&) *m_jobj; 
-  }
+  //! \brief Virtual destructor,
+  virtual ~JavaClass() {}
 
+  //! \brief Assignment operator from Java class reference.
+  //! \param cls Const reference to the Java class reference.
+  //! \return Reference to *this.
+  //! \note Releases any Java object reference held prior to the call.
   JavaClass& operator=(const jclass& cls)
   {
 	JavaObject::operator=((const jobject&) cls);
 	return *this;
   }
 
-  jclass get_jclass() { return (jclass) m_jobj; }
+  //! \brief Overloaded dereference operator.
+  //! \return Reference to the class object.
+  _jclass& operator->()
+  {
+	return (_jclass&) *m_jobj; 
+  }
+
+  //! \brief Accessor.
+  //! \return The Java class reference.
+  jclass get_jclass()
+  {
+    return (jclass) m_jobj;
+  }
 
 private:
   // Deliberately unimplemented

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,46 +32,73 @@
 namespace PLEXIL
 {
 
+  //! \class PlanError
+  //! \brief An exception class derived from Error, meant to report
+  //!        errors caused by an erroneous PLEXIL plan.
+  //! \ingroup Utils
   class PlanError : public Error
   {
   public:
 
     /**
-       @brief Build a PlanError object from the information given, including an extra message.
-    */
+     * \brief Construct a PlanError object, given a condition
+     *        description, a message, a file name, and a line number.
+     * \param condition The condition description; const reference to std::string.
+     * \param msg The message; const reference to std::string.
+     * \param file The file name; const reference to std::string.
+     * \param line The line number; const reference to int.
+     */
     PlanError(const std::string& condition,
               const std::string& msg,
               const std::string& file,
               const int& line);
     
+    //! \brief Copy constructor.
+    //! \param orig Const reference to the instance being copied.
     PlanError(const PlanError &orig);
 
+    //! \brief Copy assignment operator.
+    //! \param other Const reference to the instance being copied.
     PlanError &operator=(const PlanError &other);
 
+    //! \brief Virtual destructor.
     virtual ~PlanError() PLEXIL_NOEXCEPT;
 
+    //! \brief Equality test operator.
+    //! \param other The PlanError instance being compared.
+    //! \return true if this instance is identical to the other, false if not.
     bool operator==(const PlanError &other);
 
     /**
-     * Report and throw the exception, or assert.
+     * \brief Report and throw this exception, or assert, as
+     *        directed by PlanError::throwEnabled.
+     * \see PlanError::throwEnabled
+     * \see PlanError::doThrowExceptions
+     * \see PlanError::doNotThrowExceptions
      */
     void report() PLEXIL_NORETURN;
 
     /**
-     * Indicate that errors should throw exceptions rather than
-     * complaining and aborting.
+     * \brief Request that errors should be thrown upon detection.
+     * \see PlanError::throwEnabled
+     * \see PlanError::doNotThrowExceptions
      */
     static void doThrowExceptions();
 
     /**
-     * Indicate that errors should complain and abort rather than throw
-     * exceptions.
+     * \brief Request that when an error is detected, the message
+     *        should be printed, and the program should abort.
+     *
+     * \see PlanError::throwEnabled
+     * \see PlanError::doThrowExceptions
      */
     static void doNotThrowExceptions();
 
     /**
-     * Are errors set to throw exceptions?
-     * @return true if so; false if errors will complain and abort.
+     * \brief Query whether errors will throw exceptions.
+     * \return true if throwing is enabled; false if errors will complain and abort.
+     * \see PlanError::doThrowExceptions
+     * \see PlanError::doNotThrowExceptions
      */
     static bool throwEnabled();
 
@@ -85,9 +112,18 @@ namespace PLEXIL
 
 
 /**
- * @def reportPlanError
- * @brief Unconditionally create an error message.
- * @param msg Anything suitable as the right-hand side of <<.
+ * \def reportPlanError
+
+ * \brief Unconditionally construct a PlanError with the given
+ *        message, and report it as directed by
+ *        PlanError::throwEnabled.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \see PlanError::throwEnabled
+ * \see PlanError::doThrowExceptions
+ * \see PlanError::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define reportPlanError(msg) { \
   std::ostringstream sstr; \
@@ -96,10 +132,18 @@ namespace PLEXIL
 }
 
 /**
- * @def checkPlanError
- * @brief Test a condition and create an error if false.
- * @param cond Expression that yields a true/false result.
- * @param msg Anything suitable as the right-hand side of <<.
+ * \def checkPlanError
+ * \brief Test a condition; if false, construct a PlanError from the
+ *        condition and the given message, and report it as directed by
+ *        PlanError::throwEnabled.
+ * \param cond Expression that yields a true/false result.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \see PlanError::throwEnabled
+ * \see PlanError::doThrowExceptions
+ * \see PlanError::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define checkPlanError(cond, msg) { \
   if (!(cond)) { \

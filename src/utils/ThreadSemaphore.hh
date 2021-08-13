@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -56,13 +56,10 @@
 
 #ifdef PLEXIL_USE_POSIX_SEMAPHORES
 #include <semaphore.h>
-#if defined(HAVE_CERRNO)
-#include <cerrno>
-#elif defined(HAVE_ERRNO_H)
-#include <errno.h>
-#endif
+#include "plexil-errno.h"
 
-//* @brief Error status showing that the wait() call was interrupted.
+//! \brief Error status showing that the wait() call was interrupted.
+//! \ingroup Utils
 #define PLEXIL_SEMAPHORE_STATUS_INTERRUPTED EINTR
 #endif // PLEXIL_USE_POSIX_SEMAPHORES
 
@@ -70,59 +67,66 @@
 #include <mach/kern_return.h>  // for KERN_ABORTED
 #include <mach/mach_types.h>   // for semaphore_t, task_t
 
-//* @brief Error status showing that the wait() call was interrupted.
+//! \brief Error status showing that the wait() call was interrupted.
+//! \ingroup Utils
 #define PLEXIL_SEMAPHORE_STATUS_INTERRUPTED KERN_ABORTED
 #endif // PLEXIL_USE_MACH_SEMAPHORES
 
 namespace PLEXIL 
 {
-  /**
-     @class ThreadSemaphore
-     @brief Provides a cross-platform API to binary thread semaphores.
-     @author Chuck Fry
-     @date 11 July 2008
-   */
 
+  //! \class ThreadSemaphore
+  //! \brief Provides a cross-platform API to binary thread semaphores.
+  //! \author Chuck Fry
+  //! \date 11 July 2008
+  //! \ingroup Utils
   class ThreadSemaphore
   {
   public:
-    /**
-       @brief Constructor.
-    */
+
+    //! \brief Default constructor.
     ThreadSemaphore();
 
-    /**
-       @brief Destructor.
-    */
+    //! \brief Destructor.
     ~ThreadSemaphore();
 
-    /**
-       @brief Causes the thread to block until post() is called on the semaphore.
-       @return 0 if successful, error number otherwise.
-       @note Error number is platform dependent.
-	   @note A status of PLEXIL_SEMAPHORE_STATUS_INTERRUPTED means the system call was interrupted,
-             e.g. by a signal or pthread_cancel(). This may not be an error depending on the situation.
-			 The caller should always check the return value and deal with it appropriately!
-    */
+    //! \brief Block the current thread until another thread calls post() on this semaphore.
+    //! \return 0 if successful, error number otherwise.
+    //! \note Error number is platform dependent.
+	//! \note A status of PLEXIL_SEMAPHORE_STATUS_INTERRUPTED means the system call was interrupted,
+    //!       e.g. by a signal or pthread_cancel(). This may not be an error depending on the situation.
+	//!		 The caller should always check the return value and deal with it appropriately!
     int wait();
 
-    /**
-       @brief Causes the semaphore to unblock a thread currently waiting on it.
-       @return 0 if successful, error number otherwise.
-       @note Error number is platform dependent.
-    */
+    //! \brief Unblock another thread currently waiting on this semaphore.
+    //! \return 0 if successful, error number otherwise.
+    //! \note Error number is platform dependent.
     int post();
 
   private:
 
 #ifdef PLEXIL_USE_POSIX_SEMAPHORES
-    sem_t m_posix_sem;
+    sem_t m_posix_sem; //!< Platform-native POSIX semaphore.
 #endif // PLEXIL_USE_POSIX_SEMAPHORES
 
 #ifdef PLEXIL_USE_MACH_SEMAPHORES
-    semaphore_t m_mach_sem;
-    task_t m_mach_owning_task;
+    semaphore_t m_mach_sem; //!< Platform-native Mach semaphore.
+    task_t m_mach_owning_task; //!< Platform-native Mach task ID.
 #endif // PLEXIL_USE_MACH_SEMAPHORES
+
+    //
+    // Unimplemented constructors and assignment operators
+    //
+
+#if __cplusplus >= 201103L
+    ThreadSemaphore(ThreadSemaphore const &) = delete;
+    ThreadSemaphore(ThreadSemaphore &&) = delete;
+    ThreadSemaphore &operator=(ThreadSemaphore const &) = delete;
+    ThreadSemaphore &operator=(ThreadSemaphore &&) = delete;
+#else
+    ThreadSemaphore(ThreadSemaphore const &);
+    ThreadSemaphore &operator=(ThreadSemaphore const &);
+#endif
 
   };
 

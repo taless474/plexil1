@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -30,9 +30,13 @@
 #include "Error.hh" // PLEXIL_NOEXCEPT
 
 /**
- * @def reportParserException
- * @brief Unconditionally throw a ParserException with the given message
- * @param msg Anything suitable as the right-hand side of <<.
+ * \brief Unconditionally construct a ParserException with the given
+ *        message, and throw the exception.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \see ParserException
+ *
+ * \ingroup Utils
  */
 #define reportParserException(msg) { \
     std::ostringstream whatstr; \
@@ -41,10 +45,15 @@
 }
 
 /**
- * @def checkParserException
- * @brief If the condition is false, throw a ParserException
- * @param cond The condition to test; if false, throw the exception
- * @param msg Anything suitable as the right-hand side of <<.
+ * \brief If cond evaluates to false (nonzero), construct a
+ *        ParserException with the given message, and throw the
+ *        exception.
+ * \param cond The condition to test.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \see ParserException
+ *
+ * \ingroup Utils
  */
 #define checkParserException(cond, msg) { \
   if (!(cond)) \
@@ -58,26 +67,61 @@
 namespace PLEXIL
 {
 
+  //! \class ParserException
+  //! \brief Exception class used to report parsing errors.
+  //!
+  //! \see reportParserException
+  //! \see checkParserException
+  //!
+  //! \ingroup Utils
   class ParserException : public std::exception
   {
   public:
+
+    //! \brief Default constructor.
     ParserException() PLEXIL_NOEXCEPT;
 
+    //! \brief Constructor with an error message.
+    //! \param msg The error messsage; pointer to const
+    //!            null-terminated string.
     ParserException(const char* msg) PLEXIL_NOEXCEPT;
+
+    //! \brief Constructor with an error message, file name, and
+    //!        offset in the file.
+    //! \param msg The error messsage; pointer to const
+    //!            null-terminated string.
+    //! \param filename The file name; pointer to const
+    //!                 null-terminated string.
+    //! \param offset The offset in the file, in characters.
     ParserException(const char* msg, const char* filename, int offset) PLEXIL_NOEXCEPT;
+
+    //! \brief Constructor with error message, file name, line number,
+    //!        and column number.
+    //! \param msg The error messsage; pointer to const
+    //!            null-terminated string.
+    //! \param filename The file name; pointer to const
+    //!                 null-terminated string.
+    //! \param line The line number.
+    //! \param col The column number.
     ParserException(const char* msg, const char* filename, int line, int col) PLEXIL_NOEXCEPT;
 
+    //! \brief Copy assignment operator.
+    //! \param other Const reference to the instance being copied.
+    //! \return Reference to *this.
     ParserException& operator=(const ParserException&) PLEXIL_NOEXCEPT;
 
+    //! \brief Virtual destructor.
     virtual ~ParserException() PLEXIL_NOEXCEPT;
 
+    //! \brief Get the message string.
+    //! \return The message, as a pointer to const null-terminated string.
     virtual const char *what() const PLEXIL_NOEXCEPT;
 
   private:
-    std::string m_what;
-    std::string m_file; /**<The source file in which the error was detected (__FILE__). */
-    int m_line; /**< Line number of the error */
-	int m_char; /**< The character offset of the error */
+    std::string m_what; /**< The user-provided message. */
+    std::string m_file; /**< The source file in which the error was detected (__FILE__). */
+    int m_line; /**< Line number of the error (__LINE__). */
+	int m_char; /**< The character offset of the error. */
   };
 
 }

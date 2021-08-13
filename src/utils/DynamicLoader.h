@@ -35,34 +35,22 @@
 
 #ifndef DYNAMICLOADER_H_
 #define DYNAMICLOADER_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
     
-  /**
-   * @brief Dynamically load the shared library containing the module name, using the library name if provided.
-   * @param moduleName The name of the module
-   * @param libPath The library name containing the module, if available, NULL otherwise.
-   * @return 1 if successful, 0 otherwise.
-   * @note If libPath is not provided, attempts to load 'lib<moduleName><LIB_EXT>'.
-   * @note Expects to call init<moduleName>() with no args to initialize the freshly loaded module.
-   */
-  
-  int dynamicLoadModule(const char* moduleName, 
-                        const char* libPath);
-
-  /**
-   * @brief Call the module's init function.
-   * @param moduleName The name of the module
-   * @return 1 if the function was found and called, 0 otherwise.
-   * @note Expects to call init<moduleName>() with no args.
-   */
-
-  int dynamicInitModule(const char *moduleName);
-  
 #ifdef __cplusplus
-}
+extern "C"
 #endif
+
+/**
+ * \brief Dynamically load the shared library for the named module,
+ *        using the library name if provided, and initialize the module.
+ * \param typeName The module name, as a const C string.
+ * \param libPath The library name containing the module, as a const C string, or NULL.
+ * \return 1 if successful, 0 otherwise.
+ * \note The initializer function must be named 'init<moduleName>',
+ *       and should be a function taking no arguments and returning void.
+ * \ingroup Utils
+ */
+int dynamicLoadModule(const char* moduleName, 
+                      const char* libPath);
 
 #endif /* DYNAMICLOADER_H_ */

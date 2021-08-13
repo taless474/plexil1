@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -27,15 +27,9 @@
 #ifndef PLEXIL_MAP_UTILS_HH
 #define PLEXIL_MAP_UTILS_HH
 
-#include "plexil-config.h"
-
 #include <string>
 
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-string.h"
 
 //
 // Comparator classes for use with SimpleMap class template
@@ -44,25 +38,44 @@
 namespace PLEXIL
 {
 
-  // For exact matches in tables keying on char * or std::string
-  // Use this when you don't want to create temporary std::string instances
+  //! \struct CStringComparator
+  //! \brief Comparator class for comparing two null-terminated character strings,
+  //!        or a std::string and a null-terminated string.
+  //! \see SimpleMap
+  //! \ingroup Utils
   struct CStringComparator
   {
+    //! \brief Compare two null-terminated character strings.
+    //! \param a Const reference to a pointer to const character string.
+    //! \param b Const reference to another pointer to const character string.
+    //! \return true if the first string is strictly less than the second, false otherwise.
     bool operator()(char const * const &a, char const * const &b) const
     {
       return (strcmp(a, b) < 0);
     }
 
+    //! \brief Compare a std::string instance to a null-terminated character string.
+    //! \param a Const reference to a std::string.
+    //! \param b Const reference to another pointer to const character string.
+    //! \return true if the first string is strictly less than the second, false otherwise.
     bool operator()(std::string const &a, char const * const &b) const
     {
       return a < b;
     }
 
+    //! \brief Are two null-terminated character strings equal?
+    //! \param a Const reference to a pointer to const character string.
+    //! \param b Const reference to another pointer to const character string.
+    //! \return true if the strings are equal, false otherwise.
     bool equal(char const * const &a, char const * const &b) const
     {
       return !strcmp(a, b);
     }
 
+    //! \brief Are a std::string instance and a null-terminated character string equal?
+    //! \param a Const reference to a std::string.
+    //! \param b Const reference to another pointer to const character string.
+    //! \return true if the first string is equal to the second, false otherwise.
     bool equal(std::string const &a, char const * const &b) const
     {
       return a == b;

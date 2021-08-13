@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2008, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,17 @@
 #include <pthread.h>
 #endif
 
+//! \brief Macro for the type of a pointer to a thread function.
+//! \ingroup Utils
 #define THREAD_FUNC_PTR void* (*)(void*)
 
+//! \brief Create a new thread from the given function and parameter.
+//! \param threadFunc The function to run as the thread's top level.
+//! \param arg An argument to pass to the top level function.
+//! \param thread_id Reference to a variable to hold the ID of the spawned thread.
+//! \return true if the thread was created successfully; false if not.
+//! \deprecated Superseded by std::thread in PLEXIL 6.
+//! \ingroup Utils
 bool threadSpawn(void* (*threadFunc)(void*), void *arg, pthread_t& thread_id);
-
 
 #endif // THREAD_SPAWN_HEADER

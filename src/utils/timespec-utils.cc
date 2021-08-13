@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -28,15 +28,9 @@
 // Utilities for timespec arithmetic
 //
 
-#include "plexil-config.h"
-
 #include <limits>
 
-#if defined(HAVE_CTIME)
-#include <ctime>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
+#include "plexil-time.h"
 
 static const long ONE_BILLION = 1000000000;
 static const double ONE_BILLION_DOUBLE = 1000000000.0;

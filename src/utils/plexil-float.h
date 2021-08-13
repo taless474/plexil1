@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of float.h */
-
 #ifndef PLEXIL_FLOAT_H
 #define PLEXIL_FLOAT_H
+
+/**
+ * \file plexil-float.h
+ * \brief Selects the C or C++ version of the standard float.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

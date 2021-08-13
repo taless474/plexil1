@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of string.h */
-
 #ifndef PLEXIL_STRING_H
 #define PLEXIL_STRING_H
+
+/**
+ * \file plexil-string.h
+ * \brief Selects the C or C++ version of the standard string.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

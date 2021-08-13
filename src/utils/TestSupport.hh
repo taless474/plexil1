@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2017, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,13 @@
 #ifndef PLEXIL_TEST_SUPPORT_HH
 #define PLEXIL_TEST_SUPPORT_HH
 
-#include "PlanError.hh"
+#include "Error.hh"
 
+//! \brief Run the named test.  Print whether it passed or failed.  If
+//!        it fails, throw an Error.
+//! \param test The name of a function of no arguments, returning
+//!             bool, which implements the test.
+//! \ingroup Utils
 #define runTest(test) {	\
   bool result = false; \
   try { \
@@ -46,6 +51,11 @@
   } \
   }
 
+//! \brief Run a test inside a try-catch.  Print whether it passes or
+//!        fails.  If it throws an Error, print the error.
+//! \param test The name of a function of no arguments, returning
+//!             bool, which implements the test.
+//! \ingroup Utils
 #define runTestSuite(test) { \
   try{ \
   std::cout << #test << "******************************" << std::endl;\

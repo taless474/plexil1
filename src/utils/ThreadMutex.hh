@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,38 +35,42 @@
 
 namespace PLEXIL
 {
-  /**
-   * @brief Implements a simple mutex based on POSIX pthread_mutex_t with modest convenience features.
-   * @note Users of this class should not depend on ThreadMutex detecting deadlocks,
-   * multiple calls to lock() from the same thread, or unlock-while-unlocked.
-   */
-
+  //! \class ThreadMutex
+  //! \brief Implements a simple mutex based on POSIX pthread_mutex_t with
+  //!        modest convenience features.
+  //! \note Users of this class should not depend on ThreadMutex detecting deadlocks,
+  //!       multiple calls to lock() from the same thread, or unlock-while-unlocked.
+  //! \deprecated Superseded by std::mutex in PLEXIL 6.
+  //! \ingroup Utils
   class ThreadMutex
   {
   public:
     /**
-     * @brief Default constructor.
+     * \brief Default constructor.
      */
     ThreadMutex();
 
     /**
-     * @brief Destructor.
+     * \brief Destructor.
      */
     ~ThreadMutex();
 
     /**
-     * @brief Locks the mutex. If locked by another thread, waits until that thread has unlocked.
+     * \brief Acquire the mutex.
+     *
+     *  If the mutex is held by another thread, the current thread is
+     *  blocked until the other thread releases the mutex.
      */
     void lock();
 
     /**
-     * @brief Tries to lock the mutex.
-     * @return True if successful, false if the mutex is already held by any thread.
+     * \brief Try to acquire the mutex for the current thread.
+     * \return true if successful, false if the mutex is already held by any thread.
      */
     bool trylock();
 
     /**
-     * @brief Unlocks the mutex.
+     * \brief Release the mutex.
      */
     void unlock();
     
@@ -76,27 +80,39 @@ namespace PLEXIL
     ThreadMutex( const ThreadMutex& );
     const ThreadMutex& operator=( const ThreadMutex& );
 
-    pthread_mutex_t m_mutex;
+    pthread_mutex_t m_mutex; //!< The platform's native mutex.
   };
 
-  /**
-   * @brief Implements a guard using ThreadMutex.
-   */
-
+  //! \class ThreadMutexGuard
+  //! \brief A guard object for use with ThreadMutex.  Locks the mutex
+  //!        when constructed; unlocks the mutex when destroyed.
+  //! \note Meant to be used as a stack-allocated local variable.  The
+  //!       destructor will be called automatically when the variable
+  //!       context is exited.
+  //! \see ThreadMutex
+  //! \deprecated Replaced by std::lock_guard in PLEXIL 6.
+  //! \ingroup Utils
   class ThreadMutexGuard
   {
   public:
+
+    //! \brief Constructor from a mutex reference.  Locks the mutex.
+    //! \param Reference to a ThreadMutex instance.
     ThreadMutexGuard(ThreadMutex& mutex);
+
+    //! \brief Destructor. Unlocks the mutex.
     ~ThreadMutexGuard();
 
   private:
 
-    // deliberately unimplemented
+    // Default and copy constructors deliberately unimplemented.
     ThreadMutexGuard();
     ThreadMutexGuard(const ThreadMutexGuard &);
+
+    // Copy assignment deliberately unimplemented.
     const ThreadMutexGuard& operator=(const ThreadMutexGuard &);
 
-    ThreadMutex& m_mutex;
+    ThreadMutex& m_mutex; //!< The ThreadMutex instance being guarded.
   };
 }
 

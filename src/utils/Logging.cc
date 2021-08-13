@@ -29,28 +29,15 @@
 #include "Logging.hh"
 #include "Error.hh"
 #include "lifecycle-utils.h"
-#include <iostream>
+
+// #include <iostream> // Included by Error.hh
 #include <fstream>
-#include <string>
-#include <sstream>
+// #include <string>   // Included by Error.hh
+// #include <sstream>  // Included by Error.hh
 
-#if defined(HAVE_CSTDLIB)
-#include <cstdlib>
-#elif defined(HAVE_STDLIB_H)
-#include <stdlib.h>
-#endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
-
-#if defined(HAVE_CTIME)
-#include <ctime>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
+#include "plexil-stdlib.h"
+#include "plexil-string.h"
+#include "plexil-time.h"
 
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h>

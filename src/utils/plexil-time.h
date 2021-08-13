@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of time.h */
-
 #ifndef PLEXIL_TIME_H
 #define PLEXIL_TIME_H
+
+/**
+ * \file plexil-time.h
+ * \brief Selects the C or C++ version of the standard time.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

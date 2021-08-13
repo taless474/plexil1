@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of math.h */
-
 #ifndef PLEXIL_MATH_H
 #define PLEXIL_MATH_H
+
+/**
+ * \file plexil-math.h
+ * \brief Selects the C or C++ version of the standard math.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

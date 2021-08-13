@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2018, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -80,52 +80,75 @@ inline bool readDebugConfigStream(std::istream & /* is */)
 #include "DebugMessage.hh"
 
 /**
-   @brief The SHOW() macro is intended as a convenience debugging tool
-   inserted briefly and removed when certainty is restored.  It prints
-   the name of the passed parameter and it's value, along with the file
-   and line number where it occurs in the code.
+ * @brief Print the file and line number, the text of an expression, and
+ *        the expression's value to std::cout. 
+ *
+ * The SHOW() macro is intended as a convenience debugging tool
+ * inserted briefly and removed when certainty is restored.  It prints
+ * the name of the passed parameter and its value, along with the file
+ * and line number where it occurs in the code.
+ *
+ * \ingroup Utils
  */
 
 #define SHOW(thing) (std::cout << __FILE__ << "(" << __LINE__ << ") " << #thing << ": " << (thing) << std::endl)
 
 /**
-   @brief The MARK macro is intended as a convenience debugging tool
-   inserted briefly and removed when certainty is restored.  It prints
-   the file and line number where it occurs in the code.
+ * \brief Print the file and line numnber, and the word MARK, to std::cout.
+ *
+ * The MARK macro is intended as a convenience debugging tool
+ * inserted briefly and removed when certainty is restored.  It prints
+ * the file and line number where it occurs in the code.
+ *
+ * \ingroup Utils
  */
 
 #define MARK (std::cout << __FILE__ << "(" << __LINE__ << ") MARK" << std::endl)
 
 /**
-  @brief Use the debugMsg() macro to create a debug message that
-  will be printed when the code is executed if and only if this
-  particular debug message has been 'enabled'.
-  @param marker A string that "marks" the message to enable it by.
-  @param data The data to be printed when the message is enabled.
-  @brief The data argument can be any "chain" of C++ expressions to
-  output to the debug stream returned by DebugMessage::getStream()
-  when this debug message is enabled (via, e.g. DebugMessage::enable()
-  or DebugMessage::enableAll()).
-  @see condDebugMsg
-  @see debugStmt
-  @see condDebugStmt
-  @see DebugMessage
-*/
+ * \brief Print data to the debug stream when the marker is enabled.
+ * 
+ * Use the debugMsg() macro to create a debug message that
+ * will be printed when the code is executed if and only if this
+ * particular debug message has been 'enabled'.
+ *
+ * The data argument can be any "chain" of C++ expressions to
+ * output to the debug stream returned by DebugMessage::getStream()
+ * when this debug message is enabled (via, e.g. DebugMessage::enable()
+ * or DebugMessage::enableAll()).
+ *
+ * \param marker A string that "marks" the message to enable it by.
+ * \param data The data to be printed when the message is enabled.
+ *
+ * \see condDebugMsg
+ * \see debugStmt
+ * \see condDebugStmt
+ * \see DebugMessage
+ *
+ * \ingroup Utils
+ */
 #define debugMsg(marker, data) condDebugMsg(true, marker, data)
 
 /**
-  @brief Create a conditional debug message, which will
-  only be created or used when the given condition is true at run time.
-  @param cond An additional condition to be checked before printing the message,
-         which can be any C/C++ expression that could be used in an if statement.
-  @param marker A string that "marks" the message to enable it by.
-  @param data The data to be printed when the message is enabled.
-  @see debugMsg
-  @see condDebugMsg
-  @see debugStmt
-  @see condDebugStmt
-  @see DebugMessage
-*/
+ * \brief Print data to the debug stream when the marker is enabled and
+ *        cond is true (nonzero).
+ *
+ * Creates a conditional debug message, to be displayed only when
+ * the given condition is true at run time and the marker is enabled.
+ *
+ * \param cond An additional condition to be checked before printing the message,
+ *        which can be any C/C++ expression that could be used in an if statement.
+ * \param marker A string that "marks" the message to enable it by.
+ * \param data The data to be printed when the message is enabled.
+ *
+ * \see debugMsg
+ * \see condDebugMsg
+ * \see debugStmt
+ * \see condDebugStmt
+ * \see DebugMessage
+ *
+ * \ingroup Utils
+ */
 #define condDebugMsg(cond, marker, data) { \
   static PLEXIL::DebugMessage debug_msg(marker);     \
   if (debug_msg.enabled && (cond)) { \
@@ -134,29 +157,34 @@ inline bool readDebugConfigStream(std::istream & /* is */)
 }
 
 /**
-  @brief Add code to be executed only if the DebugMessage is enabled.
-  @param marker A string that "marks" the message to enable it by.
-  @param stmt The code to be executed when the message is enabled.
-  @see debugMsg
-  @see condDebugMsg
-  @see condDebugStmt
-  @see DebugMessage
-*/
+ * \brief Execute stmt if marker is enabled.
+ * \param marker A string that "marks" the message to enable it by.
+ * \param stmt The code to be executed when the message is enabled.
+ *
+ * \see debugMsg
+ * \see condDebugMsg
+ * \see condDebugStmt
+ * \see DebugMessage
+ *
+ * \ingroup Utils
+ */
 #define debugStmt(marker, stmt) condDebugStmt(true, marker, stmt)
 
 /**
-  @brief Add code to be executed only if the DebugMessage is enabled and
-         the condition is true.
-  @param cond An additional condition to be checked before printing the message,
-         which can be any C/C++ expression that could be used in an if statement.
-  @param marker A string that "marks" the message to enable it by.
-  @param stmt The code to be executed when the message is enabled and the condition
-         is true.
-  @see debugMsg
-  @see condDebugMsg
-  @see debugStmt
-  @see DebugMessage
-*/
+ * \brief Execute stmt if marker is enabled and cond is true (nonzero).
+ * \param cond An additional condition to be checked before printing the message,
+ *        which can be any C/C++ expression that could be used in an if statement.
+ * \param marker A string that "marks" the message to enable it by.
+ * \param stmt The code to be executed when the message is enabled and the condition
+ *        is true.
+ *
+ * \see debugMsg
+ * \see condDebugMsg
+ * \see debugStmt
+ * \see DebugMessage
+ *
+ * \ingroup Utils
+ */
 #define condDebugStmt(cond, marker, stmt) { \
   static PLEXIL::DebugMessage dm(marker); \
   if (dm.enabled && (cond)) { \

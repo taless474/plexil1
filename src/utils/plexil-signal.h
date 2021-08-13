@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of signal.h */
-
 #ifndef PLEXIL_SIGNAL_H
 #define PLEXIL_SIGNAL_H
+
+/**
+ * \file plexil-signal.h
+ * \brief Selects the C or C++ version of the standard signal.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

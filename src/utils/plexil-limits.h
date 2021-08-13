@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of limits.h */
-
 #ifndef PLEXIL_LIMITS_H
 #define PLEXIL_LIMITS_H
+
+/**
+ * \file plexil-limits.h
+ * \brief Selects the C or C++ version of the standard limits.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

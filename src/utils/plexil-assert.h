@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of assert.h */
-
 #ifndef PLEXIL_ASSERT_H
 #define PLEXIL_ASSERT_H
+
+/**
+ * \file plexil-assert.h
+ * \brief Selects the C or C++ version of the standard assert.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of stdio.h */
-
 #ifndef PLEXIL_STDIO_H
 #define PLEXIL_STDIO_H
+
+/**
+ * \file plexil-stdio.h
+ * \brief Selects the C or C++ version of the standard stdio.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2014, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -24,13 +24,20 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef PLEXIL_CONSTANT_MACROS_HH
+#define PLEXIL_CONSTANT_MACROS_HH
+
 /**
- * @def DECLARE_STATIC_CLASS_CONST(TYPE, NAME, VALUE)
- * @brief Declare and define class scoped constant to ensure initialization
- * occurs before use with all linkers.
+ * \def DECLARE_STATIC_CLASS_CONST(TYPE, NAME, VALUE)
+ * \brief Declare and define class scoped constant to ensure initialization
+ *        occurs before use with all linkers.
+ * \deprecated Superseded by the 'constexpr' keyword in C++11.
+ * \ingroup Utils
  */
 #define DECLARE_STATIC_CLASS_CONST(TYPE, NAME, VALUE) \
   static const TYPE& NAME() { \
     static const TYPE sl_data(VALUE); \
     return sl_data; \
   }
+
+#endif // PLEXIL_CONSTANT_MACROS_HH

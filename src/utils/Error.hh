@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -91,9 +91,10 @@
 #endif
 
 /**
- * @def DECLARE_ERROR
+ * \def DECLARE_ERROR
  * Declare an error as a function that returns a string naming itself.
- * @param error The error to declare.
+ * \param error The error to declare.
+ * \ingroup Utils
  */
 #define DECLARE_ERROR(error) \
   static const std::string& error() { \
@@ -105,146 +106,195 @@ namespace PLEXIL
 {
 
   /**
-     @class Error
-     @brief Used whenever a C++ exception is thrown.
+   * \class Error
+   * \brief Base class for exceptions in PLEXIL.
+   * \ingroup Utils
   */
   class Error : public std::exception
   {
   public:
 
     /**
-       @brief Build an Error object from the usual information: the false/failed
-       condition and the source file and line where it was tested/detected.
-    */
-
+     * \brief Constructor from a description of the false/failed condition,
+     *        and the source file and line where it was tested/detected.
+     * \param condition Description of the cause of the exception.
+     * \param file The source file name.
+     * \param line The line number in the source file.
+     */
     Error(const std::string& condition, const std::string& file, const int& line);
 
     /**
-       @brief Build an Error object from the information given, including an extra message.
-    */
+     * \brief Constructor from a description of the false/failed condition,
+     *        and the source file and line where it was tested/detected.
+     * \param condition Description of the cause of the exception.
+     * \param msg Message with additional information about the exception.
+     * \param file The source file name.
+     * \param line The line number in the source file.
+     */
     Error(const std::string& condition, const std::string& msg, const std::string& file, const int& line);
 
     /**
-       @brief Build an Error object from the information given, including another Error object's info.
-    */
+     * \brief Constructor with description and location information,
+     *        including another Error object's info.
+     * \param condition Description of the cause of the exception.
+     * \param exception Another Error to include in the report.
+     * \param file The source file name.
+     * \param line The line number in the source file.
+     */
     Error(const std::string& condition, const Error& exception, const std::string& file, const int& line);
 
     /**
-       @brief Build an Error object from only a message.
-
-       @note Should only be used when setCause() will be called before
-       the Error is thrown.
-
-       @note Never prints anything, unlike the other constructors.
-       @see Error::setCause()
-    */
+     * \brief Constructor from a message.
+     * \param msg The message.
+     *
+     * \note Should only be used when setCause() will be called before
+     *       the Error is thrown.
+     * \note Never prints anything, unlike the other constructors.
+     * \see Error::setCause()
+     */
     Error(const std::string& msg);
 
     /**
-       @brief Copy constructor.
-    */
+     * \brief Copy constructor.
+     * \param err The Error instance to copy.
+     */
     Error(const Error& err);
 
     /**
-     * The Error destructor.
-     * @note Should only be used implicitly.
+     * \brief Virtual destructor.
+     * \note Should only be used implicitly.
      */
     virtual ~Error() PLEXIL_NOEXCEPT;
 
     /**
-       @brief Assignment operator.
-    */
+     * \brief Assignment operator.
+     * \param err The Error to copy.
+     * \return Reference to *this.
+     */
     Error& operator=(const Error& err);
 
     /**
-       @brief Return the message as a character string.
-    */
+     * \brief Get the message from this Error.
+     * \return Pointer to const null-terminated string.
+     */
     virtual char const *what() const PLEXIL_NOEXCEPT;
 
     /**
-       @brief Return whether all error information should be printed when detected.
-    */
+     * \brief Query whether all error information should be printed when detected.
+     * \return true if printing enabled when detected, false if not.
+     */
     static bool printingErrors();
 
     /**
-       @brief Indicate that error information should be printed at detection.
-    */
+     * \brief Enable printing error information at detection.
+     */
     static void doDisplayErrors();
 
     /**
-       @brief Indicate that nothing should be printed when an error is detected.
-    */
+     * \brief Disable printing error information at detection
+     */
     static void doNotDisplayErrors();
 
     /**
-       @brief Return the output stream to which error information should be sent.
-    */
+     * \brief Get the output stream to which error information should be printed.
+     * \return Reference to the stream.
+     */
     static std::ostream& getStream();
 
     /**
-       @brief Indicate where output related to errors should be directed.
-    */
+     * \brief Set the output stream to which error information should be printed.
+     * \param os Reference to the stream.
+     */
     static void setStream(std::ostream& os);
 
     /**
-     * Display in "error format" (for Emacs, e.g.) on the stream (getStream()).
+     * \brief Print the contents of an Error in "error format" (e.g. for Emacs)
+     *        on the selected output stream.
+     * \see Error::getStream
+     * \see Error::setStream
      */
     void display();
 
     /**
-     * Print as if calling an Error constructor.
+     * \brief Print the contents of an Error as if calling an Error constructor.
+     * \param os The stream on which to print. Defaults to std::cerr.
      */
     void print(std::ostream& os = std::cerr) const;
 
     /**
-       @brief Compare two Errors.
-    */
+     * \brief Equality comparison operator.
+     * \param err Const reference to the Error being compared.
+     * \return true if both Error instances are equal, false if not.
+     */
     bool operator==(const Error& err) const;
 
     /**
-       @brief Return true iff (if and only if) the two Errors
-       "match": are the same except for possibly the line numbers.
-    */
+     * \brief Return true iff the two Error instances "match" in condition, message, and file name.
+     * \param err Const reference to the Error being compared.
+     * \return true if the instances match, false if they do not match.
+     */
     bool matches(const Error& err) const;
 
     /**
-       @brief Print a warning in the same format used by Error::display()
-       unless printing warnings has been disabled.
-    */
+     * \brief Print a warning in the format used by Error::display()
+     *        if printing warnings is enabled.
+     * \param msg The message to print.
+     * \param file The file name to print.
+     * \param line The line number to print.
+     *
+     * \see Error::displayWarnings
+     * \see Error::doDisplayWarnings
+     * \see Error::doNotDisplayWarnings
+     */
     static void printWarning(const std::string& msg,
                              const std::string& file,
                              const int& line);
 
     /**
-       @brief Return true if printing warnings and false if not.
-    */
+     * \brief Query whether warning should be printed.
+     * \return True if warnings should be printed, false if not.
+     *
+     * \see Error::doDisplayWarnings
+     * \see Error::doNotDisplayWarnings
+     */
     static bool displayWarnings();
 
     /**
-     * Indicate that warnings should be printed when detected.
+     * \brief Request that warnings be printed.
+     *
+     * \see Error::displayWarnings
+     * \see Error::doNotDisplayWarnings
      */
     static void doDisplayWarnings();
 
     /**
-     * Indicate that warnings should not be printed.
+     * \brief Request that warnings not be printed.
+     *
+     * \see Error::displayWarnings
+     * \see Error::doDisplayWarnings
      */
     static void doNotDisplayWarnings();
 
     /**
-     * Indicate that errors should throw exceptions rather than
-     * complaining and aborting.
+     * \brief Request that errors should be thrown upon detection.
+     *
+     * \see Error::throwEnabled
+     * \see Error::doNotThrowExceptions
      */
     static void doThrowExceptions();
 
     /**
-     * Indicate that errors should complain and abort rather than throw
-     * exceptions.
+     * \brief Request that when an error is detected, the message
+     *        should be printed, and the program should abort.
+     *
+     * \see Error::throwEnabled
+     * \see Error::doThrowExceptions
      */
     static void doNotThrowExceptions();
 
     /**
-     * Are errors set to throw exceptions?
-     * @return true if so; false if errors will complain and abort.
+     * \brief Query whether errors will throw exceptions.
+     * \return true if throwing is enabled; false if errors will complain and abort.
      */
     static bool throwEnabled();
 
@@ -252,24 +302,37 @@ namespace PLEXIL
     DECLARE_ERROR(GeneralUnknownError);
 
     /**
-     * Actually throw the exception or complain and abort.
-     * @note Which is done depends on throwEnabled().
-     * @see throwEnabled
+     * \brief Throw the exception, or complain and abort, as directed by Error::throwEnabled.
+     *
+     * \see Error::throwEnabled
+     * \see Error::doThrowExceptions
+     * \see Error::doNotThrowExceptions
      */
     void handleAssert() PLEXIL_NORETURN;
 
   protected:
 
-    // Data members for use by derived classes
+    //
+    // Data members which may be used by derived classes
+    //
+
     std::string m_condition; /**<The condition that, being false, implies the error has occurred. */
     std::string m_msg; /**<Additional info about the error. */
     std::string m_file; /**<The source file in which the error was detected (__FILE__). */
     int m_line; /**<The source line on which the error detected (__LINE__). */
 
   private:
+
+
     Error(); /**<The zero argument constructor should not be used. */
   };
 
+  /**
+   * \brief Overloaded formatted output operator.
+   * \param os Reference to the output stream.
+   * \param err Const reference to the Error instance to be printed.
+   * \return Reference to the output stream.
+   */
   std::ostream& operator<<(std::ostream& os, const Error& err);
 
 } // namespace PLEXIL
@@ -279,9 +342,9 @@ namespace PLEXIL
 //
 
 /**
- * @def ALWAYS_FAIL
+ * \def ALWAYS_FAIL
  * False.
- * @note Used as argument to assert() and similar functions to
+ * \note Used as argument to assert() and similar functions to
  * make clear that the assertion will fail, throw an error, etc.
  */
 #define ALWAYS_FAIL (false)
@@ -291,9 +354,18 @@ namespace PLEXIL
 //
 
 /**
- * @def assertTrue_1
- * @brief Test a condition and create an error if false.
- * @param cond Expression that yields a true/false result.
+ * \brief Test a condition; if false, construct an Error with the
+ *        location of the macro call, and throw or abort as requested.
+ * \param cond Expression that yields a true/false result.
+ *
+ * \note If cond evaluates to false, will not return to the location of the call.
+ *
+ * \see check_error_1
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define assertTrue_1(cond) { \
   if (!(cond)) { \
@@ -302,10 +374,20 @@ namespace PLEXIL
 }
 
 /**
- * @def assertTrue_2
- * @brief Test a condition and create an error if false.
- * @param cond Expression that yields a true/false result.
- * @param msg A string or Error instance.
+ * \brief Test a condition; if false, construct an Error with the
+ *        given message and location of the macro call, and throw or
+ *        abort as requested.
+ * \param cond Expression that yields a true/false result.
+ * \param msg A string or Error instance.
+ *
+ * \note If cond evaluates to false, will not return to the location of the call.
+ *
+ * \see check_error_2
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define assertTrue_2(cond, msg) { \
   if (!(cond)) { \
@@ -314,9 +396,19 @@ namespace PLEXIL
 }
 
 /**
- * @def errorMsg
- * @brief Create and report an error unconditionally.
- * @param msg Anything suitable as the right-hand side of <<.
+ * \def errorMsg
+ * \brief Unconditionally construct an Error with the given message
+ *        and location of the macro call, and throw or abort as
+ *        requested.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \note Will not return to the location of the call.
+ *
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define errorMsg(msg) { \
   std::ostringstream sstr; \
@@ -325,10 +417,20 @@ namespace PLEXIL
 } 
 
 /**
- * @def assertTrueMsg
- * @brief Test a condition and create an error if false.
- * @param cond Expression that yields a true/false result.
- * @param msg Anything suitable as the right-hand side of <<.
+ * \brief Test a condition; if false, construct an Error with the text
+ *        of the condition, the given message, and the location of the
+ *        macro call, and throw or abort as requested.
+ * \param cond Expression that yields a true/false result.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \note If cond evaluates to false, will not return to the location of the call.
+ *
+ * \see checkError
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define assertTrueMsg(cond, msg) { \
   if (!(cond)) { \
@@ -338,31 +440,45 @@ namespace PLEXIL
   } \
 }
 
+//
+// The follwing macros do nothing if the macro PLEXIL_UNSAFE is
+// defined at compile time.  They are meant to be used to check for
+// unlikely conditions during development.
+//
+// PLEXIL_UNSAFE should only be defined when the developer is
+// confident that the conditions being checked will not happen, and
+// run time must be minimized.
+//
+
 #ifdef PLEXIL_UNSAFE
 
 #define check_error_1(cond)
 #define check_error_2(cond, msg)
-
 #define checkError(cond, msg)
 
-/**
- * @def warn
- * Print a warning if such is enabled.
- * @param msg The information to print.
- * @note When PLEXIL_UNSAFE is defined, these are ignored
- */
 #define warn(msg)
 
 #else
 
 //
-// check_error implementation
+// check_error implementations
 //
 
 /**
- * @def check_error_1
- * @brief If the condition is false, throw an exception.
- * @param cond The condition to test.
+ * \brief Test a condition; if false, construct an Error with the
+ *        location of the macro call, and throw or abort as requested.
+ *        If macro PLEXIL_UNSAFE is defined at compile time, does
+ *        nothing.
+ * \param cond Expression that yields a true/false result.
+ *
+ * \note If cond evaluates to false, will not return to the location of the call.
+ *
+ * \see assertTrue_1
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define check_error_1(cond) { \
   if (!(cond)) { \
@@ -371,10 +487,21 @@ namespace PLEXIL
 }
 
 /**
- * @def check_error_2
- * @brief If the condition is false, throw an exception.
- * @param cond The condition to test.
- * @param msg A string or Error instance.
+ * \brief Test a condition; if false, construct an Error with the
+ *        given message and location of the macro call, and throw or
+ *        abort as requested. If macro PLEXIL_UNSAFE is defined at
+ *        compile time, does nothing.
+ * \param cond Expression that yields a true/false result.
+ * \param msg A string or Error instance.
+ *
+ * \note If cond evaluates to false, will not return to the location of the call.
+ *
+ * \see assertTrue_2
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
  */
 #define check_error_2(cond, msg) { \
   if (!(cond)) { \
@@ -382,6 +509,23 @@ namespace PLEXIL
   } \
 }
 
+/**
+ * \brief Test a condition; if false, construct an Error with the text
+ *        of the condition, the given message, and the location of the
+ *        macro call, and throw or abort as requested.  If macro
+ *        PLEXIL_UNSAFE is defined at compile time, does nothing.
+ * \param cond Expression that yields a true/false result.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \note If cond evaluates to false, will not return to the location of the call.
+ *
+ * \see assertTrueMsg
+ * \see Error::throwEnabled
+ * \see Error::doThrowExceptions
+ * \see Error::doNotThrowExceptions
+ *
+ * \ingroup Utils
+ */
 #define checkError(cond, msg) { \
   if (!(cond)) { \
     std::ostringstream sstr; \
@@ -390,6 +534,19 @@ namespace PLEXIL
   } \
 }
 
+/**
+ * \brief If warning messagess are enabled, print a warning with the
+ *        given message and the source location of the macro call.
+ *        Does nothing if macro PLEXIL_UNSAFE is defined at compile
+ *        time.
+ * \param msg Anything suitable as the right-hand side of <<.
+ *
+ * \see Error::displayWarnings
+ * \see Error::doDisplayWarnings
+ * \see Error::doNotDisplayWarnings
+ *
+ * \ingroup Utils
+ */
 #define warn(msg) {                                             \
       std::ostringstream sstr;                                   \
       sstr << msg;                                              \

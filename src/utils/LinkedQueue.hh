@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -27,45 +27,40 @@
 #ifndef LINKED_QUEUE_HH
 #define LINKED_QUEUE_HH
 
-#include "plexil-config.h"
-
 #include "Error.hh"
 
-#if defined(HAVE_CSTDDEF)
-#include <cstddef> // size_t, NULL
-#elif defined(HAVE_STDDEF_H)
-#include <stddef.h> // size_t, NULL
-#endif
+#include "plexil-stddef.h" // size_t, NULL
 
 namespace PLEXIL
 {
-  //*
-  // @class LinkedQueue
-  // @brief Simple unidirectional linked-list queue implementation.
-  //        Participant classes must only provide two member functions:
-  //        T *next() const and T **nextPtr()
-  //
 
+  //! @class LinkedQueue
+  //! @brief Simple singly-linked queue template.
+
+  //! LinkedQueue implements a classic singly-linked queue,
+  //! with head and tail pointers.
+  //! Classes which participate in the queue need only provide
+  //! two member functions:
+  //! - T *next() - return pointer to the next item in the queue
+  //! - const T **nextPtr() - return pointer to the pointer to next 
+  //! \see PriorityQueue
+  //! \ingroup Utils
   template <typename T>
   class LinkedQueue
   {
-  protected: // for use by PriorityQueue
-    T *m_head;
-    T *m_tail;
-    size_t m_count;
+  protected:
 
-  private: // not implemented
-#if __cplusplus >= 201103L
-    LinkedQueue(LinkedQueue const &) = delete;
-    LinkedQueue(LinkedQueue &&) = delete;
-    LinkedQueue &operator=(LinkedQueue const &) = delete;
-    LinkedQueue &operator=(LinkedQueue &&) = delete;
-#else
-    LinkedQueue(LinkedQueue const &);
-    LinkedQueue &operator=(LinkedQueue const &);
-#endif
+    //
+    // Member variables
+    // 
+
+    T *m_head;      //!< Pointer to queue head. Accessible to derived classes.
+    T *m_tail;      //!< Pointer to queue tail. Accessible to derived classes.
+    size_t m_count; //!< The number of items in the queue.
 
   public:
+
+    //! \brief Default constructor. Constructs an empty queue.
     LinkedQueue()
       : m_head(NULL),
         m_tail(NULL),
@@ -73,25 +68,35 @@ namespace PLEXIL
     {
     }
     
+    //! \brief Virtual destructor.
     virtual ~LinkedQueue()
     {
     }
 
+    //! \brief Get the first item in the queue.
+    //! \return Pointer to the first item, if any; null if queue is empty.
     T *front() const
     {
       return m_head; // may be null
     }
 
+    //! \brief Return the number of items in the queue.
+    //! \return The number of items in the queue.
+    //! \note Executes in O(1) time.
     size_t size() const
     {
       return m_count;
     }
 
+    //! \brief Query whether the queue is empty.
+    //! \return true if empty, false if non-empty.
     bool empty() const
     {
       return (m_head == NULL);
     }
 
+    //! \brief Remove the first item from the queue. If empty, do nothing.
+    //! \note Clears the 'next' pointer of the item removed.
     void pop()
     {
       if (empty())
@@ -113,6 +118,9 @@ namespace PLEXIL
       --m_count; // better be 0 if empty!
     }
 
+    //! \brief Insert an item on the tail end of the queue.
+    //! \param Pointer to the item to be inserted.
+    //! \note Clears the 'next' pointer of the new item.
     void push(T *item)
     {
       assertTrue_1(item);
@@ -127,6 +135,10 @@ namespace PLEXIL
       ++m_count;
     }
 
+    //! \brief Remove the given item from the queue, if it exists.
+    //! \param Pointer to the item to be removed.
+    //! \note If the item is found, clears its 'next' pointer.
+    //! \note If the item is not found, no side effects are performed.
     void remove(T *item)
     {
       if (item == NULL || empty())
@@ -153,13 +165,10 @@ namespace PLEXIL
       --m_count;
     }
  
-    /**
-     * @brief Find an item satisfying a predicate.
-     * @param pred The predicate object. Must have an operator() method with the signature:
-     *    bool operator()(T* item)
-     * @return The first item satisfying the predicate, or null if not found.
-     */
-
+    //! \brief Find an item satisfying a predicate.
+    //! \param pred A predicate functor. Must implement an operator() method with the signature:
+    //!             bool operator()(T* item)
+    //! \return Pointer to the first item satisfying the predicate; null if not found.
     template <typename Predicate>
     T* find_if(Predicate const &pred)
     {
@@ -175,13 +184,10 @@ namespace PLEXIL
       return NULL;
     }
  
-    /**
-     * @brief Remove the first item satisfying the predicate.
-     * @param pred The predicate object. Must have an operator() method with the signature:
-     *    bool operator()(T* item)
-     * @return The removed queue item, or null if not found.
-     */
-
+    //! \brief Remove the first item satisfying the predicate.
+    //! \param pred A predicate functor. Must implement an operator() method with the signature:
+    //!             bool operator()(T* item)
+    //! \return The removed queue item, or null if not found.
     template <typename Predicate>
     T* remove_if(Predicate const &pred)
     {
@@ -213,37 +219,57 @@ namespace PLEXIL
       return result;
     }
 
+    //! \brief Make this queue empty.
+    //! \note Any items on the queue at entry are not modified.
     void clear()
     {
       m_head = m_tail = NULL;
       m_count = 0;
     }
 
+  private:
+    
+    //
+    // Unimplented constructors and assignment operators
+    //
+
+#if __cplusplus >= 201103L
+    LinkedQueue(LinkedQueue const &) = delete;
+    LinkedQueue(LinkedQueue &&) = delete;
+    LinkedQueue &operator=(LinkedQueue const &) = delete;
+    LinkedQueue &operator=(LinkedQueue &&) = delete;
+#else
+    LinkedQueue(LinkedQueue const &);
+    LinkedQueue &operator=(LinkedQueue const &);
+#endif
+
   };
 
-  /**
-   * @class PriorityQueue
-   * @brief A variant of LinkedQueue that stores its entries in nondecreasing sorted order
-   *        as determined by Compare.
-   * @note Compare must implement a strict less-than comparison.
-   * @note Callers should not use push() member function!!
-   */
-
+  //! \class PriorityQueue
+  //! \brief A variant of LinkedQueue which stores its entries in nondecreasing sorted order
+  //!        as determined by the Compare class.
+  //! \note Compare must implement a strict less-than comparison.
+  //! \note Callers should not use push() member function!!
+  //! \ingroup Utils
   template <typename T, typename Compare = std::less<T> >
   class PriorityQueue :
     public LinkedQueue<T>
   {
   public:
+    
+    //! \brief Default constructor. Constructs an empy queue.
     PriorityQueue()
       : LinkedQueue<T>()
     {
     }
 
-    ~PriorityQueue()
+    //! \brief Virtual destructor.
+    virtual ~PriorityQueue()
     {
     }
 
-    // Inserts item after all entries less than or equal to item.
+    //! \brief Insert item in sorted order, after all entries less than or equal to item.
+    //! \param item Pointer to the item to insert.
     void insert(T *item)
     {
       if (!this->m_head) {
@@ -277,6 +303,10 @@ namespace PLEXIL
     }
 
   private:
+    
+    //
+    // Unimplented constructors and assignment operators
+    //
 
 #if __cplusplus >= 201103L
     PriorityQueue(PriorityQueue const &) = delete;
@@ -288,7 +318,8 @@ namespace PLEXIL
     PriorityQueue &operator=(PriorityQueue const &);
 #endif
 
-    void push(T *); // callers should not use this base class member function
+    void push(T *); // Callers must not use this base class member function
+
   };
 
 }

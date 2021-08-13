@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2017, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -34,20 +34,29 @@
 namespace PLEXIL
 {
   /**
-   * @class SimpleKeyComparator
-   * @brief A templatized comparator class for sorting and inserting in SimpleMap.
-   * Any class used as a key comparator must implement this API.
+   * \class SimpleKeyComparator
+   * \brief A comparator class template, specialized by key type, for
+   *        sorting and inserting keys in SimpleMap.  Any class used
+   *        as a key comparator must implement this API.
+   * \ingroup Utils
    */
   template <typename KEY_TYPE>
   struct SimpleKeyComparator
   {
-    //* Compare key a less than key b
+
+    //! \brief Less-than comparison operator.
+    //! \param a Const reference to a key.
+    //! \param b Const reference to another key.
+    //! \return true if a is strictly less than b in the key ordering, false otherwise.
     bool operator()(KEY_TYPE const &a, KEY_TYPE const &b) const
     {
       return a < b;
     }
 
-    //* Compare key a equal to key b
+    //! \brief Equality comparison operator.
+    //! \param a Const reference to a key.
+    //! \param b Const reference to another key.
+    //! \return true if a and b are equal in the key ordering, false otherwise.
     bool equal(KEY_TYPE const &a, KEY_TYPE const &b) const
     {
       return a == b;
@@ -55,35 +64,39 @@ namespace PLEXIL
   };
 
   /**
-   * @class SimpleIndexComparator
-   * @brief A templatized comparator class for lookups in SimpleMap.
-   * Any class used as an index comparator must implement this API.
+   * \class SimpleIndexComparator
+   * \brief A comparator class, specialized on key and index types,
+   *        for lookups in SimpleMap.  Any class used as an index comparator
+   *        must implement this API.
+   * \ingroup Utils
    */
   template <typename KEY_TYPE, typename INDEX_TYPE>
   struct SimpleIndexComparator
   {
-    //* Compare entry a less than index
+    //! \brief Is the entry less than the index?
+    //! \param Const reference to a key.
+    //! \param Const reference to an index.
+    //! \return True if the key is less than the index, false otherwise.
     bool operator()(KEY_TYPE const &a, INDEX_TYPE const &b) const
     {
       return a < b;
     }
 
-    //* Compare entry a equal to index
+    //! \brief Is the entry equal to the index?
+    //! \param Const reference to a key.
+    //! \param Const reference to an index.
+    //! \return True if the key is equal to the index, false otherwise.
     bool equal(KEY_TYPE const &a, INDEX_TYPE const &b) const
-    {
-      return a == b;
-    }
-
-    //* Compare entry a "equal" to index (e.g. b begins with prefix a)
-    bool match(KEY_TYPE const &a, INDEX_TYPE const &b) const
     {
       return a == b;
     }
   };
 
   /**
-   * @class SimpleMap
-   * @brief A key-value mapping sorted by key value.
+   * \class SimpleMap
+   * \brief An ordered key-value mapping.  Stores key-value pairs in a
+   *        vector and retrieves them via binary search.
+   * \ingroup Utils
    */
   template <typename KEY_TYPE,
             typename VALUE_TYPE,
@@ -97,23 +110,26 @@ namespace PLEXIL
     typedef typename MAP_STORE_TYPE::const_iterator const_iterator;
     typedef typename MAP_STORE_TYPE::iterator iterator;
 
+    //! \brief Default constructor.
     SimpleMap()
     {
     }
 
+    //! \brief Constructor specifying an initial capacity,
+    //! \param initialCapacity The requested capacity.
     SimpleMap(size_t initialCapacity)
     {
       m_store.reserve(initialCapacity);
     }
 
-    // Virtual to allow for derived classes.
+    //! \brief Virtual destructor.
     virtual ~SimpleMap()
     {
     }
 
     /*
-     * @brief Reserve space for n additional entries.
-     * @param n The number of additional entries.
+     * \brief Reserve space for n additional entries.
+     * \param n The number of additional entries.
      */
     void grow(size_t n)
     {
@@ -121,6 +137,18 @@ namespace PLEXIL
       m_store.reserve(desired);
     }
 
+    //! \brief Insert the key-value pair in sorted order, as
+    //!        directed by the key comparator.
+    //!
+    //! Searches for the given key.  If found, no insertion is
+    //! performed, and the function returns false.  If the key is not
+    //! found, the key-value pair is inserted in sorted order, and the
+    //! function returns true.
+    //!
+    //! \param index Const reference to the key.
+    //! \parm val Const reference to the value to associate with the key.
+    //! \return true if the key was not previously inserted;
+    //!         false if the key was found.
     bool insert(KEY_TYPE const &index, VALUE_TYPE const &val)
     {
       static EntryComparator s_comp;
@@ -132,6 +160,11 @@ namespace PLEXIL
       return true;
     }
 
+    //! \brief Get a const reference to the pair with the given key,
+    //!        if it exists.
+    //! \param index Const reference to the key.
+    //! \return Const reference to the key-value pair, if found;
+    //!         end() otherwise.
     const_iterator find(KEY_TYPE const &index) const
     {
       static EntryComparator s_comp;
@@ -143,6 +176,11 @@ namespace PLEXIL
         return m_store.end();
     }
 
+    //! \brief Get a reference to the pair with the given key,
+    //!        if it exists.
+    //! \param index Const reference to the key.
+    //! \return Reference to the key-value pair, if found;
+    //!         end() otherwise.
     iterator find(KEY_TYPE const &index)
     {
       static EntryComparator s_comp;
@@ -154,6 +192,11 @@ namespace PLEXIL
         return m_store.end();
     }
 
+    //! \brief Get a reference to the value at the given key.
+    //! \param index The key.
+    //! \return If the key was found, reference to the corresponding value;
+    //!         otherwise, the key is inserted with a default-constructed value,
+    //!         and the reference to the new value is returned.
     VALUE_TYPE &operator[](KEY_TYPE const &index)
     {
       static EntryComparator s_comp;
@@ -164,6 +207,11 @@ namespace PLEXIL
       return it->second;
     }
 
+    //! \brief Get a const reference to the value at the given key.
+    //! \param index The key.
+    //! \return If the key was found, a const reference to the
+    //!         corresponding value; otherwise, a const reference to a
+    //!         statically-allocated default-constructed value.
     VALUE_TYPE const &operator[](KEY_TYPE const &index) const
     {
       static EntryComparator s_comp;
@@ -181,7 +229,11 @@ namespace PLEXIL
     // Insertion is not possible with these template members
     //
 
-    // Return the entry exactly equal to the index.
+    //! \brief Return the entry whose key compares equal to the index,
+    //!        as determined by an index comparator.
+    //! \param index The index.
+    //! \return If an equal key is found, iterator pointing to the entry,
+    //!         otherwise end().
     template <typename INDEX_TYPE, class INDEX_COMP>
     iterator find(INDEX_TYPE const &index)
     {
@@ -194,41 +246,62 @@ namespace PLEXIL
         return m_store.end();
     }
 
+    //! \brief Get a const iterator pointing to the first key-value
+    //!        pair in the map.
+    //! \return The const iterator.
     const_iterator begin() const
     {
       return m_store.begin();
     }
 
+    //! \brief Get an iterator pointing to the first key-value
+    //!        pair in the map.
+    //! \return The iterator.
     iterator begin()
     {
       return m_store.begin();
     }
 
+    //! \brief Get a const iterator pointing past the last key-value
+    //!        pair in the map.
+    //! \return The const iterator.
     const_iterator end() const
     {
       return m_store.end();
     }
 
+    //! \brief Get an iterator pointing past the last key-value
+    //!        pair in the map.
+    //! \return The const iterator.
     iterator end()
     {
       return m_store.end();
     }
 
+    //! \brief Erase the map.
     virtual void clear()
     {
       m_store.clear();
     }
 
+    //! \brief Query whether the map is empty.
+    //! \return true if empty, false if not.
     bool empty() const
     {
       return m_store.empty();
     }
 
+    //! \brief Get the number of entries in the map.
+    //! \return The entry count.
     size_t size() const
     {
       return m_store.size();
     }
 
+    //! \brief Get the current capacity of the map's store, that is,
+    //!        the maximum number of entries it can hold before
+    //!        expansion is required.
+    //! \return The capacity.
     size_t capacity() const
     {
       return m_store.capacity();
@@ -240,15 +313,20 @@ namespace PLEXIL
     // Extension API provided for implementors of derived classes
     //
 
-    // Returns iterator to the new entry
+    //! \brief Insert a new map entry at the location pointed to by the iterator.
+    //! \param it Iterator pointing to the location where the entry should be inserted.
+    //! \param k Const reference to the key to insert.
+    //! \param v Const reference to the value to insert.
+    //! \return Iterator pointing to the new entry.
     virtual iterator insertEntry(iterator it, KEY_TYPE const &k, VALUE_TYPE const &v)
     {
       return m_store.insert(it, MAP_ENTRY_TYPE(k, v));
     }
     
-    MAP_STORE_TYPE m_store;
+    MAP_STORE_TYPE m_store; //!< Storage for the map data.
 
   private:
+
     // Not implemented
 #if __cplusplus >= 201103L
     SimpleMap(SimpleMap const &) = delete;
@@ -294,12 +372,6 @@ namespace PLEXIL
       bool equal(MAP_ENTRY_TYPE const &a, INDEX_TYPE const &b)
       {
         return INDEX_COMP().equal(a.first, b);
-      }
-
-      // Only used in SimpleMap::findFirst() and SimpleMap::findLast().
-      bool match(MAP_ENTRY_TYPE const &a, INDEX_TYPE const &b)
-      {
-        return INDEX_COMP().match(a.first, b);
       }
     };
     

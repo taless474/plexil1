@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2011, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,62 +38,71 @@
 namespace PLEXIL {
 
   /**
-   * @brief A class whose static methods facilitate access to Java objects.
+   * \class JNIUtils
+   * \brief A class whose static methods facilitate access to Java objects.
+   * \ingroup Utils
    */ 
-
   class JNIUtils
   {
   public:
 
-	// Constructors
+	//! \brief Constructor from pointer to a JNIEnv.
+    //! \param Pointer to the JNIEnv.
 	JNIUtils(JNIEnv* env);
+
+    //! \brief Copy constructor.
+    //! \param other Const reference to the JNIUtils instance to copy.
 	JNIUtils(const JNIUtils&);
 
-	// Destructor
+	//! \brief Destructor.
 	~JNIUtils();
 
-	// Assignment
-	JNIUtils& operator=(const JNIUtils&);
+	//! \brief Copy assignment operator.
+    //! \param orig Const reference to the JNIUtils instance to copy.
+	JNIUtils& operator=(const JNIUtils& orig);
 
 	/**
-	 * @brief Returns a freshly allocated copy of the Java string.
-	 * @param javaString The JNI string object.
-	 * @return A freshly allocated copy of the Java string, or NULL.
+	 * \brief Construct a freshly allocated copy of the Java string.
+	 * \param javaString The JNI string object.
+	 * \return A freshly allocated copy of the Java string, or NULL.
 	 */
 	char* getJavaStringCopy(jstring javaString);
 
 	/**
-	 * @brief Returns a freshly allocated copy of the Java string.
-	 * @param javaArgv The JNI string array.
-	 * @param argcReturn A reference to an int variable to hold the argument count.
-	 * @param argvReturn A reference to a char** variable to hold the argument vector.
-	 * Both the strings and the string array are freshly allocated and must be deleted by the caller.
-	 * @return true if the operation was successful, false otherwise.
+     * \brief Extract the strings from a Java string array in argc/argv format.
+	 * \param javaArgv The JNI string array.
+	 * \param argcReturn A reference to an int variable to hold the argument count.
+	 * \param argvReturn A reference to a char** variable to hold the argument vector.
+	 * \return true if the operation was successful, false otherwise.
+	 * \note Both the strings and the string array are freshly
+	 *       allocated. The caller is responsible for deleting them.
 	 */
 	bool getArgcArgv(jobjectArray javaArgv, int &argcReturn, char** &argvReturn);
 
 	/**
-	 * @brief Constructs a Java String object from the given C char* object.
-	 * @param cstr Pointer to a C character string.
-	 * @return A freshly allocated Java jstring object.
+	 * \brief Construct a Java String object from the given C char* object.
+	 * \param cstr Pointer to a C character string.
+	 * \return A freshly allocated Java jstring object.
 	 */
 	jstring makeJavaString(const char* cstr);
 
 	/**
-	 * @brief Constructs a Java array of String objects.
-	 * @param size The number of elements in the array.
-	 * @return A freshly allocated Java string array object.
+	 * \brief Construct a Java array of String objects.
+	 * \param size The number of elements in the array.
+	 * \return A freshly allocated Java string array object.
 	 */
 	jobjectArray makeJavaStringArray(jsize size);
 
 	/**
-	 * @brief Given a Java String[], return an array of char*.
-	 * @param The Java String[] object.
-	 * @return A freshly allocated vector of strings.
+	 * \brief Given a Java String[], return an array of char*.
+	 * \param The Java String[] object.
+	 * \return A freshly allocated vector of strings.
+     * \note The caller is responsible for deleting the returned vector.
 	 */
 	std::vector<std::string>* getJavaStringArray(jobjectArray ary);
 
-	//* Accessor.
+	//! \brief Get the JNIEnv pointer.
+    //! \return The pointer.
 	JNIEnv* getEnv() { return m_env; }
 
   private:
@@ -101,11 +110,9 @@ namespace PLEXIL {
 	// Deliberately unimplemented
 	JNIUtils(); 
 
-	//* A pointer to the JNI environment object.
-	JNIEnv* m_env;
+	JNIEnv* m_env;        //!< A pointer to the JNI environment object.
+	jclass m_stringClass; //!< The Java string class.
 
-	//* The Java string class.
-	jclass m_stringClass;
   }; // class JNIUtils
 
 } // namespace PLEXIL

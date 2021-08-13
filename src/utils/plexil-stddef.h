@@ -24,10 +24,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Including the right version of stddef.h */
-
 #ifndef PLEXIL_STDDEF_H
 #define PLEXIL_STDDEF_H
+
+/**
+ * \file plexil-stddef.h
+ * \brief Selects the C or C++ version of the standard stddef.h file as appropriate.
+ * \ingroup Utils
+ */
 
 #include "plexil-config.h"
 
