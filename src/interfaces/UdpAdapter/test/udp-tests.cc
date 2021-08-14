@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,15 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ThreadSpawn.hh"
+#include "plexil-config.h"
+
 #include "udp-utils.hh"
+
+#include "ThreadSpawn.hh"
+
+#include <iostream> // std::cout
+
+#include "plexil-stdio.h" // printf(), sprintf()
 
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h> // IPPROTO_UDP

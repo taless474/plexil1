@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,6 +24,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "plexil-config.h"
+
 #include "UdpAdapter.h"
 
 #include "AdapterConfiguration.hh"
@@ -41,26 +43,15 @@
 #include "udp-utils.hh"
 #include "Update.hh"
 
-#if defined(HAVE_CERRNO)
-#include <cerrno>
-#elif defined(HAVE_ERRNO_H)
-#include <errno.h>
-#endif
+#include <iostream>         // cout
 
-#if defined(HAVE_CFLOAT)
-#include <cfloat>
-#elif defined(HAVE_FLOAT_H)
-#include <float.h>
-#endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-errno.h"
+#include "plexil-float.h"
+#include "plexil-stdio.h"
+#include "plexil-string.h"
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h> // for close()
+#include <unistd.h> // close()
 #endif
 
 #ifdef HAVE_NETINET_IN_H
