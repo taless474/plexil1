@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,10 @@ libPlexilUtils_la_CPPFLAGS = $(AM_CPPFLAGS)
 include_HEADERS = ConstantMacros.hh Debug.hh DynamicLoader.h Error.hh \
  LinkedQueue.hh Logging.hh ParserException.hh PlanError.hh SimpleMap.hh \
  SimpleSet.hh TestSupport.hh bitsetUtils.hh lifecycle-utils.h map-utils.hh \
- plexil-inttypes.h plexil-stdint.h stricmp.h timespec-utils.hh \
- timeval-utils.hh utils_main_page.hh
+ plexil-assert.h plexil-errno.h plexil-float.h plexil-inttypes.h \
+ plexil-limits.h plexil-math.h plexil-signal.h plexil-stddef.h plexil-stdint.h \
+ plexil-stdio.h plexil-stdlib.h plexil-string.h plexil-time.h stricmp.h \
+ timespec-utils.hh timeval-utils.hh
 
 libPlexilUtils_la_SOURCES = DynamicLoader.cc Error.cc Logging.cc \
  ParserException.cc PlanError.cc bitsetUtils.cc lifecycle-utils.c \
