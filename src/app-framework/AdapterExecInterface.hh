@@ -27,6 +27,8 @@
 #ifndef PLEXIL_ADAPTER_EXEC_INTERFACE_HH
 #define PLEXIL_ADAPTER_EXEC_INTERFACE_HH
 
+#include "plexil-config.h"
+
 #include "CommandHandle.hh"
 
 // forward reference
