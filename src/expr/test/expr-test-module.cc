@@ -24,8 +24,6 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "plexil-config.h"
-
 #include "DebugMessage.hh"
 #include "Error.hh"
 #include "TestSupport.hh"
@@ -33,11 +31,7 @@
 
 #include <fstream>
 
-#if defined(HAVE_CSTRING)
-#include <cstring> // for strcmp()
-#elif defined(HAVE_STRING_H)
-#include <string.h> // for strcmp()
-#endif
+#include "plexil-string.h" // strcmp()
 
 using PLEXIL::Error;
 

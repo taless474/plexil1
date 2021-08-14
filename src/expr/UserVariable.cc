@@ -35,17 +35,8 @@
 #include "PlexilTypeTraits.hh"
 #include "Value.hh"
 
-#if defined(HAVE_CSTDLIB)
-#include <cstdlib> // free()
-#elif defined(HAVE_STDLIB_H)
-#include <stdlib.h> // free()
-#endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring> // strdup()
-#elif defined(HAVE_STRING_H)
-#include <string.h> // strdup()
-#endif
+#include "plexil-stdlib.h" // free()
+#include "plexil-string.h" // strdup()
 
 namespace PLEXIL {
 

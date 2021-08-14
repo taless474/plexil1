@@ -28,11 +28,7 @@
 #include "Function.hh"
 #include "PlanError.hh"
 
-#if defined(HAVE_CMATH)
-#include <cmath>
-#elif defined(HAVE_MATH_H)
-#include <math.h>
-#endif
+#include "plexil-math.h"
 
 namespace PLEXIL
 {

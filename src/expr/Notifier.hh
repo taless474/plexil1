@@ -26,17 +26,11 @@
 #ifndef PLEXIL_NOTIFIER_HH
 #define PLEXIL_NOTIFIER_HH
 
-#include "plexil-config.h"
-
 #include "Listenable.hh"
 
 #include <vector>
 
-#if defined(HAVE_CSTDDEF)
-#include <cstddef> // size_t
-#elif defined(HAVE_STDDEF_H)
-#include <stddef.h> // size_t
-#endif
+#include "plexil-stddef.h" // size_t
 
 namespace PLEXIL
 {
