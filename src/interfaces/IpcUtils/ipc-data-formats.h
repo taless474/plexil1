@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2019, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,16 +27,11 @@
 #ifndef IPC_DATA_FORMATS_H
 #define IPC_DATA_FORMATS_H
 
+#include "plexil-limits.h"
 #include "plexil-stdint.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if defined(HAVE_CLIMITS)
-#include <climits>
-#elif defined(HAVE_LIMITS_H)
-#include <limits.h>
 #endif
 
 /*
