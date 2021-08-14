@@ -27,6 +27,8 @@
 #ifndef PLEXIL_INTERFACE_MANAGER_HH
 #define PLEXIL_INTERFACE_MANAGER_HH
 
+#include "plexil-config.h"
+
 #include "ExternalInterface.hh"
 #include "AdapterExecInterface.hh"
 
