@@ -26,14 +26,10 @@
 #ifndef PLEXIL_TIME_ADAPTER_IMPL_HH
 #define PLEXIL_TIME_ADAPTER_IMPL_HH
 
+#include "plexil-config.h"
+
 #include "InterfaceAdapter.hh"
 #include "InterfaceError.hh"
-
-#if defined(HAVE_CSIGNAL)
-#include <csignal> // sigset_t
-#elif defined(HAVE_SIGNAL_H)
-#include <signal.h>
-#endif
 
 #ifdef PLEXIL_WITH_THREADS
 #include "ThreadMutex.hh"
@@ -53,6 +49,8 @@
 #error "clock_gettime() is defined, but not CLOCK_MONOTONIC or CLOCK_REALTIME"
 #endif // defined(CLOCK_REALTIME)_
 #endif // defined(HAVE_CLOCK_GETTIME)
+
+#include "plexil-signal.h" // sigset_t
 
 namespace PLEXIL
 {

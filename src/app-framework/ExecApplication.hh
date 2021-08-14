@@ -26,7 +26,7 @@
 #ifndef EXEC_APPLICATION_H
 #define EXEC_APPLICATION_H
 
-#include <plexil-config.h>
+#include "plexil-config.h"
 
 #ifdef PLEXIL_WITH_THREADS
 #include "ThreadMutex.hh"
@@ -35,17 +35,13 @@
 
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#endif
-#endif
+#endif // #ifdef HAVE_PTHREAD_H
+#endif // #ifdef PLEXIL_WITH_THREADS
 
 #include <string>
 #include <vector>
 
-#if defined(HAVE_CSIGNAL)
-#include <csignal>
-#elif defined(HAVE_SIGNAL_H)
-#include <signal.h>
-#endif
+#include "plexil-signal.h"
 
 #define EXEC_APPLICATION_MAX_N_SIGNALS 8
 
