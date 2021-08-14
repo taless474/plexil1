@@ -24,8 +24,6 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "plexil-config.h"
-
 #include "DebugMessage.hh"
 #include "lifecycle-utils.h"
 #include "TestSupport.hh"
@@ -33,11 +31,7 @@
 #include <fstream>
 #include <iostream>
 
-#if defined(HAVE_CSTRING)
-#include <cstring> // strcmp()
-#elif defined(HAVE_STRING_H)
-#include <string.h> // strcmp()
-#endif
+#include "plexil-string.h" // strcmp(); includes plexil-config.h
 
 extern bool lookupsTest();
 extern bool stateTest();

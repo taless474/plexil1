@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -27,15 +27,9 @@
 #ifndef PLEXIL_EXPR_VEC_HH
 #define PLEXIL_EXPR_VEC_HH
 
-#include "plexil-config.h"
-
 #include <iosfwd> // std::ostream
 
-#if defined(HAVE_CSTDDEF)
-#include <cstddef>  // size_t
-#elif defined(HAVE_STDDEF_H)
-#include <stddef.h> // size_t
-#endif
+#include "plexil-stddef.h" // size_t
 
 namespace PLEXIL
 {

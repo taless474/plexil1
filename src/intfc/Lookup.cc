@@ -32,11 +32,7 @@
 #include "StateCacheEntry.hh"
 #include "StateCacheMap.hh"
 
-#if defined(HAVE_CMATH)
-#include <cmath> // for abs()
-#elif defined(HAVE_MATH_H)
-#include <math.h> // for abs()
-#endif
+#include "plexil-math.h" // fabs()
 
 namespace PLEXIL
 {
