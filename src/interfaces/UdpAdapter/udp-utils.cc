@@ -28,9 +28,6 @@
 
 #include "udp-utils.hh"
 
-#include "plexil-errno.h"
-#include "plexil-string.h"  // memset(), memmove()
-
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>      // htonl(), htons(), ntohl(), ntohs()
 #endif
@@ -50,6 +47,10 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>  // close()
 #endif
+
+#include "plexil-errno.h"
+#include "plexil-stdio.h"   // perror(), printf(), sprintf()
+#include "plexil-string.h"  // memset(), memmove()
 
 namespace PLEXIL
 {
