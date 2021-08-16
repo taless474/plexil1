@@ -2,7 +2,7 @@
 # File: $SVNROOT/scripts/run-agents
 # Note: Script to run two Plexil agent systems using IPC
 
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -77,7 +77,6 @@ do
     case "$1" in
         ( -d )
 	    debug=true
-	    shift
         ;;
         ( -h | -help )
 	    usage
@@ -85,35 +84,28 @@ do
         ;;
         ( -v | -viewer )
 	    use_viewer=yes
-	    shift
         ;;
         ( -x | -xterm | -xterms )
 	    use_xterm=yes
-	    shift
         ;;
         ( -vx | -xv )
 	    use_xterm=yes
 	    use_viewer=yes
-	    shift
         ;;
         ( -i | -ipc )
 	    run_ipc_in_background=no
-	    shift
         ;;
         ( -n | -no-ipc )
 	    no_ipc=yes
-	    shift
         ;;
         ( -c )
         if [ -z "$com1" ]
 	    then
 	        shift
 	        com1="$1"
-	        shift;
         else
 	        shift
 	        com2="$1"
-	        shift
         fi
         ;;
         ( -l )
@@ -122,11 +114,9 @@ do
 	    then
 	        shift
 	        libs1="$libs1$1 "
-	        shift
         else
 	        shift
 	        libs2="$libs2$1 "
-	        shift
         fi
         ;;
         ( -L )
@@ -134,21 +124,19 @@ do
         if [ -z "$agent2_raw" ]
 	    then
 	        libdirs1="$libdirs1$1 $2 "
-	        shift 2
+	        shift
         else
 	        libdirs2="$libdirs1$1 $2 "
-	        shift 2
+	        shift
         fi
         ;;
         ( * )
         if [ -z "$agent1_raw" ]
 	    then
 	        agent1_raw="$1"
-	        shift
         elif [ -z "$agent2_raw" ]
 	    then
 	        agent2_raw="$1"
-	        shift
         else
 	        echo "The \"$1\" parameter is ambiguous.  Maybe it is a library missing the -l flag?" >&2
 	        usage
@@ -156,6 +144,7 @@ do
         fi
         ;;
     esac
+    shift
 done
 
 if [ -z "$agent1_raw" ] || [ -z "$agent2_raw" ] ; then
@@ -339,6 +328,26 @@ do
     libraries2="$libraries2 -l $lib.plx"
 done
 
+# Choose debug configuration files
+debug1=
+debug2=
+if [ -r "${agent1}.cfg" ]
+then
+    debug1="-d ${agent1}.cfg"
+elif [ -r 'Debug.cfg' ]
+then
+    debug1='-d Debug.cfg'
+fi
+
+if [ -r "${agent2}.cfg" ]
+then
+    debug2="-d ${agent2}.cfg"
+elif [ -r 'Debug.cfg' ]
+then
+    debug2='-d Debug.cfg'
+fi
+
+
 if [ -n "$debug" ] ;
 then
     echo ' '
@@ -347,12 +356,14 @@ then
     echo "com1:         $com1"
     echo "libs1:        $libs1"
     echo "libraries1:   $libraries1"
+    echo "debug1:       $debug1"
     echo ' '
     echo "agent2_raw:   $agent2_raw"
     echo "agent2:       $agent2"
     echo "com2:         $com2"
     echo "libs2:        $libs2"
     echo "libraries2:   $libraries2"
+    echo "debug2:       $debug2"
     echo ' ' 
     echo "cmd1:         $cmd1"
     echo "cmd2:         $cmd2"
@@ -420,9 +431,9 @@ fi
 echo "$cmd1"
 if [ -z "$use_xterm" ]
 then
-    plexilexec ${use_viewer:+'-v -b'} -p "$agent1".plx -c "$com1" $libdirs1 $libraries1 &
+    plexilexec ${use_viewer:+'-v -b'} -p "$agent1".plx -c "$com1" $debug1 $libdirs1 $libraries1 &
 else
-    xterm -e plexilexec ${use_viewer:+'-v -b'} -p "$agent1".plx -c "$com1" $libdirs1 $libraries1 &
+    xterm -e plexilexec ${use_viewer:+'-v -b'} -p "$agent1".plx -c "$com1" $debug1 $libdirs1 $libraries1 &
 fi
 
 sleep $sleep_time
@@ -430,9 +441,9 @@ sleep $sleep_time
 echo "$cmd2"
 if [ -z "$use_xterm" ]
 then
-    plexilexec ${use_viewer:+'-v -b'} -p "$agent2".plx -c "$com2" $libdirs2 $libraries2
+    plexilexec ${use_viewer:+'-v -b'} -p "$agent2".plx -c "$com2" $debug2 $libdirs2 $libraries2
 else
-    xterm -e plexilexec ${use_viewer:+'-v -b'} -b -p "$agent2".plx -c "$com2" $libdirs2 $libraries1
+    xterm -e plexilexec ${use_viewer:+'-v -b'} -b -p "$agent2".plx -c "$com2" $debug2 $libdirs2 $libraries1
 fi
 
 if [ -n "$ipc_pid" ]
