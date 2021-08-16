@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,12 +36,12 @@
 #include "timeval-utils.hh"
 #include "Value.hh"
 
-#include <cctype>
-
 #include <fstream>
 #include <iomanip> // std::setw(), std::setfill()
 #include <iostream>
 #include <sstream>
+
+#include "plexil-ctype.h"
 
 using namespace PLEXIL;
 

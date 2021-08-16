@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,8 @@
 * Updated by Cao, Yichuan
 */
 
+#include "plexil-config.h"
+
 #include "GanttListener.hh"
 
 #include "AdapterExecInterface.hh"
@@ -41,29 +43,10 @@
 #include <fstream>
 #include <iostream>
 
-#if defined(HAVE_CMATH)
-#include <cmath>
-#elif defined(HAVE_MATH_H)
-#include <math.h>
-#endif
-
-#if defined(HAVE_CSTDIO)
-#include <cstdio>
-#elif defined(HAVE_STDIO_H)
-#include <stdio.h>
-#endif
-
-#if defined(HAVE_CSTDLIB)
-#include <cstdlib>
-#elif defined(HAVE_STDLIB_H)
-#include <stdlib.h>
-#endif
-
-#if defined(HAVE_CTIME)
-#include <ctime>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
+#include "plexil-math.h"
+#include "plexil-stdio.h"
+#include "plexil-stdlib.h"
+#include "plexil-time.h"
 
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h> // mkdir()

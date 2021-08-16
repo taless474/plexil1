@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2014, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -24,12 +24,12 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <cstddef> // for NULL
-
 #include "SimpleInputQueue.hh"
 
 #include "Error.hh"
 #include "QueueEntry.hh"
+
+#include "plexil-stddef.h" // NULL
 
 namespace PLEXIL
 {

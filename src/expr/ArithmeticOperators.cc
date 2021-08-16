@@ -28,7 +28,7 @@
 #include "Function.hh"
 #include "PlanError.hh"
 
-#include "plexil-math.h"
+#include "plexil-math.h" // includes plexil-config.h
 
 namespace PLEXIL
 {

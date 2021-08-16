@@ -34,11 +34,7 @@
 #include "PlexilExec.hh"
 #include "pugixml.hpp"
 
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-string.h" // includes plexil-config.h
 
 namespace PLEXIL
 {

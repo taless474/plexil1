@@ -30,11 +30,7 @@
 #include "parser-utils.hh"
 #include "PlexilSchema.hh"
 
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-string.h"
 
 using namespace pugi;
 

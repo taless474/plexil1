@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,17 +35,8 @@
 #include <fstream>
 #include <map>
 
-#if defined(HAVE_CSTDIO)
-#include <cstdio>
-#elif defined(HAVE_STDIO_H)
-#include <stdio.h>
-#endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-stdio.h"
+#include "plexil-string.h"
 
 namespace PLEXIL 
 {

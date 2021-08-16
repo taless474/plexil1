@@ -35,17 +35,7 @@
 
 #include <iostream>
 
-// #if defined(HAVE_CMATH)
-// #include <cmath>
-// #elif defined(HAVE_MATH_H)
-// #include <math.h>
-// #endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring>
-#elif defined(HAVE_STRING_H)
-#include <string.h>
-#endif
+#include "plexil-string.h"
 
 using namespace PLEXIL;
 

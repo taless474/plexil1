@@ -23,6 +23,8 @@
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 // USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "plexil-config.h"
+
 #include "TimeAdapterImpl.hh"
 
 #include "AdapterConfiguration.hh"
@@ -37,19 +39,11 @@
 
 #include <iomanip>
 
-#if defined(HAVE_CERRNO)
-#include <cerrno>
-#elif defined(HAVE_ERRNO_H)
-#include <cerrno>
-#endif
+#include "plexil-errno.h"
 
 #if defined(HAVE_CLOCK_GETTIME)
 
-#if defined(HAVE_CTIME)
-#include <ctime>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
+#include "plexil-time.h"
 #include "timespec-utils.hh"
 
 #elif defined(HAVE_GETTIMEOFDAY)

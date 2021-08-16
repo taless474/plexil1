@@ -38,17 +38,8 @@
 #include <iomanip>   // std::setprecision
 #include <sstream>
 
-#if defined(HAVE_CFLOAT)
-#include <cfloat>   // DBL_MAX
-#elif defined(HAVE_FLOAT_H)
-#include <float.h>  // DBL_MAX
-#endif
-
-#if defined(HAVE_CSTRING)
-#include <cstring>   // strcmp(), strnlen()
-#elif defined(HAVE_STRING_H)
-#include <string.h>  // strcmp(), strnlen()
-#endif
+#include "plexil-float.h"  // DBL_MAX
+#include "plexil-string.h"  // strcmp(), strnlen()
 
 namespace PLEXIL
 {

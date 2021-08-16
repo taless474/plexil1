@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -38,19 +38,10 @@
 
 #include "pugixml.hpp"
 
-#if defined(HAVE_CERRNO)
-#include <cerrno>
-#elif defined(HAVE_ERRNO_H)
-#include <errno.h>
-#endif
-
-#if defined(HAVE_CSTDLIB)
-#include <cstdlib> // for strtoul()
-#elif defined(HAVE_STDLIB_H)
-#include <stdlib.h>
-#endif
-
 #include <limits>
+
+#include "plexil-errno.h"
+#include "plexil-stdlib.h"
 
 using pugi::xml_node;
 

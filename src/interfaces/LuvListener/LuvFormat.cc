@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -30,9 +30,9 @@
 #include "Expression.hh"
 #include "NodeImpl.hh"
 
-#include <iostream>
+// #include <iostream> // included in Error.hh
 
-#include <cstddef> // size_t
+#include "plexil-stddef.h" // size_t
 
 namespace PLEXIL {
 

@@ -29,7 +29,7 @@
 #include "Debug.hh"
 #include "Error.hh"
 
-#include "plexil-errno.h"
+#include "plexil-errno.h" // includes plexil-config.h
 
 namespace PLEXIL
 {

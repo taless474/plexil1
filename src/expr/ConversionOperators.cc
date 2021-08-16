@@ -31,7 +31,7 @@
 
 #include <limits>
 
-#include "plexil-math.h"
+#include "plexil-math.h" // includes plexil-config.h
 
 namespace PLEXIL
 {

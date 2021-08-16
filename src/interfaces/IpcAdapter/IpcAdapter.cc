@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,11 +50,7 @@
 #include <algorithm>
 #include <string>
 
-#if defined(HAVE_CSTDLIB)
-#include <cstdlib>
-#elif defined(HAVE_STDLIB_H)
-#include <stdlib.h>
-#endif
+#include "plexil-stdlib.h"
 
 #define TRANSACTION_ID_SEPARATOR_CHAR ':'
 
