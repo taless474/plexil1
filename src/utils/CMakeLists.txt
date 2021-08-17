@@ -1,4 +1,4 @@
-## Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+## Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 ##  All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,24 @@
 # Utils module subproject of PLEXIL_EXEC
 
 add_library(PlexilUtils ${PlexilExec_SHARED_OR_STATIC}
-  DebugMessage.cc DynamicLoader.cc Error.cc
-  Logging.cc ParserException.cc PlanError.cc bitsetUtils.cc
-  lifecycle-utils.c stricmp.c timespec-utils.cc timeval-utils.cc)
+  DynamicLoader.cc Error.cc Logging.cc ParserException.cc PlanError.cc
+  bitsetUtils.cc lifecycle-utils.c stricmp.c timespec-utils.cc timeval-utils.cc)
 
 install(TARGETS PlexilUtils
   DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # Public includes
 install(FILES
-  ConstantMacros.hh Debug.hh DebugMessage.hh DynamicLoader.h Error.hh
-  LinkedQueue.hh Logging.hh ParserException.hh PlanError.hh
-  SimpleMap.hh SimpleSet.hh TestSupport.hh 
-  bitsetUtils.hh lifecycle-utils.h map-utils.hh stricmp.h
-  timespec-utils.hh timeval-utils.hh
+  ConstantMacros.hh Debug.hh DynamicLoader.h Error.hh
+  LinkedQueue.hh Logging.hh ParserException.hh PlanError.hh SimpleMap.hh
+  SimpleSet.hh TestSupport.hh bitsetUtils.hh lifecycle-utils.h map-utils.hh
+  plexil-assert.h plexil-ctype.h plexil-errno.h plexil-float.h plexil-inttypes.h
+  plexil-limits.h plexil-math.h plexil-signal.h plexil-stddef.h plexil-stdint.h
+  plexil-stdio.h plexil-stdlib.h plexil-string.h plexil-time.h
+  stricmp.h timespec-utils.hh timeval-utils.hh
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# Presume every platform has dlopen and dlclose
-if(CMAKE_DL_LIBS)
-  target_link_libraries(PlexilUtils PUBLIC ${CMAKE_DL_LIBS})
-endif()
-
-if(${PLEXIL_WITH_THREADS})
-  # Additional support for multithreading
-  target_sources(PlexilUtils PRIVATE
-    RecursiveThreadMutex.cc ThreadMutex.cc ThreadSemaphore.cc ThreadSpawn.cc)
-  target_link_libraries(PlexilUtils PUBLIC pthread)
-  install(FILES
-    RecursiveThreadMutex.hh ThreadMutex.hh ThreadSemaphore.hh ThreadSpawn.hh
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-endif()
-
-
-if(${WITH_JNI})
+if(WITH_JNI)
   # Additional support for Java Native Interface
   target_sources(PlexilUtils PRIVATE
     JNIHelper.cc JNIUtils.cc)
@@ -67,6 +52,26 @@ if(${WITH_JNI})
 
   install(FILES
     JNIHelper.hh JNIUtils.hh ScopedOstreamRedirect.hh
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+
+if(CMAKE_DL_LIBS AND HAVE_DLFCN_H)
+  target_link_libraries(PlexilUtils PUBLIC ${CMAKE_DL_LIBS})
+endif()
+
+# Multithread support
+if(PLEXIL_WITH_THREADS)
+  target_sources(PlexilUtils PRIVATE
+    RecursiveThreadMutex.cc ThreadMutex.cc ThreadSemaphore.cc ThreadSpawn.cc)
+  target_link_libraries(PlexilUtils PUBLIC pthread)
+  install(FILES
+    RecursiveThreadMutex.hh ThreadMutex.hh ThreadSemaphore.hh ThreadSpawn.hh
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+
+if(NOT NO_DEBUG_MESSAGE_SUPPORT)
+  target_sources(PlexilUtils PRIVATE DebugMessage.cc)
+  install(FILES DebugMessage.hh
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 

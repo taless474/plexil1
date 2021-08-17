@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,50 +29,30 @@ project(StandAloneSimulator
   DESCRIPTION "A simple scriptable simulator for use with the PlexilExec"
   LANGUAGES CXX)
 
-add_library(standalonesimulator ${PlexilExec_SHARED_OR_STATIC}
-  IpcCommRelay.cc ResponseBase.cc ResponseFactory.cc ResponseMessage.cc
-  ResponseMessageManager.cc Simulator.cc SimulatorScriptReader.cc
-  TelemetryResponseManager.cc TimingService.cc)
+add_executable(simulator 
+  Agenda.cc CommandResponseManager.cc IpcCommRelay.cc PlexilSimulator.cc
+  Simulator.cc SimulatorScriptReader.cc TimingService.cc
+  )
 
-target_include_directories(standalonesimulator PUBLIC
+target_include_directories(simulator PUBLIC
   ${PlexilExec_SOURCE_DIR}/utils
   ${PlexilExec_SOURCE_DIR}/value
   ${PlexilExec_SOURCE_DIR}/third-party/ipc/src
   ${PlexilExec_SOURCE_DIR}/interfaces/IpcUtils
   )
 
-target_link_libraries(standalonesimulator PUBLIC
+target_link_libraries(simulator PUBLIC
   PlexilUtils PlexilValue IpcUtils
   -L${ipc_LIB_DIR} -lipc
   )
 
-install(TARGETS standalonesimulator
-  DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-install(FILES
-  CommRelayBase.hh GenericResponse.hh IpcCommRelay.hh ResponseBase.hh
-  ResponseFactory.hh ResponseMessage.hh ResponseMessageManager.hh Simulator.hh
-  SimulatorScriptReader.hh TelemetryResponseManager.hh TimingService.hh
-  simdefs.hh
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-add_executable(simulator 
-  PlexilSimulator/PlexilSimulator.cc
-  PlexilSimulator/PlexilSimResponseFactory.cc
-  )
-
-target_include_directories(simulator PUBLIC
-  ${CMAKE_CURRENT_LIST_DIR}
-  # ${PlexilExec_SOURCE_DIR}/utils
-  # ${PlexilExec_SOURCE_DIR}/value
-  # ${PlexilExec_SOURCE_DIR}/third-party/ipc/src
-  # ${PlexilExec_SOURCE_DIR}/interfaces/IpcUtils
-  )
-
-target_link_libraries(simulator PRIVATE
-  standalonesimulator
-  -L${ipc_LIB_DIR} -lipc
-  )
+# Since StandAloneSimulator is a standalone application,
+# no need to install these files.
+# install(FILES
+#   Agenda.hh CommRelayBase.hh CommandResponseManager.hh GenericResponse.hh
+#   IpcCommRelay.hh ResponseMessage.hh Simulator.hh SimulatorScriptReader.hh
+#   TimingService.hh simdefs.hh
+#   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(TARGETS simulator
   DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -1,4 +1,4 @@
-## Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+## Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 ##  All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -23,6 +23,9 @@
 ## TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 ## USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#
+# Configuration checks for the PLEXIL Executive and associated programs
+#
 
 include(CheckCXXSourceCompiles)
 include(CheckCXXSymbolExists)
@@ -44,6 +47,7 @@ set(CMAKE_REQUIRED_QUIET 1)
 
 # C++
 CHECK_INCLUDE_FILE_CXX(cassert HAVE_CASSERT)
+CHECK_INCLUDE_FILE_CXX(cctype HAVE_CCTYPE)
 CHECK_INCLUDE_FILE_CXX(cerrno HAVE_CERRNO)
 CHECK_INCLUDE_FILE_CXX(cfloat HAVE_CFLOAT)
 CHECK_INCLUDE_FILE_CXX(cinttypes HAVE_CINTTYPES)  # C++11
@@ -59,6 +63,7 @@ CHECK_INCLUDE_FILE_CXX(ctime HAVE_CTIME)
 
 # Standard C (C90, C99)
 CHECK_INCLUDE_FILE(assert.h HAVE_ASSERT_H)
+CHECK_INCLUDE_FILE_CXX(ctype.h HAVE_CTYPE_H)
 CHECK_INCLUDE_FILE(errno.h HAVE_ERRNO_H)
 CHECK_INCLUDE_FILE(float.h HAVE_FLOAT_H)
 CHECK_INCLUDE_FILE(inttypes.h HAVE_INTTYPES_H)
@@ -81,14 +86,15 @@ CHECK_INCLUDE_FILE(unistd.h HAVE_UNISTD_H)
 CHECK_INCLUDE_FILE(arpa/inet.h HAVE_ARPA_INET_H)
 CHECK_INCLUDE_FILE(netinet/in.h HAVE_NETINET_IN_H)
 CHECK_INCLUDE_FILE(sys/socket.h HAVE_SYS_SOCKET_H)
-CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H) # GanttListener only
+CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H) # CheckpointAdapter, GanttListener only
 CHECK_INCLUDE_FILE(sys/time.h HAVE_SYS_TIME_H)
 
 # glibc
 CHECK_INCLUDE_FILE(execinfo.h HAVE_EXECINFO_H)
 
-# Non-Unix platformsn
+# Non-Unix platforms
 CHECK_INCLUDE_FILE(vxWorks.h HAVE_VXWORKS_H)
+CHECK_INCLUDE_FILE(sys/times.h HAVE_SYS_TIMES_H)
 
 #
 # Functions
@@ -164,8 +170,8 @@ CHECK_TYPE_SIZE(suseconds_t SUSECONDS_T)
 # Compiler quirks
 #
 
-# Search on __STDC_LIMIT_MACROS, __STDC_CONSTANT_MACROS, __STDC_FORMAT_MACROS
-# to understand the issues being checked for inttypes.h and stdint.h
+# A web search on __STDC_LIMIT_MACROS, __STDC_CONSTANT_MACROS, __STDC_FORMAT_MACROS
+# will explain the issues being checked for inttypes.h and stdint.h
 
 # inttypes.h under C++
 # This is a hack when compiled without including stdint.h -
@@ -215,7 +221,6 @@ int main(int argc, char ** /* argv */)
 }
 "
   HAVE_TIMER_CREATE)
-
 
 #
 # External programs
@@ -305,7 +310,6 @@ else()
   unset(HAVE_UDP_ADAPTER CACHE)
 endif()
   
-
 #
 # Construct configuration header file
 #

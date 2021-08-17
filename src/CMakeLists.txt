@@ -1,4 +1,4 @@
-## Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+## Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 ##  All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -80,6 +80,7 @@ install(FILES ${CMAKE_BINARY_DIR}/plexil-config.h
 include_directories(${CMAKE_BINARY_DIR})
 
 # TODO: create compile-time environment file plexil-config.env
+# for use with example Makefiles
 
 # Set default RPATH for executables
 if(${CMAKE_SYSTEM_NAME} STREQUAL Darwin)
