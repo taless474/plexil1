@@ -32,7 +32,7 @@ libPlexilUtils_la_CPPFLAGS = $(AM_CPPFLAGS)
 include_HEADERS = ConstantMacros.hh Debug.hh DynamicLoader.h Error.hh \
  LinkedQueue.hh Logging.hh ParserException.hh PlanError.hh SimpleMap.hh \
  SimpleSet.hh TestSupport.hh bitsetUtils.hh lifecycle-utils.h map-utils.hh \
- plexil-assert.h plexil-errno.h plexil-float.h plexil-inttypes.h \
+ plexil-assert.h plexil-ctype.h plexil-errno.h plexil-float.h plexil-inttypes.h \
  plexil-limits.h plexil-math.h plexil-signal.h plexil-stddef.h plexil-stdint.h \
  plexil-stdio.h plexil-stdlib.h plexil-string.h plexil-time.h stricmp.h \
  timespec-utils.hh timeval-utils.hh
