@@ -42,7 +42,7 @@ The %PLEXIL language also provides the following internal data types:
 * \ref NodeState
 * \ref NodeOutcome
 * \ref FailureType
-* \ref CommandHandle
+* \ref CommandHandleValue
 
 ## Value representations
 
