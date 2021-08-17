@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2018, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,9 +35,6 @@
 namespace PLEXIL
 {
 
-  /**
-   * @brief Default constructor.
-   */
   template <typename T>
   Constant<T>::Constant()
     : GetValueImpl<T>(),
@@ -58,9 +55,6 @@ namespace PLEXIL
   {
   }
 
-  /**
-   * @brief Copy constructor.
-   */
   template <typename T>
   Constant<T>::Constant(const Constant &other)
   : GetValueImpl<T>(),
@@ -84,9 +78,6 @@ namespace PLEXIL
   {
   }
 
-  /**
-   * @brief Constructor from value type.
-   */
   template <typename T>
   Constant<T>::Constant(const T &value)
   : GetValueImpl<T>(),
@@ -110,9 +101,9 @@ namespace PLEXIL
   {
   }
 
-  /**
-   * @brief Constructors from char *.
-   */
+  //
+  // Constructors from char *.
+  //
 
   // *** TODO: More types ***
   Constant<String>::Constant(const char *value)
@@ -122,9 +113,6 @@ namespace PLEXIL
   {
   }
 
-  /**
-   * @brief Destructor.
-   */
   template <typename T>
   Constant<T>::~Constant()
   {
@@ -139,10 +127,6 @@ namespace PLEXIL
   {
   }
 
-  /**
-   * @brief Return a print name for the expression type.
-   * @return A constant character string.
-   */
   template <typename T>
   const char *Constant<T>::exprName() const
   {
@@ -160,11 +144,6 @@ namespace PLEXIL
     return "Constant";
   }
 
-  /**
-   * @brief Retrieve the value of this Expression in its native type.
-   * @param The appropriately typed place to put the result.
-   * @return True if known, false if unknown.
-   */
   template <typename T>
   bool Constant<T>::getValue(T& result) const
   {
@@ -180,11 +159,6 @@ namespace PLEXIL
     return m_known;
   }
 
-  /**
-   * @brief Retrieve a pointer to the (const) value of this Expression.
-   * @param ptr Reference to the pointer variable to receive the result.
-   * @return True if known, false if unknown.
-   */
   bool Constant<String>::getValuePointer(String const *&ptr) const
   {
     if (m_known)
@@ -200,10 +174,6 @@ namespace PLEXIL
     return m_known;
   }
 
-  /**
-   * @brief Query whether the expression's value is known.
-   * @return True if known, false otherwise.
-   */
   template <typename T>
   bool Constant<T>::isKnown() const
   {
@@ -221,10 +191,6 @@ namespace PLEXIL
     return m_known;
   }
 
-  /**
-   * @brief Query whether this expression is constant, i.e. incapable of change.
-   * @return True if assignable, false otherwise.
-   */
   template <typename T>
   bool Constant<T>::isConstant() const
   {
