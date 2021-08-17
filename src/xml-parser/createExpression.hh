@@ -56,7 +56,7 @@ namespace PLEXIL
   //! \brief Creates a new Expression instance with the type associated with the
   //!        given expression specification.
   //! \param expr The expression specification.
-  //! \param node Node for name lookup.
+  //! \param node Pointer to the parent Node; used for name lookup.
   //! \return Pointer to the new Expression. May not be unique.
   //! \note Convenience wrapper.
   extern Expression *createExpression(pugi::xml_node const expr,
@@ -65,11 +65,12 @@ namespace PLEXIL
   //! \brief Creates a new Expression instance with the specified return type.
   //! \param expr The expression spec.
   //! \param node Node for name lookup.
-  //! \return Pointer to the new Expression. May not be unique.
   //! \param wasCreated Reference to a boolean variable;
   //!                   variable will be set to true if new object created, false otherwise.
-
-  // Used in AssignmentNode, CommandNode, LibraryCallNode, Node::createConditions
+  //! \param returnType The desired ValueType the new expression should return.
+  //! \return Pointer to the new Expression. May not be unique.
+  //! \note This variant is used in AssignmentNode, CommandNode, LibraryCallNode,
+  //!       and Node::createConditions.
   extern Expression *createExpression(pugi::xml_node const expr,
                                       NodeConnector *node,
                                       bool& wasCreated,
@@ -82,8 +83,7 @@ namespace PLEXIL
   //! \return Pointer to the new Expression. May not be unique.
   //! \param wasCreated Reference to a boolean variable;
   //!                   variable will be set to true if new object created, false otherwise.
-
-  // Used in AssignmentNode, CommandNode
+  //! \note This variant is used in AssignmentNode and CommandNode.
   extern Assignable *createAssignable(pugi::xml_node const expr,
                                       NodeConnector *node,
                                       bool& wasCreated);
