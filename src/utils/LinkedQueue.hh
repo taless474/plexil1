@@ -119,7 +119,7 @@ namespace PLEXIL
     }
 
     //! \brief Insert an item on the tail end of the queue.
-    //! \param Pointer to the item to be inserted.
+    //! \param item Pointer to the item to be inserted.
     //! \note Clears the 'next' pointer of the new item.
     void push(T *item)
     {
@@ -136,7 +136,7 @@ namespace PLEXIL
     }
 
     //! \brief Remove the given item from the queue, if it exists.
-    //! \param Pointer to the item to be removed.
+    //! \param item Pointer to the item to be removed.
     //! \note If the item is found, clears its 'next' pointer.
     //! \note If the item is not found, no side effects are performed.
     void remove(T *item)

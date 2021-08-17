@@ -74,8 +74,8 @@ namespace PLEXIL
   struct SimpleIndexComparator
   {
     //! \brief Is the entry less than the index?
-    //! \param Const reference to a key.
-    //! \param Const reference to an index.
+    //! \param a Const reference to a key.
+    //! \param b Const reference to an index.
     //! \return True if the key is less than the index, false otherwise.
     bool operator()(KEY_TYPE const &a, INDEX_TYPE const &b) const
     {
@@ -83,8 +83,8 @@ namespace PLEXIL
     }
 
     //! \brief Is the entry equal to the index?
-    //! \param Const reference to a key.
-    //! \param Const reference to an index.
+    //! \param a Const reference to a key.
+    //! \param b Const reference to an index.
     //! \return True if the key is equal to the index, false otherwise.
     bool equal(KEY_TYPE const &a, INDEX_TYPE const &b) const
     {
@@ -146,7 +146,7 @@ namespace PLEXIL
     //! function returns true.
     //!
     //! \param index Const reference to the key.
-    //! \parm val Const reference to the value to associate with the key.
+    //! \param val Const reference to the value to associate with the key.
     //! \return true if the key was not previously inserted;
     //!         false if the key was found.
     bool insert(KEY_TYPE const &index, VALUE_TYPE const &val)

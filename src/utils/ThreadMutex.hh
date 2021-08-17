@@ -97,7 +97,7 @@ namespace PLEXIL
   public:
 
     //! \brief Constructor from a mutex reference.  Locks the mutex.
-    //! \param Reference to a ThreadMutex instance.
+    //! \param mutex Reference to a ThreadMutex instance.
     ThreadMutexGuard(ThreadMutex& mutex);
 
     //! \brief Destructor. Unlocks the mutex.

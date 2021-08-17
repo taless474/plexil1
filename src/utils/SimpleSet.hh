@@ -126,7 +126,7 @@ namespace PLEXIL
     }
 
     //! \brief Does the set contain this value?
-    //! \param Const reference to the desired value.
+    //! \param val Const reference to the desired value.
     //! \return true if the value is a member of the set, false otherwise.
     bool contains(VALUE_TYPE const &val) const
     {

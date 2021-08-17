@@ -43,7 +43,7 @@ extern "C"
 /**
  * \brief Dynamically load the shared library for the named module,
  *        using the library name if provided, and initialize the module.
- * \param typeName The module name, as a const C string.
+ * \param moduleName The module name, as a const C string.
  * \param libPath The library name containing the module, as a const C string, or NULL.
  * \return 1 if successful, 0 otherwise.
  * \note The initializer function must be named 'init<moduleName>',

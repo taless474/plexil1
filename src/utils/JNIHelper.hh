@@ -219,7 +219,7 @@ public:
   JavaClass() : JavaObject() {}
 
   //! \brief Constructor from a Java class reference.
-  //! \param The Java class reference.
+  //! \param cls The Java class reference.
   JavaClass(jclass cls) : JavaObject((jobject) cls) {}
 
   //! \brief Virtual destructor,

@@ -123,7 +123,7 @@ namespace PLEXIL
   public:
 
     //! \brief Constructor from a mutex reference.  Locks the mutex.
-    //! \param Reference to a RecursiveThreadMutex instance.
+    //! \param mutex Reference to a RecursiveThreadMutex instance.
     RTMutexGuard(RecursiveThreadMutex& mutex):
       m_mutex( mutex )
     {

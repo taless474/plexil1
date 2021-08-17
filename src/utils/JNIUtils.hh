@@ -47,19 +47,19 @@ namespace PLEXIL {
   public:
 
 	//! \brief Constructor from pointer to a JNIEnv.
-    //! \param Pointer to the JNIEnv.
+    //! \param env Pointer to the JNIEnv.
 	JNIUtils(JNIEnv* env);
 
     //! \brief Copy constructor.
     //! \param other Const reference to the JNIUtils instance to copy.
-	JNIUtils(const JNIUtils&);
+	JNIUtils(const JNIUtils &other);
 
 	//! \brief Destructor.
 	~JNIUtils();
 
 	//! \brief Copy assignment operator.
     //! \param orig Const reference to the JNIUtils instance to copy.
-	JNIUtils& operator=(const JNIUtils& orig);
+	JNIUtils& operator=(const JNIUtils &orig);
 
 	/**
 	 * \brief Construct a freshly allocated copy of the Java string.
@@ -95,7 +95,7 @@ namespace PLEXIL {
 
 	/**
 	 * \brief Given a Java String[], return an array of char*.
-	 * \param The Java String[] object.
+	 * \param ary The Java String[] object.
 	 * \return A freshly allocated vector of strings.
      * \note The caller is responsible for deleting the returned vector.
 	 */

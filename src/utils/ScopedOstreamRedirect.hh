@@ -45,7 +45,7 @@ namespace PLEXIL
 	/**
 	 * @brief Construct a redirection for the given output stream.
 	 * @param inOriginal Reference to the output stream being redirected.
-	 * @param inDirect Reference to the output stream receiving the redirection.
+	 * @param inRedirect Reference to the output stream receiving the redirection.
 	 */
     ScopedOstreamRedirect(std::ostream & inOriginal, std::ostream & inRedirect) :
 	  mOriginal(inOriginal),
