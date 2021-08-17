@@ -86,9 +86,9 @@ namespace PLEXIL
 
 
   //! \brief Local macro to define update methods for VoidCachedValue.
-  //! \param _type_ The type of the argument to the update method.
-#define DEFINE_UPDATE_METHOD(_type_)                                    \
-  bool VoidCachedValue::update(unsigned int /* timestamp */, _type_ const & /* val */) \
+  //! \param TYPE The type of the argument to the update method.
+#define DEFINE_UPDATE_METHOD(TYPE)                                    \
+  bool VoidCachedValue::update(unsigned int /* timestamp */, TYPE const & /* val */) \
   {                                                                     \
     errorMsg("Can't update a VoidCachedValue");        \
     return false;                                                       \
@@ -102,9 +102,9 @@ namespace PLEXIL
 #undef DEFINE_UPDATE_METHOD
 
   //! \brief Local macro to define updatePtr methods for VoidCachedValue.
-  //! \param _type_ The type of the argument to the updatePtr method.
-#define DEFINE_UPDATE_PTR_METHOD(_type_)                                \
-  bool VoidCachedValue::updatePtr(unsigned int /* timestamp */, _type_ const * /* valPtr */) \
+  //! \param TYPE The type of the argument to the updatePtr method.
+#define DEFINE_UPDATE_PTR_METHOD(TYPE)                                \
+  bool VoidCachedValue::updatePtr(unsigned int /* timestamp */, TYPE const * /* valPtr */) \
   {                                                                     \
     errorMsg("Can't update a VoidCachedValue");        \
     return false;                                                       \
