@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -153,12 +153,12 @@ AC_SEARCH_LIBS([timer_create], [rt])
 # Checks for header files.
 
 # C++ standard headers for PLEXIL core functionality
-AC_CHECK_HEADERS_ONCE([cassert cerrno cfloat cinttypes climits cmath csignal cstddef cstdint cstdio cstdlib cstring ctime])
+AC_CHECK_HEADERS_ONCE([cassert cctype cerrno cfloat cinttypes climits cmath csignal cstddef cstdint cstdio cstdlib cstring ctime])
 
 # Standard C (C90, C99, etc.) headers for PLEXIL core functionality
 # Some platforms (e.g. vxWorks) may lack some of these
 # NOTE: checks only apply to PLEXIL source code, not imported third party code
-AC_CHECK_HEADERS_ONCE([assert.h errno.h float.h inttypes.h math.h stddef.h stdint.h stdio.h stdlib.h string.h time.h])
+AC_CHECK_HEADERS_ONCE([assert.h ctype.h errno.h float.h inttypes.h math.h stddef.h stdint.h stdio.h stdlib.h string.h time.h])
 # POSIX dependencies for core functionality
 AC_CHECK_HEADERS_ONCE([dlfcn.h fcntl.h pthread.h unistd.h sys/stat.h sys/time.h])
 # POSIX headers for network functionality
@@ -167,7 +167,7 @@ AC_CHECK_HEADERS_ONCE([netdb.h arpa/inet.h netinet/in.h sys/socket.h])
 AC_CHECK_HEADERS_ONCE([execinfo.h])
 
 # Non-Unix-like platforms
-AC_CHECK_HEADERS_ONCE([sockLib.h vxWorks.h sys/times.h])
+AC_CHECK_HEADERS_ONCE([vxWorks.h sys/times.h])
 
 # Check whether cstdint (stdint.h) and cinttypes (inttypes.h) behave correctly
 # This is required because of a misfeature in the C99 spec
