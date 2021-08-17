@@ -65,11 +65,13 @@ namespace PLEXIL
     virtual Array *clone() const = 0;
 
     //! \brief Copy assignment operator.
-    Array &operator=(Array const &);
+    //! \param other The array being copied.
+    Array &operator=(Array const &other);
 
 #if __cplusplus >= 201103L
     //! \brief Move assignment operator.
-    virtual Array &operator=(Array &&);
+    //! \param other The array being moved.
+    virtual Array &operator=(Array && other);
 #endif
 
     // Generic accessors
@@ -109,6 +111,7 @@ namespace PLEXIL
     virtual Value getElementValue(size_t index) const = 0;
 
     //! \brief Equality operator.
+    //! \param other Const reference to the Array being compared.
     //! \return True if the arrays have the same size, the same known vector,
     ///          and the same contents; false otherwise.
     virtual bool operator==(Array const &other) const;
@@ -159,7 +162,7 @@ namespace PLEXIL
 
     //! \brief Set an element of the array to the new value.
     //! \param index The index.
-    //! \param newval Const reference to the new value.
+    //! \param newVal Const reference to the new value.
     virtual void setElement(size_t index, Boolean const &newVal);
     virtual void setElement(size_t index, Integer const &newVal);
     virtual void setElement(size_t index, Real const &newVal);

@@ -148,73 +148,73 @@ namespace PLEXIL
   }
 
   template <typename T>
-  Array &ArrayImpl<T>::operator=(Array const &orig)
+  Array &ArrayImpl<T>::operator=(Array const &other)
   {
-    ArrayImpl<T> const *typedOrig =
-      dynamic_cast<ArrayImpl<T> const *>(&orig);
-    checkPlanError(typedOrig,
-                   "Can't assign array of element type " << valueTypeName(orig.getElementType())
+    ArrayImpl<T> const *typedOther =
+      dynamic_cast<ArrayImpl<T> const *>(&other);
+    checkPlanError(typedOther,
+                   "Can't assign array of element type " << valueTypeName(other.getElementType())
                    << " to array of element type " << valueTypeName(getElementType()));
-    return this->operator=(*typedOrig);
+    return this->operator=(*typedOther);
   }
 
-  Array &ArrayImpl<String>::operator=(Array const &orig)
+  Array &ArrayImpl<String>::operator=(Array const &other)
   {
-    ArrayImpl<String> const *typedOrig =
-      dynamic_cast<ArrayImpl<String> const *>(&orig);
-    checkPlanError(typedOrig,
-                   "Can't assign array of element type " << valueTypeName(orig.getElementType())
+    ArrayImpl<String> const *typedOther =
+      dynamic_cast<ArrayImpl<String> const *>(&other);
+    checkPlanError(typedOther,
+                   "Can't assign array of element type " << valueTypeName(other.getElementType())
                    << " to array of element type String");
-    return this->operator=(*typedOrig);
+    return this->operator=(*typedOther);
   }
 
 #if __cplusplus >= 201103L
   template <typename T>
-  Array &ArrayImpl<T>::operator=(Array && orig)
+  Array &ArrayImpl<T>::operator=(Array && other)
   {
-    checkPlanError(dynamic_cast<ArrayImpl<T> *>(&orig),
-                   "Can't assign array of element type " << valueTypeName(orig.getElementType())
+    checkPlanError(dynamic_cast<ArrayImpl<T> *>(&other),
+                   "Can't assign array of element type " << valueTypeName(other.getElementType())
                    << " to array of element type " << valueTypeName(getElementType()));
-    return this->operator=(static_cast<ArrayImpl<T> &&>(orig));
+    return this->operator=(static_cast<ArrayImpl<T> &&>(other));
   }
 
-  Array &ArrayImpl<String>::operator=(Array &&orig)
+  Array &ArrayImpl<String>::operator=(Array &&other)
   {
-    checkPlanError(dynamic_cast<ArrayImpl<String> *>(&orig),
-                   "Can't assign array of element type " << valueTypeName(orig.getElementType())
+    checkPlanError(dynamic_cast<ArrayImpl<String> *>(&other),
+                   "Can't assign array of element type " << valueTypeName(other.getElementType())
                    << " to array of element type String");
-    return this->operator=(static_cast<ArrayImpl<String> &&>(orig));
+    return this->operator=(static_cast<ArrayImpl<String> &&>(other));
   }
 #endif
   
   template <typename T>
-  ArrayImpl<T> &ArrayImpl<T>::operator=(ArrayImpl<T> const &orig)
+  ArrayImpl<T> &ArrayImpl<T>::operator=(ArrayImpl<T> const &other)
   {
-    Array::operator=(orig);
-    m_contents = orig.m_contents;
+    Array::operator=(other);
+    m_contents = other.m_contents;
     return *this;
   }
 
-  ArrayImpl<String> &ArrayImpl<String>::operator=(ArrayImpl<String> const &orig)
+  ArrayImpl<String> &ArrayImpl<String>::operator=(ArrayImpl<String> const &other)
   {
-    Array::operator=(orig);
-    m_contents = orig.m_contents;
+    Array::operator=(other);
+    m_contents = other.m_contents;
     return *this;
   }
 
 #if __cplusplus >= 201103L
   template <typename T>
-  ArrayImpl<T> &ArrayImpl<T>::operator=(ArrayImpl<T> &&orig)
+  ArrayImpl<T> &ArrayImpl<T>::operator=(ArrayImpl<T> &&other)
   {
-    Array::operator=(orig);
-    m_contents = std::move(orig.m_contents);
+    Array::operator=(other);
+    m_contents = std::move(other.m_contents);
     return *this;
   }
 
-  ArrayImpl<String> &ArrayImpl<String>::operator=(ArrayImpl<String> &&orig)
+  ArrayImpl<String> &ArrayImpl<String>::operator=(ArrayImpl<String> &&other)
   {
-    Array::operator=(orig);
-    m_contents = std::move(orig.m_contents);
+    Array::operator=(other);
+    m_contents = std::move(other.m_contents);
     return *this;
   }
 #endif
@@ -834,12 +834,9 @@ namespace PLEXIL
     return result;
   }
 
-  /**
-   * @brief Write a binary version of the object to the given buffer.
-   * @param o The object.
-   * @param b Pointer to the insertion point in the buffer.
-   * @return Pointer to first byte after the object; NULL if failed.
-   */
+  //
+  // De/Serialization
+  //
 
   template <typename T>
   char *ArrayImpl<T>::serialize(char *buf) const
@@ -918,13 +915,6 @@ namespace PLEXIL
     return buf;
   }
 
-  /**
-   * @brief Read a binary representation from the buffer and store it to the result object.
-   * @param o The result object.
-   * @param buf Pointer to the representation in the buffer.
-   * @return Pointer to first byte after the object; NULL if failed.
-   */
-
   // General case
   template <typename T>
   char const *ArrayImpl<T>::deserialize(char const *buf)
@@ -986,12 +976,6 @@ namespace PLEXIL
     return buf;
   }
 
-  /**
-   * @brief Calculate the size of the serial representation of the object.
-   * @param o The object.
-   * @return Number of bytes; 0 if the object is not serializable.
-   */
-
   // Numeric case
   template <typename NUM>
   size_t ArrayImpl<NUM>::serialSize() const
@@ -1023,14 +1007,16 @@ namespace PLEXIL
 
   // Seems template functions can't be partially specialized. Fooey.
 
-#define DEF_ARRAY_SERDES_WRAPPERS(typ) \
-  template <> char *serialize(ArrayImpl<typ> const &o, char *buf)	\
+  //! \brief Local macro to generate boilerplate wrapper functions.
+  //! \param TYP The array element type.
+#define DEF_ARRAY_SERDES_WRAPPERS(TYP) \
+  template <> char *serialize(ArrayImpl<TYP> const &o, char *buf)	\
   {return o.serialize(buf);} \
 \
-  template <> char const *deserialize(ArrayImpl<typ> &o, char const *buf) \
+  template <> char const *deserialize(ArrayImpl<TYP> &o, char const *buf) \
   {return o.deserialize(buf);} \
 \
-  template <> size_t serialSize(ArrayImpl<typ> const &o) \
+  template <> size_t serialSize(ArrayImpl<TYP> const &o) \
   {return o.serialSize();}
 
   DEF_ARRAY_SERDES_WRAPPERS(Boolean)

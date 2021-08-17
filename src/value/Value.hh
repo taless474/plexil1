@@ -176,7 +176,7 @@ namespace PLEXIL
     bool getValue(String &result) const;
 
     //! \brief Get a const pointer to the value and store it in the given result variable.
-    //! \param result Reference to the result variable.
+    //! \param ptr Reference to the result pointer variable.
     //! \return True if the value is known and representable in the result type,
     //!         false otherwise.
     bool getValuePointer(String const *&ptr) const;
