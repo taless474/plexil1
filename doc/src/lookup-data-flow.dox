@@ -3,11 +3,11 @@ namespace PLEXIL {
 
 \page lookup-data-flow Data and control flow for %PLEXIL lookups
 
-*Please be aware that this document describes APIs for lookup handlers
-which only apply to the %PLEXIL 4.6 release.  This is one of the areas
-in which the %PLEXIL Executive implementation has evolved
-significantly over time.  However, the general concepts should be
-applicable to all %PLEXIL releases since release 4.0.*
+\note This document describes APIs for lookup handlers which only
+apply to the %PLEXIL 4.6 release.  This is one of the areas in which
+the %PLEXIL Executive implementation has evolved significantly over
+time.  However, the general concepts should be applicable to all
+%PLEXIL releases since release 4.0.
 
 ## Two approaches to acquiring data from a controlled system
 
