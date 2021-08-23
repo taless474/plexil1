@@ -27,11 +27,8 @@
 
 SHELL = /bin/sh
 
-DOXYGEN ?= $(shell command -v doxygen)
-
-ifeq ($(DOXYGEN),)
-$(error 'doxygen' command not found)
-endif
+# User may need to specify this on make command line if doxygen is not in $PATH
+DOXYGEN ?= doxygen
 
 # Doxygen configuration files
 DOXY_FILES := Doxyfile PLEXIL_layout.xml PLEXIL_footer.html PLEXIL_header.html \
