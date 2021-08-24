@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
- *  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Universities Space Research Association nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+//  All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "IpcFacade.hh"
 
@@ -48,13 +47,11 @@ namespace PLEXIL
   typedef std::map<MessageFormatKey, std::string> MessageFormatMap;
   static MessageFormatMap messageFormatMap;
 
-  /**
-   * Returns a constant character string pointer for the formatted message type,
-   *  given the basic message type and destination ID.
-   * @param msgName The name of the message type
-   * @param destId The destination ID for the message
-   * @return Character string pointer.
-   */
+  //! \brief Get a constant character string pointer for the formatted message type,
+  //!  given the basic message type and destination ID.
+  //! \param msgName The name of the message type
+  //! \param destId The destination ID for the message
+  //! \return Character string pointer.
   static char const *formatMsgName(const std::string& msgName, const std::string& destId) {
     MessageFormatKey const key(msgName, destId);
     MessageFormatMap::iterator it = messageFormatMap.find(key);
@@ -65,11 +62,9 @@ namespace PLEXIL
     return it->second.c_str();
   }
 
-  /**
-   * @brief Return the message format string corresponding to the message type.
-   * @param typ The message type.
-   * @return Const char pointer to the message format name.
-   */
+  //! \brief Return the message format string corresponding to the message type.
+  //! \param typ The message type.
+  //! \return Const char pointer to the message format name.
   static inline const char* msgFormatForType(const PlexilMsgType typ)
   {
     switch (typ) {
@@ -146,12 +141,10 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Utility function to create a value message from a PLEXIL Value.
-   * @param val The Value to encode in the message.
-   * @return Pointer to newly allocated IPC message.
-   * @note Returns NULL for unimplemented/invalid Values.
-   */
+  //! \brief Utility function to create a value message from a PLEXIL Value.
+  //! \param val The Value to encode in the message.
+  //! \return Pointer to newly allocated IPC message.
+  //! \note Returns NULL for unimplemented/invalid Values.
   struct PlexilMsgBase *constructPlexilValueMsg(Value const &val)
   {
     if (val.isKnown())
@@ -301,8 +294,13 @@ namespace PLEXIL
     }
   }
 
+  //! \brief Utility function to create a pair message from a name and a PLEXIL Value.
+  //! \param name Const reference to the pair name.
+  //! \param val The Value.
+  //! \return Pointer to newly allocated IPC message.
+  //! \note Returns NULL for unimplemented/invalid Values.
   struct PlexilMsgBase* constructPlexilPairMsg(std::string const& name,
-                                               Value const val) {
+                                               Value const &val) {
   PlexilMsgBase* result = NULL;
   if(val.isKnown()) {
     switch(val.valueType()) {
@@ -358,12 +356,10 @@ namespace PLEXIL
   return result;
 }
 
-  /**
-   * @brief Utility function to extract the value from a value message.
-   * @param msg Pointer to const IPC message.
-   * @return The Value represented by the message.
-   * @note The returned value will be unknown if the message is not a value message.
-   */
+  //! \brief Utility function to extract the value from a value message.
+  //! \param msg Pointer to const IPC message.
+  //! \return The Value represented by the message.
+  //! \note The returned value will be unknown if the message is not a value message.
   Value getPlexilMsgValue(struct PlexilMsgBase const *msg)
   {
     switch ((PlexilMsgType) msg->msgType) {
@@ -492,12 +488,7 @@ namespace PLEXIL
   const std::string& IpcFacade::getUID() {
     return m_myUID;
   }
-  /**
-   * @brief Connects to the Ipc server. This should be called before calling start().
-   * If it is not, this method is called by start. If already initialized, this method
-   * does nothing and returns IPC_OK.
-   * @param taskName If null, the current UID of the IpcFacade is used as the task name.
-   */
+
   IPC_RETURN_TYPE IpcFacade::initialize(const char* taskName, const char* serverName) {
     if (m_isInitialized) {
       debugMsg("IpcFacade:initialize", " already done, returning");
@@ -548,11 +539,6 @@ namespace PLEXIL
     return result;
   }
 
-  /**
-   * @brief Initializes and starts the Ipc message handling thread. If Ipc is already
-   * started, this method does nothing and returns IPC_OK.
-   * @return IPC_Error if the dispatch thread is not started correctly, IPC_OK otherwise
-   */
   IPC_RETURN_TYPE IpcFacade::start() {
     IPC_RETURN_TYPE result = IPC_OK;
     if (!m_isInitialized || !IPC_isConnected())
@@ -576,11 +562,6 @@ namespace PLEXIL
     return result;
   }
 
-  /**
-   * @brief Removes all subscriptions registered by this IpcFacade. If
-   * this is the only running instance of IpcFacade, stops the Ipc message
-   * handling thread. If Ipc is not running, this method does nothing and returns IPC_OK.
-   */
   void IpcFacade::stop() {
     if (!m_isStarted) {
       return;
@@ -604,10 +585,6 @@ namespace PLEXIL
 
   }
 
-  /**
-   * @brief Disconnects from the Ipc server. This puts Ipc back in its initial state before
-   * being initialized.
-   */
   void IpcFacade::shutdown() {
     debugMsg("IpcFacade::shutdown", "locking mutex");
     RTMutexGuard guard(m_mutex);
@@ -734,11 +711,7 @@ namespace PLEXIL
     return status;
   }
 
-  /**
-   * @brief publishes the given message via IPC
-   * @param command The command string to send
-   */
-  uint32_t IpcFacade::publishMessage(std::string const &command) {
+  IPC_RETURN_TYPE IpcFacade::publishMessage(std::string const &command) {
     assertTrue_2(m_isStarted, "publishMessage called before started");
     struct PlexilStringValueMsg packet = { { PlexilMsgType_Message, 0, getSerialNumber(), m_myUID.c_str() }, command.c_str() };
     return IPC_publishData(STRING_VALUE_MSG, (void *) &packet);
@@ -825,7 +798,7 @@ namespace PLEXIL
     return status == IPC_OK ? leaderSerial : ERROR_SERIAL();
   }
   
-uint32_t IpcFacade::publishUpdate(const std::string& nodeName, std::vector<std::pair<std::string, Value> > const& update) {
+  uint32_t IpcFacade::publishUpdate(const std::string& nodeName, std::vector<std::pair<std::string, Value> > const& update) {
   debugMsg("IpcFacade:publishUpdate",
            " sending planner update for \"" << nodeName << "\"");
   uint32_t serial = getSerialNumber();
@@ -840,22 +813,10 @@ uint32_t IpcFacade::publishUpdate(const std::string& nodeName, std::vector<std::
   return status == IPC_OK ? serial : ERROR_SERIAL();
 }
 
-  /**
-   * @brief Helper function for sending a vector of parameters via IPC.
-   * @param args The arguments to convert into messages and send
-   * @param serial The serial to send along with each parameter. This should be the same serial as the header
-   */
   IPC_RETURN_TYPE IpcFacade::sendParameters(std::vector<Value> const &args, uint32_t serial) {
     return sendParameters(args, serial, "");
   }
 
-  /**
-   * @brief Helper function for sending a vector of parameters via IPC to a specific executive.
-   * @param args The arguments to convert into messages and send
-   * @param serial The serial to send along with each parameter. This should be the same serial as the header
-   * @param dest The destination executive name. If dest is an empty string, parameters are broadcast to
-   * all executives
-   */
   IPC_RETURN_TYPE IpcFacade::sendParameters(std::vector<Value> const &args, uint32_t serial, std::string const &dest) {
     size_t nParams = args.size();
     // Construct parameter messages
@@ -947,13 +908,6 @@ uint32_t IpcFacade::publishUpdate(const std::string& nodeName, std::vector<std::
     return result;
   }
 
-/** 
- * @brief Helper function for sending a vector of pairs via IPC.
- * @param pairs The pairs to convert into messages and send
- * @param serial The serial to send along with each parameter.  This should be the same serial s the header.
- * 
- * @return The IPC error status.
- */
 IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> > const& pairs,
                                      uint32_t serial) {
   IPC_RETURN_TYPE result = IPC_OK;
@@ -989,9 +943,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
   return result;
 }
 
-  /**
-   * @brief Get next serial number
-   */
   uint32_t IpcFacade::getSerialNumber() {
     return m_nextSerial++;
   }
@@ -1085,9 +1036,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
     return status == IPC_OK;
   }
 
-  /**
-   * @brief IPC listener thread top level function to replace IPC_dispatch().
-   */
   void IpcFacade::myIpcDispatch(void * this_as_void_ptr)
   {
     IpcFacade* facade = reinterpret_cast<IpcFacade*>(this_as_void_ptr);
@@ -1105,9 +1053,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
     debugMsg("IpcFacade:myIpcDispatch", " terminated");
   }
 
-  /**
-   * @brief Handler function as seen by IPC.
-   */
   void IpcFacade::messageHandler(MSG_INSTANCE /* rawMsg */,
                                  void * unmarshalledMsg,
                                  void * this_as_void_ptr) {
@@ -1169,9 +1114,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
       break;
     }
   }
-  /**
-   * @brief Cache start message of a multi-message sequence
-   */
 
   // N.B. Presumes that messages are received in order.
   // Also presumes that any required filtering (e.g. on command name) has been done by the caller
@@ -1197,10 +1139,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
     }
   }
 
-  /**
-   * @brief Cache following message of a multi-message sequence
-   */
-
   // N.B. Presumes that messages are received in order.
 
   void IpcFacade::cacheMessageTrailer(const PlexilMsgBase* msgData) {
@@ -1223,9 +1161,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
     }
   }
 
-  /**
-   * @brief Deliver the given message to all listeners registered for it
-   */
   void IpcFacade::deliverMessage(const std::vector<const PlexilMsgBase*>& msgs) {
     if (!msgs.empty()) {
       //send to listeners for all
@@ -1257,7 +1192,7 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
   }
 
   /**
-   * @brief Unsubscribe the given listener from the listener map.
+  //! \brief Unsubscribe the given listener from the listener map.
    */
   void IpcFacade::unsubscribeGlobal(const LocalListenerRef& listener) {
     ListenerMap::iterator map_it = m_registeredListeners.find(listener.first);
@@ -1272,14 +1207,11 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
 
 
 // UUID generation constants
-#define UUID_SIZE_BITS 128
+#define UUID_SIZE_BITS (128)
 
 // 8-4-4-4-12 format
 #define UUID_STRING_SIZE (8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12)
 
-  /**
-   * @brief Initialize unique ID string
-   */
   std::string IpcFacade::generateUID()
   {
     debugMsg("IpcFacade:generateUID", " entered");
@@ -1313,12 +1245,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
     return std::string(resultbuf);
   }
 
-  /**
-   * Unsubscribes from the given message and the UID-specific version of the given message on central. Wrapper for IPC_unsubscribe.
-   * If an error occurs in unsubscribing from the given message, the UID-specific version is not processed
-   * @param msgName the name of the message to unsubscribe from
-   * @param handler The handler to unsubscribe.
-   */
   IPC_RETURN_TYPE IpcFacade::unsubscribeCentral (const char *msgName, HANDLER_TYPE handler) {
     IPC_RETURN_TYPE result = IPC_unsubscribe(msgName, handler);
     if (result != IPC_OK)
@@ -1326,13 +1252,6 @@ IPC_RETURN_TYPE IpcFacade::sendPairs(std::vector<std::pair<std::string, Value> >
     return IPC_unsubscribe(formatMsgName(std::string(msgName), m_myUID), handler);
   }
 
-  /**
-   * Subscribes from the given message and the UID-specific version of the given message on central. Wrapper for IPC_unsubscribe.
-   * If an error occurs in subscribing from the given message, the UID-specific version is not processed
-   * @param msgName the name of the message to subscribe from
-   * @param handler The handler to subscribe.
-   * @param clientData Pointer to data that will be passed to handler upon message receipt.
-   */
   IPC_RETURN_TYPE IpcFacade::subscribeDataCentral (const char *msgName,
                                                    HANDLER_DATA_TYPE handler) {
     void* clientData = reinterpret_cast<void*>(this);

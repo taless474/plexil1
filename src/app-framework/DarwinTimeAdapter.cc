@@ -1,31 +1,31 @@
-/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+//  All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //
-// Fallback for systems with setitimer() but no timer_create()
+// Fallback for systems with setitimer() but no timer_create(),
+// notably macOS (a.k.a. Darwin)
 //
 
 #include "plexil-config.h"
@@ -49,47 +49,40 @@
 
 namespace PLEXIL
 {
-  /**
-   * @brief An interface adapter using Darwin native time facilities
-   *        to implement LookupNow and LookupOnChange.
-   */
+
+  //! \class DarwinTimeAdapter
+  //! \brief An interface adapter using time facilities available in macOS
+  //!        to implement LookupNow and LookupOnChange for the 'time' state.
+  //! \ingroup interface-library
   class DarwinTimeAdapter : public TimeAdapterImpl
   {
   public:
-    /**
-     * @brief Constructor.
-     * @param execInterface Reference to the parent AdapterExecInterface object.
-     */
+
+    //! \brief Constructor.
+    //! \param execInterface Reference to the parent AdapterExecInterface object.
     DarwinTimeAdapter(AdapterExecInterface& execInterface)
       : TimeAdapterImpl(execInterface)
     {
     }
 
-    /**
-     * @brief Constructor from configuration XML.
-     * @param execInterface Reference to the parent AdapterExecInterface object.
-     * @param xml A const reference to the XML element describing this adapter
-     * @note The instance maintains a shared pointer to the XML.
-     */
+    //! \brief Constructor from configuration XML.
+    //! \param execInterface Reference to the parent AdapterExecInterface object.
+    //! \param xml A const reference to the XML element describing this adapter
     DarwinTimeAdapter(AdapterExecInterface& execInterface, 
                       pugi::xml_node const xml)
       : TimeAdapterImpl(execInterface, xml)
     {
     }
 
-    /**
-     * @brief Destructor.
-     */
+    //! \brief Virtual destructor.
     virtual ~DarwinTimeAdapter()
     {
     }
 
   protected:
 
-    /**
-     * @brief Initialize signal handling for the process.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Initialize signal handling for the process.
+    //! \return true if successful, false otherwise.
     virtual bool configureSignalHandling()
     {
       // block SIGALRM and SIGUSR1 for the process as a whole
@@ -114,28 +107,17 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Construct and initialize the timer as required.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Construct and initialize the timer as required.
+    //! \return true if successful, false otherwise.
     virtual bool initializeTimer()
     {
       return true; // nothing to do
     }
 
-    /**
-     * @brief Set the timer.
-     * @param date The Unix-epoch wakeup time, as a double.
-     * @return True if the timer was set, false if clock time had already passed the wakeup time.
-     * @note This function is not reentrant! Acquire m_timerMutex before calling.
-     */
-
-    // N.B. gettimeofday() on macOS rarely performs an actual syscall:
-    // https://stackoverflow.com/questions/40967594/does-gettimeofday-on-macos-use-a-system-call
-
-    // N.B. setitimer() wants timevals, and won't let us specify a monotonic clock.
-    // So wing it.
-
+    //! \brief Set the timer in an implementation-dependent way..
+    //! \param date The Unix-epoch wakeup time, as a double.
+    //! \return True if the timer was set, false if clock time had already passed the wakeup time.
+    //! \note This function is not reentrant! Acquire m_timerMutex before calling.
     virtual bool setTimer(double date)
     {
       static struct timespec const sl_timezero_ts = {0, 0};
@@ -194,10 +176,8 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Stop the timer.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Stop the timer in an implementation-dependent way.
+    //! \return true if successful, false otherwise.
     virtual bool stopTimer()
     {
       static itimerval const sl_disableItimerval = {{0, 0}, {0, 0}};
@@ -210,19 +190,16 @@ namespace PLEXIL
       return status == 0;
     }
 
-    /**
-     * @brief Shut down and delete the timer as required.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Shut down and delete the timer as required.
+    //! \return true if successful, false otherwise.
     virtual bool deleteTimer()
     {
       return true; // nothing to do
     }
 
-    /**
-     * @brief Initialize the wait thread signal mask.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Initialize the wait thread signal mask.
+    //! \param mask Pointer to the thread's mask.
+    //! \return true if successful, false otherwise.
     virtual bool configureWaitThreadSigmask(sigset_t* mask)
     {
       if (0 != sigemptyset(mask)) {
@@ -242,11 +219,9 @@ namespace PLEXIL
       return errnum == 0;
     }
 
-    /**
-     * @brief Initialize the sigwait mask.
-     * @param Pointer to the mask.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Initialize the sigwait mask.
+    //! \param mask Pointer to the process's mask.
+    //! \return true if successful, false otherwise.
     virtual bool initializeSigwaitMask(sigset_t* mask)
     {
       // listen for SIGALRM and SIGUSR1
@@ -271,6 +246,8 @@ namespace PLEXIL
     DarwinTimeAdapter & operator=(const DarwinTimeAdapter &);
   };
 
+  //! \brief Register the DarwinTimeAdapter as the class implementing OSNativeTime.
+  //! \ingroup interface-library
   void registerTimeAdapter()
   {
     REGISTER_ADAPTER(DarwinTimeAdapter, "OSNativeTime");

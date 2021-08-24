@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "UtilityAdapter.hh"
 
@@ -42,6 +41,11 @@ namespace PLEXIL
   // Command implementation functions
   //
 
+  //! \brief Implement the print command.
+  //! \param cmd Pointer to the Command.
+  //! \param intf Pointer to the AdapterExecInterface.
+  //! \see ExecuteCommandHandler
+  //! \ingroup interface-library
   static void utilityPrint1(Command *cmd, AdapterExecInterface *intf)
   {
     print(cmd->getArgValues());
@@ -49,6 +53,11 @@ namespace PLEXIL
     intf->notifyOfExternalEvent();
   }
 
+  //! \brief Implement the pprint command.
+  //! \param cmd Pointer to the Command.
+  //! \param intf Pointer to the AdapterExecInterface.
+  //! \see ExecuteCommandHandler
+  //! \ingroup interface-library
   static void utilityPprint1(Command *cmd, AdapterExecInterface *intf)
   {
     pprint(cmd->getArgValues());
@@ -56,6 +65,11 @@ namespace PLEXIL
     intf->notifyOfExternalEvent();
   }    
 
+  //! \brief Implement the printToString command.
+  //! \param cmd Pointer to the Command.
+  //! \param intf Pointer to the AdapterExecInterface.
+  //! \see ExecuteCommandHandler
+  //! \ingroup interface-library
   static void utilityPrintToString1(Command *cmd, AdapterExecInterface *intf)
   {
     intf->handleCommandReturn(cmd, printToString(cmd->getArgValues()));
@@ -63,6 +77,11 @@ namespace PLEXIL
     intf->notifyOfExternalEvent();
   }
   
+  //! \brief Implement the pprintToString command.
+  //! \param cmd Pointer to the Command.
+  //! \param intf Pointer to the AdapterExecInterface.
+  //! \see ExecuteCommandHandler
+  //! \ingroup interface-library
   static void utilityPprintToString1(Command *cmd, AdapterExecInterface *intf)
   {
     intf->handleCommandReturn(cmd, pprintToString(cmd->getArgValues()));
@@ -70,10 +89,16 @@ namespace PLEXIL
     intf->notifyOfExternalEvent();
   }
 
+  //! \class UtilityAdapter
+  //! \brief Provides several print commands, e.g. for plan debugging.
+  //! \ingroup interface-library
   class UtilityAdapter : public InterfaceAdapter
   {
   public:
 
+    //! \brief Constructor from configuration XML.
+    //! \param execInterface Reference to the parent AdapterExecInterface.
+    //! \param configXml Const handle to the configuration XML.
     UtilityAdapter(AdapterExecInterface &execInterface,
                    pugi::xml_node const configXml)
       : InterfaceAdapter(execInterface, configXml)
@@ -81,6 +106,9 @@ namespace PLEXIL
       debugMsg("UtilityAdapter", " created.");
     }
     
+    //! \brief Initialize and register the adapter.
+    //! \param config Pointer to the AdapterConfiguration instance.
+    //! \return true if initialization is successful, false otherwise.
     virtual bool initialize(AdapterConfiguration *config)
     {
       config->registerCommandHandler("print",
@@ -95,32 +123,12 @@ namespace PLEXIL
       debugMsg("UtilityAdapter", " initialized.");
       return true;
     }
-
-    // Adapter has no state, so just return true from each of these.
-    
-    virtual bool start()
-    {
-      return true;
-    }
-
-    virtual bool stop()
-    {
-      return true;
-    }
-
-    virtual bool reset()
-    {
-      return true;
-    }
-
-    virtual bool shutdown()
-    {
-      return true;
-    }
   };
 
 } // namespace PLEXIL
 
+//! \brief Module initialization function for the UtilityAdapter.
+//! \ingroup interface-library
 extern "C" {
   void initUtilityAdapter() {
     REGISTER_ADAPTER(PLEXIL::UtilityAdapter, "Utility");

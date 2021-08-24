@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
- *  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Universities Space Research Association nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+//  All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "IpcAdapter.h"
 
@@ -60,7 +59,7 @@ namespace PLEXIL
   namespace {
 
     //
-    // Constants
+    // Local constants
     //
 
     std::string const COMMAND_PREFIX = "__COMMAND__";
@@ -78,10 +77,13 @@ namespace PLEXIL
     // Helper functions
     //
 
-    /**
-     * @brief Convert a message name into the proper format,
-     *        given the command type and a user-defined id.
-     */
+    //! \brief Convert a message name into the proper format,
+    //!        given the command type and a user-defined id.
+    //! \param name Const reference to the message name.
+    //! \param command Const reference to the command name.
+    //! \param id The id.
+    //! \return The formatted message name string.
+    //! \ingroup interface-library
     static std::string formatMessageName(const std::string& name,
                                          const std::string& command,
                                          int id = 0)
@@ -95,7 +97,11 @@ namespace PLEXIL
       return ss.str();
     }
 
-    // Helper function used in ParseExternalLookups.
+    //! \brief Helper function used in ParseExternalLookups.
+    //! \param type Pointer to const null-terminated string naming the PLEXIL type.
+    //! \param value Const handle to the XML value attribute.
+    //! \return A PLEXIL Value instance.
+    //! \ingroup interface-library
     static Value parseTypedValue(char const *type, pugi::xml_attribute const value)
     {
       ValueType t = parseValueType(type);
@@ -193,7 +199,7 @@ namespace PLEXIL
     }
 
     /**
-     * @brief Given a sequence of messages, turn the trailers into a Value for the Exec.
+    //! \brief Given a sequence of messages, turn the trailers into a Value for the Exec.
      */
     static Value parseReturnValue(const std::vector<const PlexilMsgBase*>& msgs) 
     {
@@ -204,12 +210,10 @@ namespace PLEXIL
 
   }
 
-  /**
-   * @class IpcAdapter
-   * @brief An InterfaceAdapter specialization which uses TCA-IPC to communicate
-   *        with an external agent, which may be another PLEXIL Exec.
-   */
-
+  //! \class IpcAdapter
+  //! \brief An InterfaceAdapter specialization which uses TCA-IPC to communicate
+  //!        with an external agent, which may be another PLEXIL Exec.
+  //! \ingroup interface-library
   class IpcAdapter: public InterfaceAdapter
   {
   private:
@@ -230,7 +234,7 @@ namespace PLEXIL
     // Private intarnal classes
     //
 
-    //* brief Class to receive messages from Ipc
+    //! \brief Class to receive messages from IpcFacade
     class MessageListener :
       public IpcMessageListener
     {
@@ -323,43 +327,43 @@ namespace PLEXIL
     // Member variables
     //
 
-    //* @brief Interface with IPC
+    //* \brief Interface with IPC
     IpcFacade m_ipcFacade;
 
-    //* @brief Map of queues for holding complete messages and message handlers while they wait to be paired
+    //* \brief Map of queues for holding complete messages and message handlers while they wait to be paired
     MessageQueueMap m_messageQueues;
 
-    //* @brief Cache of ack and return value variables for commands we sent
+    //* \brief Cache of ack and return value variables for commands we sent
     PendingCommandsMap m_pendingCommands;
 
-    //* @brief Stores names of declared external lookups
+    //* \brief Stores names of declared external lookups
     std::vector<std::string> m_externalLookupNames;
 
-    //* @brief Map of external lookup values.
+    //* \brief Map of external lookup values.
     ExternalLookupMap m_externalLookups;
 
-    //* @brief Listener instance to receive messages.
+    //* \brief Listener instance to receive messages.
     MessageListener m_listener;
 
-    //* @brief Semaphore for return values from LookupNow
+    //* \brief Semaphore for return values from LookupNow
     ThreadSemaphore m_lookupSem;
 
     /**
-     * @brief Mutex used to hold the processing of incoming return values while commands
-     * are being sent and recorded.
+    //! \brief Mutex used to hold the processing of incoming return values while commands
+    //! are being sent and recorded.
      */
     ThreadMutex m_cmdMutex;
 
-    //* @brief Name registered with IPC Central
+    //* \brief Name registered with IPC Central
     const char* m_taskName;
 
-    //* @brief Place to store result of current pending LookupNow request
+    //* \brief Place to store result of current pending LookupNow request
     Value m_pendingLookupResult;
 
-    //* @brief Place to store state of pending LookupNow
+    //* \brief Place to store state of pending LookupNow
     State m_pendingLookupState;
 
-    //* @brief Serial # of current pending LookupNow request, or 0
+    //* \brief Serial # of current pending LookupNow request, or 0
     uint32_t m_pendingLookupSerial;
 
     //
@@ -381,11 +385,8 @@ namespace PLEXIL
 
   public:
 
-    /**
-     * @brief Constructor.
-     * @param execInterface Reference to the parent AdapterExecInterface object.
-     */
-    
+    //! \brief Constructor.
+    //! \param execInterface Reference to the parent AdapterExecInterface object.
     IpcAdapter(AdapterExecInterface& execInterface) :
       InterfaceAdapter(execInterface),
       m_ipcFacade(),
@@ -403,11 +404,9 @@ namespace PLEXIL
       debugMsg("IpcAdapter:IpcAdapter", " configuration XML not provided");
     }
 
-    /**
-     * @brief Constructor from configuration XML.
-     * @param execInterface Reference to the parent AdapterExecInterface object.
-     * @param xml A const reference to the XML element describing this adapter
-     */
+    //! \brief Constructor from configuration XML.
+    //! \param execInterface Reference to the parent AdapterExecInterface object.
+    //! \param xml A const reference to the XML element describing this adapter
     IpcAdapter(AdapterExecInterface& execInterface, pugi::xml_node const xml) :
       InterfaceAdapter(execInterface, xml),
       m_ipcFacade(),
@@ -426,9 +425,7 @@ namespace PLEXIL
       condDebugMsg(xml, "IpcAdapter:IpcAdapter", " configuration XML = " << xml);
     }
 
-    /**
-     * @brief Destructor.
-     */
+    //! \brief Virtual destructor.
     ~IpcAdapter() {
     }
 
@@ -437,10 +434,9 @@ namespace PLEXIL
     // API to ExecApplication
     //
 
-    /**
-     * @brief Initializes the adapter, and registers it with the interface registry.
-     * @return true if successful, false otherwise.
-     */
+    //! \brief Initializes the adapter, and registers it with the interface registry.
+    //! \param config Pointer to the AdapterConfiguration registry.
+    //! \return true if successful, false otherwise.
     virtual bool initialize(AdapterConfiguration *config)
     {
       debugMsg("IpcAdapter:initialize", " called");
@@ -546,10 +542,8 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Starts the adapter, possibly using its configuration data.
-     * @return true if successful, false otherwise.
-     */
+    //! \brief Starts the adapter, possibly using its configuration data.
+    //! \return true if successful, false otherwise.
     virtual bool start() {
       // Spawn listener thread
       assertTrueMsg(m_ipcFacade.start() == IPC_OK,
@@ -560,10 +554,8 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Stops the adapter.
-     * @return true if successful, false otherwise.
-     */
+    //! \brief Stops the adapter.
+    //! \return true if successful, false otherwise.
     virtual bool stop() {
       m_ipcFacade.stop();
 
@@ -571,10 +563,8 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Shuts down the adapter, releasing any of its resources.
-     * @return true if successful, false otherwise.
-     */
+    //! \brief Shuts down the adapter, releasing any of its resources.
+    //! \return true if successful, false otherwise.
     virtual bool shutdown() {
       m_ipcFacade.shutdown();
       debugMsg("IpcAdapter:shutdown", ' ' << m_taskName << " succeeded");
@@ -706,10 +696,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief handles SEND_MESSAGE_COMMAND commands from the exec
-     */
-
+    //! \class SendMessageCommandHandler
+    //! \brief handles SEND_MESSAGE_COMMAND commands from the exec
     class SendMessageCommandHandler :
       public IpcCommandHandler
     {
@@ -763,10 +751,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief handles SEND_RETURN_VALUE_COMMAND commands from the exec
-     */
-
+    //! \class SendReturnValueCommandHandler
+    //! \brief handles SEND_RETURN_VALUE_COMMAND commands from the exec
     class SendReturnValueCommandHandler :
       public IpcCommandHandler
     {
@@ -831,10 +817,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief handles ReceiveMessage commands from the exec
-     */
-
+    //! \class ReceiveMessageCommandHandler
+    //! \brief handles ReceiveMessage commands from the exec
     class ReceiveMessageCommandHandler :
       public IpcCommandHandler
     {
@@ -882,10 +866,8 @@ namespace PLEXIL
     }
 
 
-    /**
-     * @brief handles RECEIVE_COMMAND_COMMAND commands from the exec
-     */
-
+    //! \class ReceiveCommandCommandHandler
+    //! \brief handles RECEIVE_COMMAND_COMMAND commands from the exec
     class ReceiveCommandCommandHandler :
       public IpcCommandHandler
     {
@@ -933,10 +915,8 @@ namespace PLEXIL
                << " ReceiveCommand \"" << msgName << "\" handler registered.");
     }
 
-    /**
-     * @brief handles GET_PARAMETER_COMMAND commands from the exec
-     */
-
+    //! \class GetParameterCommandHandler
+    //! \brief handles GET_PARAMETER_COMMAND commands from the exec
     class GetParameterCommandHandler :
       public IpcCommandHandler
     {
@@ -988,11 +968,8 @@ namespace PLEXIL
                << " GetParameter \"" << msgName << "\" handler registered.");
     }
 
-
-    /**
-     * @brief handles UPDATE_LOOKUP_COMMAND commands from the exec
-     */
-
+    //! \class UpdateLookupCommandHandler
+    //! \brief handles UPDATE_LOOKUP_COMMAND commands from the exec
     class UpdateLookupCommandHandler :
       public IpcCommandHandler
     {
@@ -1071,10 +1048,8 @@ namespace PLEXIL
     // Lookup handling
     //
 
-    //
-    // For lookups responded to by another agent
-    //
-
+    //! \class IpcLookupHandler
+    //! \brief Handler class for lookups published by another agent
     class IpcLookupHandler :
       public LookupHandler
     {
@@ -1100,13 +1075,10 @@ namespace PLEXIL
       IpcAdapter &m_adapter;
     };
 
-    /**
-     * @brief Perform an immediate lookup on an existing state.
-     * @param state The state.
-     * @param entry The state cache entry in which to store the result.
-     */
-
-    void performLookupNow(const State& state, StateCacheEntry &entry) 
+    //! \brief Perform an immediate lookup on an existing state.
+    //! \param state The state.
+    //! \param entry The state cache entry in which to store the result.
+    virtual void performLookupNow(const State& state, StateCacheEntry &entry) 
     {
       const std::string& stateName = state.name();
       const std::vector<Value>& params = state.parameters();
@@ -1155,10 +1127,8 @@ namespace PLEXIL
       m_pendingLookupResult.setUnknown();
     }
 
-    //
-    // For lookups this agent publishes to other agents
-    //
-
+    //! \class IpcExternalLookupHandler
+    //! \brief Handler class for lookups this agent publishes to other agents
     class IpcExternalLookupHandler :
       public LookupHandler
     {
@@ -1184,8 +1154,9 @@ namespace PLEXIL
       IpcAdapter &m_adapter;
     };
 
-    // IpcAdapter method to get value of published lookups
-
+    //! \brief IpcAdapter method to get value of published lookups
+    //! \param state Const reference to the lookup's State.
+    //! \param entry Reference to the place to store the lookup result.
     void getExternalLookup(const State &state, StateCacheEntry &entry)
     {
       ExternalLookupMap::iterator it = m_externalLookups.find(state);
@@ -1198,10 +1169,8 @@ namespace PLEXIL
       }
     }
 
-    //
-    // Planner update handler
-    //
-
+    //! \class IpcPlannerUpdateHandler
+    //! \brief Handler class for planner update
     struct IpcPlannerUpdateHandler: public PlannerUpdateHandler
     {
     public:
@@ -1225,8 +1194,9 @@ namespace PLEXIL
       IpcAdapter &m_adapter;
     };
 
-
-    // Implementation method for the above
+    //! \brief Implementation method for planner updates.
+    //! \param update Pointer to the Update object.
+    //! \param intf Pointer to the AdapterExecInterface.
     void performPlannerUpdate(Update *update, AdapterExecInterface *intf)
     {
       std::string const& name = update->getSource()->getNodeId();
@@ -1249,6 +1219,8 @@ namespace PLEXIL
       intf->notifyOfExternalEvent();
     }
 
+    //! \brief Parse the ExternalLookups configuration element.
+    //! \param external Const handle to the ExternalLookups element.
     void parseExternalLookups(pugi::xml_node const external) 
     {
       if (external) {
@@ -1287,9 +1259,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief Send a single message to the Exec's queue and free the message
-     */
+    //! \brief Send a single message to the Exec's queue and free the message
+    //! \param msgData Const pointer to the message.
     void enqueueMessage(const PlexilMsgBase* msgData) {
       assertTrue_2(msgData, "IpcAdapter::enqueueMessage: msgData is null");
 
@@ -1393,9 +1364,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief Process a PlexilMsgType_Message packet and free the message
-     */
+    //! \brief Process a PlexilMsgType_Message packet and free the message
+    //! \param msgData Const pointer to the message.
     void handleMessageMessage(const PlexilStringValueMsg* msgData) {
       assertTrueMsg(msgData != NULL,
                     "IpcAdapter::handleMessageMessage: msgData is null")
@@ -1404,9 +1374,8 @@ namespace PLEXIL
         m_messageQueues.addMessage(msgData->stringValue);
     }
 
-    /**
-     * @brief Queues the command in the message queue
-     */
+    //! \brief Enqueues the sequence of messages for one command in the message queue
+    //! \param msgs Const reference to vector of message pointers.
     void handleCommandSequence(const std::vector<const PlexilMsgBase*>& msgs) {
       //only support one parameter, the id
       //TODO: support more parameters
@@ -1426,10 +1395,8 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief Process a TelemetryValues message sequence
-     */
-
+    //! \brief Process a TelemetryValues message sequence
+    //! \param msgs Const reference to vector of message pointers.
     void handleTelemetryValuesSequence(const std::vector<const PlexilMsgBase*>& msgs) 
     {
       const PlexilStringValueMsg* tv = reinterpret_cast<const PlexilStringValueMsg*>(msgs[0]);
@@ -1473,10 +1440,8 @@ namespace PLEXIL
       m_execInterface.notifyOfExternalEvent();
     }
 
-    /**
-     * @brief Process a ReturnValues message sequence
-     */
-
+    //! \brief Process a ReturnValues message sequence
+    //! \param msgs Const reference to vector of message pointers.
     void handleReturnValuesSequence(const std::vector<const PlexilMsgBase*>& msgs) 
     {
       const PlexilReturnValuesMsg* rv = (const PlexilReturnValuesMsg*) msgs[0];
@@ -1542,10 +1507,9 @@ namespace PLEXIL
       }
     }
 
-    /**
-     * @brief Process a LookupNow message.
-     * @note Ignores any lookups that are not defined in config or published.
-     */
+    //! \brief Process a LookupNow message sequence.
+    //! \param msgs Const reference to vector of message pointers.
+    //! \note Ignores any lookups that are not defined in config or published.
     void handleLookupNow(const std::vector<const PlexilMsgBase*>& msgs) 
     {
       debugMsg("IpcAdapter:handleLookupNow", " received LookupNow");
@@ -1593,6 +1557,8 @@ namespace PLEXIL
 
 }
 
+//! \brief Register the IpcAdapter's factory.
+//! \ingroup interface-library
 extern "C"
 void initIpcAdapter()
 {

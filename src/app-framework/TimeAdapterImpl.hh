@@ -57,16 +57,37 @@ namespace PLEXIL
   // Forward reference
   class AdapterConfiguration;
   
+  //! \class TimeAdapterImpl
+  //! \brief Abstract base class for implementing Lookups of 'time' state,
+  //!        including scheduling Exec wakeups.
+  //!
+  //! TimeAdapterImpl implements the (mostly) platform-independent
+  //! functions required for a time interface in PLEXIL.  It presumes
+  //! a somewhat POSIX-compliant platform.  Derived classes implement
+  //! functionality which is platform dependent.
+  //! \note This functionality is reimplemented in a completely different
+  //!       fashion in PLEXIL 6.
+  //! \see DarwinTimeAdapter
+  //! \see PosixTimeAdapter
+  //! \ingroup interface-library
   class TimeAdapterImpl : public InterfaceAdapter
   {
     // The lookup handler needs access to some protected member functions
     friend class TimeLookupHandler;
 
   public:
-    TimeAdapterImpl(AdapterExecInterface &);
-    TimeAdapterImpl(AdapterExecInterface &,
-                    pugi::xml_node const);
 
+    //! \brief Constructor.
+    //! \param mgr Reference to parent AdapterExecInterface.
+    TimeAdapterImpl(AdapterExecInterface &mgr);
+
+    //! \brief Constructor with configuration XML.
+    //! \param mgr Reference to parent AdapterExecInterface.
+    //! \param config Const handle to configuration XML.
+    TimeAdapterImpl(AdapterExecInterface &mgr,
+                    pugi::xml_node const config);
+
+    //! \brief Virtual destructor.
     virtual ~TimeAdapterImpl();
 
     //
@@ -89,10 +110,6 @@ namespace PLEXIL
     //! \return true if successful, false otherwise.
     virtual bool stop();
 
-    //! \brief Resets the adapter.  
-    //! \return true if successful, false otherwise.
-    virtual bool reset();
-
     //! \brief Shuts down the adapter, releasing any of its resources.
     //! \return true if successful, false otherwise.
     virtual bool shutdown();
@@ -109,44 +126,51 @@ namespace PLEXIL
     void setNextWakeup(double date);
 
     //
-    // Internal functions to be implemented by derived classes
+    // Internal functions
     //
 
     //! \brief Get the current time from the operating system.
     //! \return A double representing the current time.
-    //! \note Default method uses clock_gettime() or gettimeofday() as available;
-    //!       specializations may override this method.
+    //! \note Default method uses clock_gettime() or gettimeofday() as available.
+    //!       Derived classes may override this method.
     virtual double getCurrentTime();
 
     //! \brief Initialize signal handling for the process.
-    //! \return True if successful, false otherwise.
+    //! \return true if successful, false otherwise.
+    //! \note Derived classes must implement this method.
     virtual bool configureSignalHandling() = 0;
 
     //! \brief Construct and initialize the timer as required.
-    //! \return True if successful, false otherwise.
+    //! \return true if successful, false otherwise.
+    //! \note Derived classes must implement this method.
     virtual bool initializeTimer() = 0;
 
     //! \brief Set the timer in an implementation-dependent way.
     //! \param date The Unix-epoch wakeup time, as a double.
-    //! \return True if the timer was set, false if clock time had already passed the wakeup time.
+    //! \return true if the timer was set, false if clock time had already passed the wakeup time.
+    //! \note Derived classes must implement this method.
     virtual bool setTimer(double date) = 0;
 
     //! \brief Stop the timer in an implementation-dependent way.
-    //! \return True if successful, false otherwise.
+    //! \return true if successful, false otherwise.
+    //! \note Derived classes must implement this method.
     virtual bool stopTimer() = 0;
 
     //! \brief Shut down and delete the timer as required.
-    //! \return True if successful, false otherwise.
+    //! \return true if successful, false otherwise.
+    //! \note Derived classes must implement this method.
     virtual bool deleteTimer() = 0;
 
     //! \brief Initialize the wait thread signal mask.
     //! \param mask Pointer to the thread's mask.
-    //! \return True if successful, false otherwise.
+    //! \return true if successful, false otherwise.
+    //! \note Derived classes must implement this method.
     virtual bool configureWaitThreadSigmask(sigset_t* mask) = 0;
 
     //! \brief Initialize the sigwait mask.
     //! \param mask Pointer to the process's mask.
-    //! \return True if successful, false otherwise.
+    //! \return true if successful, false otherwise.
+    //! \note Derived classes must implement this method.
     virtual bool initializeSigwaitMask(sigset_t* mask) = 0;
 
   private:
@@ -161,7 +185,7 @@ namespace PLEXIL
 
 #ifdef PLEXIL_WITH_THREADS
     //! \brief Static member function which waits for timer wakeups.
-    //! \param this_as_void_ptr Pointer to the TimeAdapter instance, as a void *.
+    //! \param this_as_void_ptr Pointer to the TimeAdapterImpl instance, as a void *.
     //! \return Ignored.
     static void* timerWaitThread(void* this_as_void_ptr);
 
@@ -173,20 +197,16 @@ namespace PLEXIL
     // Member variables
     //
 
-    // Wait thread
-    pthread_t m_waitThread;
-    ThreadMutex m_timerMutex;
+    pthread_t m_waitThread;   //!< The timer wait thread.
+    ThreadMutex m_timerMutex; //!< Mutex to serialize access to timer resources.
 #endif
 
-    // Next scheduled wakeup
-    double m_nextWakeup;
+    double m_nextWakeup;      //!< Time of the next scheduled wakeup.
 
-    // Flag to wait thread
-    bool m_stopping;
+    bool m_stopping;          //!< Flag to command timer wait thread to exit.a
 
   }; // class TimeAdapterImpl
 
 } // namespace PLEXIL
-
 
 #endif // PLEXIL_TIME_ADAPTER_IMPL_HH

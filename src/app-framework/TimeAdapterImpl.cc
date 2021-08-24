@@ -62,25 +62,36 @@ namespace PLEXIL
   // Time lookup handler implementation
   //
 
+  //! \class TimeLookupHandler
+  //! \brief Implements the Lookup of the 'time' state.
+  //! \see LookupHandler
+  //! \ingroup interface-library
   class TimeLookupHandler : public LookupHandler
   {
   private:
 
-    TimeAdapterImpl &m_adapter;
+    TimeAdapterImpl &m_adapter; //!< Reference to the parent TimeAdapterImpl
 
   public:
 
+    //! \brief Constructor.
+    //! \param adapter Reference to the parent TimeAdapterImpl.
     TimeLookupHandler(TimeAdapterImpl &adapter)
     : LookupHandler(),
       m_adapter(adapter)
     {
     }
 
+    //! \brief Virtual destructor.
     virtual ~TimeLookupHandler()
     {
     }
 
-    virtual void lookupNow(const State & /* state */, StateCacheEntry &cacheEntry)
+    //! \brief Query the external system for the specified state, and
+    //!        update the given state cache entry.
+    //! \param state The State to look up.
+    //! \param cacheEntry The StateCacheEntry for the given State.
+    virtual void lookupNow(const State &state, StateCacheEntry &cacheEntry)
     {
       double now = m_adapter.getCurrentTime();
       debugMsg("TimeAdapter:lookupNow",
@@ -88,32 +99,55 @@ namespace PLEXIL
       cacheEntry.update(now);
     }
 
-    virtual void subscribe(const State & /* state */, AdapterExecInterface * /* intf */)
+    //! \brief The subscribe() method notifies the interface that the
+    //! PLEXIL Exec is interested in updates for this state.
+    //! \param state The State being subscribed to.
+    //! \param intf Pointer to the AdapterExecInterface, through which
+    //! updates in the state's value can be sent.
+    //! \note This method is a no-op.
+    virtual void subscribe(const State &state, AdapterExecInterface *intf)
     {
       debugMsg("TimeAdapter:subscribe", " called");
     }
       
+    //! \brief The unsubscribe() method notifies the interface that the
+    //! PLEXIL Exec is no longer interested in updates for this state.
+    //! \param state The State formerly subscribed to.
+    //! \note Stops the timer.
     virtual void unsubscribe(const State &state)
     {
       m_adapter.stopTimer();
       debugMsg("TimeAdapter:unsubscribe", " complete");
     }
 
-    virtual void setThresholds(const State & /* state */, double hi, double /* lo */)
+    //! \brief Notify the handler that the Exec is not interested in
+    //! new values within the given bounds.
+    //! \param state The state on which the bounds are being
+    //! established.
+    //! \param hi The Real value above which updates should be sent to the Exec.
+    //! \param lo The Real value below which updates should be sent to the Exec.
+    //! \note Interprets the high threshold as a deadline for a timer wakeup.
+    virtual void setThresholds(const State &state, double hi, double lo)
     {
       debugMsg("TimeAdapter:setThresholds", " high threshold is " << std::setprecision(15) << hi);
       m_adapter.setNextWakeup(hi);
     }
 
+    //! \brief Notify the handler that the Exec is not interested in
+    //! new values within the given bounds.
+    //! \param state The state on which the bounds are being
+    //! established.
+    //! \param hi The Integer value above which updates should be sent to the Exec.
+    //! \param lo The Integer value below which updates should be sent to the Exec.
+    //! \note This method should not be reachable in normal operation.
     virtual void setThresholds(const State &state, int32_t hi, int32_t lo)
     {
-      // This is an internal error, shouldn't be reachable from a plan
       errorMsg("TimeAdapter: setThresholds not implemented for Integer thresholds");
     }
   };
 
   //
-  // TimeAdapterImpl
+  // TimeAdapterImpl methods
   //
 
   TimeAdapterImpl::TimeAdapterImpl(AdapterExecInterface &mgr)
@@ -185,11 +219,6 @@ namespace PLEXIL
     return true;
   }
 
-  bool TimeAdapterImpl::reset()
-  {
-    return true;
-  }
-
   bool TimeAdapterImpl::shutdown()
   {
     if (!this->deleteTimer()) {
@@ -200,10 +229,6 @@ namespace PLEXIL
     return true;
   }
 
-
-  //! \brief Get the current time from the operating system.
-  //! \return A double representing the current time.
-  //! \note Default method. May be overridden.
   double TimeAdapterImpl::getCurrentTime()
   {
     double tym;

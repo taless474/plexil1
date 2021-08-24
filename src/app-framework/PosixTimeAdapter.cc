@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
-*  All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Universities Space Research Association nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-* OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //
 // Time adapter implementation for platforms with the POSIX timer_create() function
@@ -47,48 +46,39 @@
 namespace PLEXIL
 {
 
-  /**
-   * @brief An interface adapter using standard POSIX time facilities
-   *        to implement LookupNow and LookupOnChange.
-   */
+  //! \class PosixTimeAdapter
+  //! \brief An interface adapter using standard POSIX time facilities
+  //!        to implement LookupNow and LookupOnChange for the 'time' state.
+  //! \ingroup interface-library
   class PosixTimeAdapter : public TimeAdapterImpl
   {
   public:
 
-    /**
-     * @brief Constructor.
-     * @param execInterface Reference to the parent AdapterExecInterface object.
-     */
+    //! \brief Constructor.
+    //! \param execInterface Reference to the parent AdapterExecInterface object.
     PosixTimeAdapter(AdapterExecInterface& execInterface)
       : TimeAdapterImpl(execInterface)
     {
     }
 
-    /**
-     * @brief Constructor from configuration XML.
-     * @param execInterface Reference to the parent AdapterExecInterface object.
-     * @param xml A const reference to the XML element describing this adapter
-     * @note The instance maintains a shared pointer to the XML.
-     */
+    //! \brief Constructor from configuration XML.
+    //! \param execInterface Reference to the parent AdapterExecInterface object.
+    //! \param xml A const reference to the XML element describing this adapter
     PosixTimeAdapter(AdapterExecInterface& execInterface, 
                      pugi::xml_node const xml)
       : TimeAdapterImpl(execInterface, xml)
     {
     }
 
-    /**
-     * @brief Destructor.
-     */
+    //! \brief Virtual destructor.
     virtual ~PosixTimeAdapter()
     {
     }
 
   protected:
 
-    /**
-     * @brief Initialize signal handling for the process.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Initialize signal handling for the process.
+    //! \return true if successful, false otherwise.
     virtual bool configureSignalHandling()
     {
       // Mask SIGUSR1 at the process level
@@ -110,10 +100,8 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Construct and initialize the timer as required.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Construct and initialize the timer as required.
+    //! \return true if successful, false otherwise.
     virtual bool initializeTimer()
     {
       // Initialize sigevent
@@ -133,11 +121,9 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Set the timer.
-     * @param date The wakeup time, as a double.
-     * @return True if the timer was set, false if clock time had already passed the wakeup time.
-     */
+    //! \brief Set the timer in an implementation-dependent way.
+    //! \param date The Unix-epoch wakeup time, as a double.
+    //! \return true if the timer was set, false if clock time had already passed the wakeup time.
     virtual bool setTimer(double date)
     {
       // Get the wakeup time into the format timer_settime wants.
@@ -172,9 +158,8 @@ namespace PLEXIL
       return true;
     }
 
-    /**
-     * @brief Stop the timer.
-     */
+    //! \brief Stop the timer in an implementation-dependent way.
+    //! \return true if successful, false otherwise.
     virtual bool stopTimer()
     {
       static itimerspec sl_tymrDisable = {{0, 0}, {0, 0}};
@@ -190,10 +175,8 @@ namespace PLEXIL
       return status == 0;
     }
 
-    /**
-     * @brief Shut down and delete the timer as required.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Shut down and delete the timer as required.
+    //! \return true if successful, false otherwise.
     virtual bool deleteTimer()
     {
       int status = timer_delete(m_timer);
@@ -203,10 +186,9 @@ namespace PLEXIL
       return status == 0;
     }
 
-    /**
-     * @brief Initialize the wait thread signal mask.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Initialize the wait thread signal mask.
+    //! \param mask Pointer to the thread's mask.
+    //! \return true if successful, false otherwise.
     virtual bool configureWaitThreadSigmask(sigset_t* mask)
     {
       if (sigemptyset(mask)) {
@@ -226,11 +208,9 @@ namespace PLEXIL
       return errnum == 0;
     }
 
-    /**
-     * @brief Initialize the sigwait mask.
-     * @param Pointer to the mask.
-     * @return True if successful, false otherwise.
-     */
+    //! \brief Initialize the sigwait mask.
+    //! \param Pointer to the process's mask.
+    //! \return True if successful, false otherwise.
     virtual bool initializeSigwaitMask(sigset_t* mask)
     {
       // listen only for SIGUSR1
@@ -256,10 +236,12 @@ namespace PLEXIL
     // Member variables
     //
 
-    sigevent m_sigevent;
-    timer_t m_timer;
+    sigevent m_sigevent; //!< The timer event.
+    timer_t m_timer;     //!< The timer.
   };
 
+  //! \brief Register the PosixTimeAdapter as the class implementing OSNativeTime.
+  //! \ingroup interface-library
   void registerTimeAdapter()
   {
     REGISTER_ADAPTER(PosixTimeAdapter, "OSNativeTime");
