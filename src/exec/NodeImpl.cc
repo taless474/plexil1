@@ -289,7 +289,7 @@ namespace PLEXIL
     m_variablesByName->grow(n);
   }
 
-  // Default method.
+  // Default method. Overridden by ListNode.
   NodeVariableMap const *NodeImpl::getChildVariableMap() const
   {
     return NULL; // this node has no children
@@ -365,7 +365,7 @@ namespace PLEXIL
     this->specializedCreateConditionWrappers();
   }
 
-  // Default method does nothing.
+  // Default method does nothing. Applies to Empty and Assignment nodes.
   void NodeImpl::specializedCreateConditionWrappers()
   {
   }
@@ -437,7 +437,7 @@ namespace PLEXIL
     m_cleanedConditions = true;
   }
 
-  // Default method.
+  // Default method. Applies to Empty and Assignment nodes.
   void NodeImpl::cleanUpNodeBody()
   {
   }
@@ -484,7 +484,7 @@ namespace PLEXIL
     this->publishChange();
   }
 
-  // Default method
+  // Default method. Overridden by ListNode.
   void NodeImpl::specializedActivate()
   {
   }
@@ -521,7 +521,7 @@ namespace PLEXIL
     }
   }
 
-  // Default methods.
+  // Default methods. Overridden by ListNode.
   std::vector<NodeImpl *>& NodeImpl::getChildren()
   {
     static std::vector<NodeImpl *> sl_emptyNodeVec;
@@ -984,7 +984,7 @@ namespace PLEXIL
   // Conditions active: AncestorExit, AncestorInvariant, End, Exit, Invariant, Post
   // Legal successor states: FINISHED, ITERATION_ENDED
 
-  // Default method
+  // Default method. Applies to Empty and Update nodes.
   void NodeImpl::transitionToExecuting()
   {
     activateLocalVariables();
@@ -994,7 +994,7 @@ namespace PLEXIL
     activatePostCondition();
   }
 
-  // Default method
+  // Empty node method
   bool NodeImpl::getDestStateFromExecuting()
   {
     Expression *cond;
@@ -1261,9 +1261,9 @@ namespace PLEXIL
   }
 
   //
-  // FINISHING (legal for ListNode and LibraryCallNode only)
+  // FINISHING (legal for Command, ListNode, and LibraryCallNode only)
   //
-  // Description and methods here apply to all other node types.
+  // Description and methods here apply to Empty, Assignment, and Update nodes.
   //
   // Legal predecessor states: n/a
   // Conditions active: n/a
@@ -1290,21 +1290,21 @@ namespace PLEXIL
   }
 
   //
-  // FAILING (legal for Command, Update, ListNode, and LibraryCallNode only)
+  // FAILING (legal for Assignment, Command, Update, ListNode, and LibraryCallNode only)
   //
-  // Description and methods here apply to Empty and Assignment nodes.
+  // Description and methods here apply only to Empty nodes.
   //
   // Legal predecessor states: n/a
   // Conditions active: n/a
   // Legal successor states: n/a
 
-  // Default method
+  // Empty node method
   void NodeImpl::transitionToFailing()
   {
-    errorMsg("No transition to FAILING state defined for this node");
+    errorMsg("No transition to FAILING state defined for " << getType() << " node");
   }
 
-  // Default method
+  // Empty node method
   bool NodeImpl::getDestStateFromFailing()
   {
     errorMsg("Attempted to compute destination state from FAILING for node "
@@ -1312,10 +1312,10 @@ namespace PLEXIL
     return false;
   }
 
-  // Default method
+  // Empty node method
   void NodeImpl::transitionFromFailing()
   {
-    errorMsg("No transition from FAILING state defined for this node");
+    errorMsg("No transition from FAILING state defined for " << getType() <<  " node");
   }
 
   // ***
@@ -1485,7 +1485,7 @@ namespace PLEXIL
     return NULL;
   }
 
-  // Default methods
+  // Default methods, overridden by ListNode.
   NodeImpl const *NodeImpl::findChild(char const * /* childName */) const
   {
     return NULL;
@@ -1673,7 +1673,7 @@ namespace PLEXIL
     m_failureType = NO_FAILURE;
   }
 
-  // Default method
+  // Default method, applies to Empty, NodeList, LibraryNodeCall nodes.
   void NodeImpl::abort() 
   {
     errorMsg("Abort illegal for node type " << getType());
@@ -1685,7 +1685,7 @@ namespace PLEXIL
     deactivateLocalVariables();
   }
 
-  // Default method
+  // Default method, applies to Empty, NodeList, LibraryNodeCall nodes.
   void NodeImpl::specializedDeactivateExecutable()
   {
   }
@@ -1741,6 +1741,7 @@ namespace PLEXIL
   }
 
   // Default method does nothing
+  // Overridden by CommandNode
   void NodeImpl::printCommandHandle(std::ostream& /* stream */, const unsigned int /* indent */) const
   {
   }
