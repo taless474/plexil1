@@ -32,7 +32,7 @@ specified on the command line.  In this way, universalExec can be
 application-agnostic, and can serve a variety of applications without
 having to be rebuilt for each one.
 
-### The interface configuration file
+## The interface configuration file
 
 At initialization, the AdapterConfiguration instance loads the
 interface configuration file.  This file describes the kinds of
@@ -41,7 +41,10 @@ make them usable by a %PLEXIL plan; e.g. lists of command or lookup
 names that each such object handles, IP addresses for external
 connections, et cetera.
 
-### Abstract factories for interface objects
+See [Interface configuration files](#interface-config-files) for
+details.
+
+## Abstract factories for interface objects
 
 AdapterConfiguration constructs interface objects by invoking a set of
 [*abstract factories*](https://en.wikipedia.org/wiki/Abstract_factory_pattern).
@@ -63,7 +66,7 @@ The concrete factory class template's `create` method simply calls
 the constructor for the adapter class, with a standardized parameter
 list.
 
-### Registering custom interface objects
+## Registering custom interface objects
 
 Registering a factory for a custom interface object is as simple as
 instantiating its concrete factory class.  Because this is a common
@@ -104,7 +107,7 @@ Since the `OSNativeTime` and `Utility` adapters are included in the
 they are pre-registered, and therefore quickly constructed and
 initialized.
 
-### Loading interfaces at startup time
+## Loading interfaces at startup time
 
 Now we get to `MyAdapter`.  No factory for this adapter is
 registered in the universalExec application.  So
@@ -114,7 +117,7 @@ In our example, it looks for a library file named
 `libMyAdapter.so` (or, on macOS, `libMyAdapter.dylib`) in the
 current library path.
 
-### Contents of the shared library
+## Contents of the shared library
 
 The library file should contain the adapter implementation, and any
 additional code and data necessary to make it work.  It must also
@@ -126,7 +129,7 @@ the adapter type name; in this case it would be `initMyAdapter`.
 This function should invoke the REGISTER_ADAPTER macro to ensure
 the adapter class is registered.
 
-### Finishing the job
+## Finishing the job
 
 If the library file is found, it is loaded, and its initialization
 function is called.  Assuming this succeeds,
@@ -140,7 +143,7 @@ Exec listeners and Exec listener filters.
 In this way any number of custom interface objects can be loaded at
 startup time, in any combination.
 
-### Key points for interface implementors
+## Key points for interface implementors
 
 - **An interface configuration file specifies which interfaces to
   construct for a particular application.**
@@ -150,8 +153,7 @@ startup time, in any combination.
   
 - **Each custom class to be instantiated must have a factory registered.**
   
-- **Custom interface classes can be loaded at startup time as shared
-  libraries.**
+- **Custom interface classes can be loaded at startup time as shared libraries.**
   
 - **Each shared library is expected to have an initialization function
   taking no arguments and returning no value.**
@@ -159,7 +161,7 @@ startup time, in any combination.
 - **The initialization function must register the custom classes'
   factories.**
 
-[Previous](\ref listener-data-flow) | [Up](\ref interfacing-tutorial)
+[Previous](\ref listener-data-flow) | [Up](\ref interfacing-tutorial) | [Next](\ref interface-config-files)
 
 [Home](index.html)
 

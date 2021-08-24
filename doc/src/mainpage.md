@@ -13,7 +13,7 @@ syntax (Standard %PLEXIL).
 How to use this versatile command-line application to run %PLEXIL plans
 and applications.
 
-* [The PLEXIL Standard Interface Library](@ref interface-library)
+* [The PLEXIL Standard Interface Library](group__interface-library.html)
 
 Most %PLEXIL plans will need to deal with time.  Most %PLEXIL users will
 need to print from their plans at some point.  Some applications will

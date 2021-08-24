@@ -1,0 +1,191 @@
+namespace PLEXIL {
+/*!
+
+\page interface-config-files Interface configuration files
+
+An *interface configuration file* tells the %PLEXIL Exec:
+
++ which interface adapters to build;
++ how to distribute Lookups, Commands, and planner updates to those
+  adapters;
++ what Exec listeners to build; 
++ what listener filters to apply to those Exec listeners;
++ any other information needed by the particular adapters and
+  listeners;
++ and what directories to search for plan and library files.
+
+## Contents of the interface configuration file
+
+The interface configuration file's contents are standard XML.  The top
+level element is `Interfaces`.  The contents of that element may be
+any of the following elements, in any order:
+
++ `Adapter` specifies an interface adapter.
++ `Listener` specifies an Exec listener.
++ `LibraryNodePath` specifies the search path for loading library node
+  files; and
++ `PlanPath` specifies the search path for loading plan files.
+
+These are described in more detail in the sections below.
+
+### The Adapter element
+
+The `Adapter` element must contain an `AdapterType` attribute at a
+minimum.  The `AdapterType` is used to look up a concrete
+AdapterFactory instance.  If a factory is found, its create() method
+is called, with the `Adapter` element as its parameter.
+
+The `Adapter` element may optionally contain the following standard
+attributes:
+
++ `LibPath` - see
+  [Dynamic loading of interface factories](#factory-loading) for
+  details.
+  
+The `Adapter` element may optionally contain the following standard
+elements:
+
++ `DefaultAdapter` - Registers this adapter for all interface
+  functions not registered to another adapter.
+
++ `DefaultLookupAdapter` - Registers this adapter for all Lookup names
+  not registered to another adapter.
+
++ `LookupNames` - Contains a comma-separated list of Lookup names to
+  register to this adapter.  The optional `TelemetryOnly` attribute,
+  if true, specifies that the application will push values for the
+  named Lookups to the Exec, and that the LookupNow handler should not
+  be called for those names.
+  
+  \note The `TelemetryOnly` attribute is deprecated, and is removed in
+  PLEXIL 6.
+  
++ `DefaultCommandAdapter` - Registers this adapter for all Command
+  names not registered to another adapter.
+  
++ `CommandNames` - Contains a comma-separated list of Command names to
+  register to this adapter.
+
++ `PlannerUpdate` - Registers this adapter to send all Planner
+  Updates.
+
+### The Listener element
+
+The `Listener` element must contain an `ListenerType` attribute at a
+minimum.  The `ListenerType` is used to look up a concrete
+ListenerFactory instance.  If a factory is found, its create() method
+is called, with the `Listener` element as its parameter.
+
+The `Listener` element may optionally contain the following standard
+attributes:
+
++ `LibPath` - see
+  [Dynamic loading of interface factories](#factory-loading) for
+  details.
+  
+The `Listener` element may optionally contain the following standard
+elements:
+
++ `Filter` - specifies a listener filter, which selects the events
+  this Listener will report.  Must contain a `FilterType` attribute at
+  minimum.  The `FilterType` is used to look up a concrete
+  ListenerFactory instance.  If a factory is found, its create()
+  method is called, with the `Filter` element as its parameter.
+  
+  The `Filter` element may optionally contain a `LibPath` attribute as
+  well.
+  
+  Most listener filter types will require additional configuration
+  information.  See the documentation for the specific listener
+  filters.
+
+### The LibraryNodePath element
+
+The `LibraryNodePath` element tells the Exec where it should search to
+find library files to satisfy a call to
+AdapterExecInterface::handleAddLibrary.  The contents of this element
+are directory paths, separated by commas.
+
+If no `LibraryNodePath` is supplied, the Exec defaults to searching
+the current working directory.
+
+### The PlanPath element
+
+The `PlanPath` element tells the Exec where it should search to find
+library files to satisfy a call to
+AdapterExecInterface::handleAddPlan.  The contents of this element are
+directory paths, separated by commas.
+
+If no `PlanPath` is supplied, the Exec defaults to searching the
+current working directory.
+
+## Adapter-, listener-, and filter-specific configuration
+
+The `Adapter`, `Listener`, and `Filter` elements may also contain
+configuration information specifically for use by that object or its
+factory.  E.g. the [IpcAdapter](#ipc-adapter) configuration XML tells
+the adapter what server to connect to, what name to register itself
+under, and so forth.  The Application Framework places no restrictions
+on the kinds or amounts of additional information provided in those
+elements, so long as it is expressed as valid XML.
+
+See the documentation for the specific adapter, listener, or listener
+filter type.
+
+## Dynamic loading of interface factories {#factory-loading}
+
+On platforms which support dynamic library loading at runtime, the
+implementations of adapters, listeners, and listener filters need not
+be built in to the Executive executable.  The implementations can be
+loaded as shared libraries at startup time.
+
+When an adapter, listener, or filter factory name is not found, the
+Application Framework searches for a library by that name, and loads
+it if found.
+
+Each of these configuration elements supports the `LibPath` attribute.
+If one exists, it specifies the library's file name.  In the absence
+of a `LibPath` attribute, the library name is created by prepending
+"lib" and appending ".so" (or ".dylib" on macOS) to the factory name.
+The resulting library file name is given to the platform's dlopen()
+implementation.  See the dlopen manual page for details.
+
+If the named library is successfully loaded, an initialization
+function is searched for.  The initialization function name is created
+by prepending "init" to the factory name.  If found, the
+initialization function is called with no arguments, and its return
+value (if any) is not used.  The initialization function is expected
+to register the factory name, and perform any other initialization
+required.
+
+If this process is successful, the factory name is looked up again.
+
+## Facilities for parsing configuration XML
+
+This section is intended for those implementing their own interface
+objects.
+
+The configuration XML used in the construction of an interface object
+is accessible through its base class's member functions.  See
+InterfaceAdapter::getXml, ExecListener::getXml, and
+ExecListenerFilter::getXml.
+
+The AdapterConfiguration class serves as the registrar for interface
+objects.  Interface implementors should reference the documentation
+for its member functions.
+
+The member function AdapterConfiguration::defaultRegisterAdapter
+automatically registers an interface adapter as directed by its
+configuration XML.  This function has been deprecated with the advent
+of the handler-based interface paradigm, but may still prove useful.
+
+Additional generic utilities may prove useful for parsing
+configuration data.  E.g. the function parseCommaSeparatedArgs() can
+be used to parse lists of names.
+
+[Previous](\ref startup-and-configuration) | [Up](\ref interfacing-tutorial)
+
+[Home](index.html)
+
+*/
+}
