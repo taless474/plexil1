@@ -4,9 +4,9 @@
 \addtogroup App-Framework The PLEXIL Executive Application Framework
 
 In order to do useful things with %PLEXIL, the Executive must be able
-to inquire about the environment, and must be able to effect commands.
-The Application Framework module provides hooks to implement those
-capabilities.
+to inquire about the environment, effect commands, and report
+execution status.  The Application Framework module provides hooks to
+implement those capabilities.
 
 ### Key concepts
 
@@ -29,23 +29,39 @@ handlers is specified by the AdapterExecInterface abstract base
 class.
 
 * Node state changes in the Executive can be monitored and reported
-through instances of the ExecListener abstract base class.
+through *listeners*, instances of the ExecListener abstract base
+class.
 
 * The AdapterConfiguration class manages the construction of the
 interface objects from a configuration file loaded at runtime.
 
 ### Standard interface library
 
-Most every real-world application needs a sense of time.  The %PLEXIL
-Executive Application Framework provides a TimeAdapter using standard
-POSIX APIs to read the current time, and to schedule wakeups at a
-future time.
+A standard set of adapters and listeners, the [%PLEXIL Standard
+Interface Library](#interface-library), is part of the %PLEXIL
+distribution.  It includes these modules:
 
-Similarly, most every application will need to be debugged.  The
-UtilityAdapter class implements the `print()` and `pprint()` commands.
++ The TimeAdapter uses standard POSIX APIs to read the current
+  time, and to schedule wakeups at a future time.
 
-A %PLEXIL plan can start, monitor, and terminate additional plans
-through the Launcher adapter.
++ The UtilityAdapter implements printing commands.
+
++ The Launcher allows %PLEXIL plans to start, monitor, and terminate
+  other plans.
+
++ The IpcAdapter uses a cross-platform, publish/subscribe
+  inter-process communication (IPC) package to command and monitor
+  external systems, and to publish planner updates.
+  
++ The UdpAdapter uses UDP datagrams to command and monitor external
+  systems.
+  
++ LuvListener allows monitoring %PLEXIL plan execution in real time
+  via the %PLEXIL Viewer Java application.
+
+Users can take advantage of these capabilities directly, or use the
+source code of these interfaces as templates for implementing their
+own custom interfaces.
 
 ### AbstractFactory classes for interface objects
 

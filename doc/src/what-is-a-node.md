@@ -1,9 +1,11 @@
 # What is a PLEXIL Node? {#what-is-a-node}
 
 A Node in PLEXIL is a unit of contingent action.  A Node has a *node
-state*, an *outcome*, and optionally a *failure type*; the node state
-evolves as a function of the Node's *conditions*.  There are several
-Node *types* specialized for different purposes.
+state*, an *outcome*, and for certain outcomes, a *failure type*; the
+node state evolves as a function of the Node's *conditions*.  There
+are several Node *types* specialized for different purposes.  The Node
+*body* is directly related to its type.  A Node may declare
+*variables* for use by its body.
 
 ## Node types
 
