@@ -1557,7 +1557,7 @@ namespace PLEXIL
 
 }
 
-//! \brief Register the IpcAdapter's factory.
+//! \brief Register the IpcAdapter factory with the PLEXIL Application Framework.
 //! \ingroup interface-library
 extern "C"
 void initIpcAdapter()

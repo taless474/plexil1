@@ -72,10 +72,11 @@ namespace PLEXIL
     virtual bool initialize();
 
     //! \brief The adapter should initialize itself and register itself with the interface registry.
+    //! \param config Pointer to the AdapterConfiguration interface registry.
     //! \return true if successful, false otherwise.
     //! \note Adapters should provide their own methods as required.
     //! \note Default method simply calls the above member function for backward compatibility.
-    virtual bool initialize(AdapterConfiguration *);
+    virtual bool initialize(AdapterConfiguration *config);
 
     //! \brief Starts the adapter, possibly using its configuration data.  
     //! \return true if successful, false otherwise.

@@ -46,23 +46,23 @@ namespace PLEXIL
 
   //! \class Expression
   //! \brief Abstract base class for expressions in the %PLEXIL language.
-
+  //!
   //! The Expression class is the basis for expressions in the %PLEXIL
   //! Executive.  It defines an API for querying an expression.  The
   //! Expression class does not support modifying the value of an
   //! expression; the API for that functionality is on a separate
   //! mixin class, Assignable.
-
-  //! \para Expression derives from Listenable, therefore every class
+  //!
+  //! Expression derives from Listenable, therefore every class
   //! derived from Expression must implement the Listenable API.
   //! Expression classes whose value will not change can simply use
   //! the default methods on Listenable.
-
-  //! \para Expression classes whose values can change should also
+  //!
+  //! Expression classes whose values can change should also
   //! derive from Notifier, and may wish to override some of its
   //! protected member functions.
-
-  //! \para Classes for interior nodes in the expression graph
+  //!
+  //! Classes for interior nodes in the expression graph
   //! (e.g. arithmetic functions) should derive from Propagator; it
   //! inherits behavior from both ExpressionListener and Notifier, and
   //! as the name implies, it propagates change notifications.

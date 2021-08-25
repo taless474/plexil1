@@ -1,28 +1,27 @@
-/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
- *  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Universities Space Research Association nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// Copyright (c) 2006-2021, Universities Space Research Association (USRA).
+//  All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Universities Space Research Association nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY USRA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL USRA BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+// OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+// TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "plexil-config.h"
 
@@ -82,6 +81,13 @@ namespace PLEXIL
     // Helper functions
     //
 
+    //! \brief Convert a message name into the proper format,
+    //!        given the command type and a user-defined id.
+    //! \param name Const reference to the message name.
+    //! \param command Const reference to the command name.
+    //! \param id The id.
+    //! \return The formatted message name string.
+    //! \ingroup interface-library
     static std::string formatMessageName(const std::string &name,
                                          const std::string &command,
                                          int id = 0)
@@ -96,7 +102,9 @@ namespace PLEXIL
       return ss.str();
     }
 
-    // Print the content of a message
+    //! \brief Print the parsed content of a message for debugging.
+    //! \param name The message name.
+    //! \param args Const reference to vector of Value instances.
     static void printMessageContent(const std::string& name,
                                     const std::vector<Value>& args)
     {
@@ -122,25 +130,30 @@ namespace PLEXIL
 
   } // namespace
 
+  //! \brief Structure describing one parameter of a command or return value message.
+  //! \ingroup interface-library
   struct UdpParameter
   {
-    std::string desc;           // optional parameter description
-    std::string type;           // int|float|bool|string|int-array|float-array|string-array|bool-array
-    unsigned int len;           // number of bytes for type (or array element)
-    unsigned int elements;      // number of elements in the array (non-array types are 0 or 1?)
+    std::string desc;           //!< optional parameter description
+    std::string type;           //!< int|float|bool|string|int-array|float-array|string-array|bool-array
+    unsigned int len;           //!< number of bytes for type (or array element)
+    unsigned int elements;      //!< number of elements in the array (non-array types are 0 or 1?)
   };
 
+  //! \brief Specifications for a message to be sent by UdpAdapter.
+  //! \ingroup interface-library
   struct UdpMessage
   {
-    std::string name;                     // the Plexil Command name
-    std::string peer;                     // peer to which to send
-    std::vector<UdpParameter> parameters; // message value parameters
-    UdpAdapter *self;                     // reference to the UdpAdapter for use in message decoding
-    unsigned int len;                     // the length of the message in bytes
-    unsigned int local_port;              // local port on which to receive
-    unsigned int peer_port;               // port to which to send
-    int sock;                             // socket to use -- only meaningful in call to waitForUdpMessage
+    std::string name;                     //!< the Plexil Command name
+    std::string peer;                     //!< peer to which to send
+    std::vector<UdpParameter> parameters; //!< message value parameters
+    UdpAdapter *self;                     //!< reference to the UdpAdapter for use in message decoding
+    unsigned int len;                     //!< the length of the message in bytes
+    unsigned int local_port;              //!< local port on which to receive
+    unsigned int peer_port;               //!< port to which to send
+    int sock;                             //!< socket to use -- only meaningful in call to waitForUdpMessage
 
+    //! \brief Default constructor.
     UdpMessage()
       : name(),
         peer(),
@@ -159,11 +172,16 @@ namespace PLEXIL
   typedef std::map<std::string, pthread_t> ThreadMap;
   typedef std::map<std::string, int> SocketMap;
 
+  //! \class UdpAdapter
+  //! \brief Interface adapter to send and receive commands, messages,
+  //!        and return values via UDP datagrams.
+  //! \ingroup interface-library
   class UdpAdapter : public InterfaceAdapter
   {
   public:
 
-    // Constructor
+    //! \brief Constructor.
+    //! \param execInterface Parent AdapterExecInterface instance.
     UdpAdapter(AdapterExecInterface& execInterface)
       : InterfaceAdapter(execInterface),
         m_default_local_port(0),
@@ -174,7 +192,9 @@ namespace PLEXIL
       debugMsg("UdpAdapter:UdpAdapter(execInterface)", " called");
     }
 
-    // Constructor
+    //! \brief Constructor with configuration XML.
+    //! \param execInterface Parent AdapterExecInterface instance.
+    //! \param xml Const handle to the configuration XML.
     UdpAdapter(AdapterExecInterface& execInterface, pugi::xml_node const xml)
       : InterfaceAdapter(execInterface, xml),
         m_default_local_port(0),
@@ -188,7 +208,7 @@ namespace PLEXIL
                " Using " << xml.attribute("AdapterType").value());
     }
 
-    // Destructor
+    //! \brief Destructor
     virtual ~UdpAdapter()
     {
       debugMsg("UdpAdapter:~UdpAdapter", " called");
@@ -198,6 +218,10 @@ namespace PLEXIL
     // InterfaceAdapter API
     //
 
+    //! \brief Initialize the adapter and register it for the
+    //! specified commands, lookups, and planner update.
+    //! \param config Pointer to the AdapterConfiguration interface registry.
+    //! \return true if successful, false otherwise.
     virtual bool initialize(AdapterConfiguration *config)
     {
       debugMsg("UdpAdapter:initialize", " called");
@@ -215,6 +239,8 @@ namespace PLEXIL
       return true;
     }
 
+    //! \brief Start the adapter.
+    //! \return true if successful, false otherwise.
     virtual bool start()
     {
       debugMsg("UdpAdapter:start()", " called");
@@ -222,6 +248,8 @@ namespace PLEXIL
       return true;
     }
 
+    //! \brief Stop the adapter.
+    //! \return true if successful, false otherwise.
     virtual bool stop()
     {
       debugMsg("UdpAdapter:stop", " called");
@@ -229,12 +257,16 @@ namespace PLEXIL
       return true;
     }
 
+    //! \brief Shut down the adapter.
+    //! \return true if successful, false otherwise.
     virtual bool shutdown()
     {
       debugMsg("UdpAdapter:shutdown", " called");
       return true;
     }
 
+    //! \brief Send the name of the supplied node, and the supplied value pairs, to the planner.
+    //! \param update Pointer to the Update instance containing the data to report to the planner.
     virtual void sendPlannerUpdate(Update *update)
     {
       debugMsg("UdpAdapter:sendPlannerUpdate", " called");
@@ -247,7 +279,8 @@ namespace PLEXIL
       m_execInterface.notifyOfExternalEvent();
     }
 
-    // Executes the command.
+    //! \brief Execute a command with the requested arguments.
+    //! \param cmd The Command instance.
     virtual void executeCommand(Command *cmd)
     {
       std::string const &name = cmd->getName();
@@ -269,7 +302,8 @@ namespace PLEXIL
       //debugMsg("UdpAdapter:executeCommand", " " << name << " done.");
     }
 
-    // Abort the given command.  Store the abort-complete into ack
+    //! \brief Abort the pending command.
+    //! \param cmd Pointer to the command being aborted.
     virtual void invokeAbort(Command *cmd)
     {
       std::string const &cmdName = cmd->getName();
@@ -376,7 +410,8 @@ namespace PLEXIL
     // Implementation methods
     //
 
-    // Default UDP command handler
+    //! \brief Send a generic command via UDP.  Use the first parameter as the message name.
+    //! \param cmd Pointer to the command to be sent.
     void executeDefaultCommand(Command *cmd)
     {
       std::vector<Value> const &args = cmd->getArgValues();
@@ -433,7 +468,8 @@ namespace PLEXIL
       m_execInterface.notifyOfExternalEvent();
     }
     
-    // RECEIVE_COMMAND_COMMAND
+    //! \brief Implement the ReceiveCommand command.
+    //! \param cmd Pointer to the command instance.
     void executeReceiveCommandCommand(Command *cmd)
     {
       std::vector<Value> const &args = cmd->getArgValues();
@@ -477,7 +513,8 @@ namespace PLEXIL
       }
     }
 
-    // GET_PARAMETER_COMMAND
+    //! \brief Implement the GetParameter command.
+    //! \param cmd Pointer to the command instance.
     void executeGetParameterCommand(Command *cmd)
     {
       std::vector<Value> const &args = cmd->getArgValues();
@@ -569,15 +606,17 @@ namespace PLEXIL
     }    
 
 
-    // SEND_RETURN_VALUE_COMMAND
-    // Required by OnCommand XML macro. No-op for UDP.
+    //! \brief Implement the SendReturnValue command.
+    //! \param cmd Pointer to the command instance.
+    //! \note No-op for UdpAdapter.
     void executeSendReturnValueCommand(Command *cmd)
     {
       m_execInterface.handleCommandAck(cmd, COMMAND_SUCCESS);
       m_execInterface.notifyOfExternalEvent();
     }
 
-    // SEND_MESSAGE_COMMAND
+    //! \brief Implement the SendMessage command.
+    //! \param cmd Pointer to the command instance.
     void executeSendMessageCommand(Command *cmd)
     {
       std::vector<Value> const &args = cmd->getArgValues();
@@ -615,8 +654,9 @@ namespace PLEXIL
     // XML Support
     //
 
+    //! \brief Parse and verify the adapter configuration XML.
+    //! \param xml Const handle to the XML.
     void parseXmlMessageDefinitions(pugi::xml_node const xml)
-    // Parse and verify the given Adapter configuration
     {
       m_messages.clear();         // clear the old messages (if any)
       // First, set up the internal debugging output
@@ -728,6 +768,7 @@ namespace PLEXIL
       }
     }
 
+    //! \brief Print all the registered message definitions to std::cout.
     void printMessageDefinitions()
     {
       // print all of the stuff in m_message for debugging
@@ -759,6 +800,9 @@ namespace PLEXIL
         }
     }
 
+    //! \brief Start a thread to receive the named message.
+    //! \param name Const reference to the message name.
+    //! \param cmd Pointer to the receive command.
     int startUdpMessageReceiver(const std::string& name, Command *cmd)
     {
       //ThreadMutexGuard guard(m_cmdMutex);
@@ -807,7 +851,9 @@ namespace PLEXIL
       return 0;
     }
 
-    // TODO - Turn into non-member fn
+    //! \brief Block until the specified message arrives.
+    //! \param msg Pointer to a description of the message.
+    //! \return 0.
     static void* waitForUdpMessage(UdpMessage* msg)
     {
       debugMsg("UdpAdapter:waitForUdpMessage", " called for " << msg->name);
@@ -839,6 +885,11 @@ namespace PLEXIL
       return (void *) 0;
     }
 
+    //! \brief Process a UDP message after receipt.
+    //! \param msgDef Description of the message to be processed.
+    //! \param buffer Pointer to the receive buffer.
+    //! \param debug If true, print debugging messages. Default is false.
+    //! \return 0 if successful, -1 on error.
     int handleUdpMessage(const UdpMessage* msgDef,
                          const unsigned char* buffer,
                          bool debug = false)
@@ -1010,6 +1061,10 @@ namespace PLEXIL
       return 0;
     }
       
+    //! \brief Send the contents of the buffer as described by the message spec.
+    //! \param buffer Pointer to the send buffer.
+    //! \param msg Const reference to the message specification.
+    //! \param debug If true, print debugging messages. Default is false.
     int sendUdpMessage(const unsigned char* buffer,
                        const UdpMessage& msg,
                        bool debug = false)
@@ -1020,6 +1075,13 @@ namespace PLEXIL
       return status;
     }
 
+    //! \brief Format the vector of argument values into the buffer, as specified
+    //!        by the message definition.
+    //! \param buffer Pointer to the send buffer.
+    //! \param msg Const reference to the message definition.
+    //! \param args Const reference to the vector of values.
+    //! \param skip_arg If true, do not format the first value. Default is false.
+    //! \param debug If true, print debugging messages. Default is false.
     int buildUdpBuffer(unsigned char* buffer,
                        const UdpMessage& msg,
                        const std::vector<Value>& args,
@@ -1352,7 +1414,8 @@ namespace PLEXIL
 
 }
 
-// Register the UdpAdapter
+//! \brief Register the UdpAdapter factory with the PLEXIL Application Framework.
+//! \ingroup interface-library
 extern "C"
 void initUdpAdapter()
 {

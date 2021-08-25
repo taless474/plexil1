@@ -380,6 +380,7 @@ namespace PLEXIL {
   //! \note Returns NULL for unimplemented/invalid Values.
   extern struct PlexilMsgBase* constructPlexilPairMsg(std::string const& name,
                                                       Value const &val);
+
   //! \brief Utility function to extract the value from a value message.
   //! \param msg Pointer to const IPC message.
   //! \return The Value represented by the message.

@@ -48,7 +48,7 @@ namespace PLEXIL
   static MessageFormatMap messageFormatMap;
 
   //! \brief Get a constant character string pointer for the formatted message type,
-  //!  given the basic message type and destination ID.
+  //!        given the basic message type and destination ID.
   //! \param msgName The name of the message type
   //! \param destId The destination ID for the message
   //! \return Character string pointer.
@@ -141,10 +141,6 @@ namespace PLEXIL
     }
   }
 
-  //! \brief Utility function to create a value message from a PLEXIL Value.
-  //! \param val The Value to encode in the message.
-  //! \return Pointer to newly allocated IPC message.
-  //! \note Returns NULL for unimplemented/invalid Values.
   struct PlexilMsgBase *constructPlexilValueMsg(Value const &val)
   {
     if (val.isKnown())
@@ -294,16 +290,11 @@ namespace PLEXIL
     }
   }
 
-  //! \brief Utility function to create a pair message from a name and a PLEXIL Value.
-  //! \param name Const reference to the pair name.
-  //! \param val The Value.
-  //! \return Pointer to newly allocated IPC message.
-  //! \note Returns NULL for unimplemented/invalid Values.
   struct PlexilMsgBase* constructPlexilPairMsg(std::string const& name,
                                                Value const &val) {
-  PlexilMsgBase* result = NULL;
-  if(val.isKnown()) {
-    switch(val.valueType()) {
+    PlexilMsgBase* result = NULL;
+    if(val.isKnown()) {
+      switch(val.valueType()) {
       case BOOLEAN_TYPE: {
         bool b;
         val.getValue(b);
@@ -346,20 +337,16 @@ namespace PLEXIL
       }
       default:        
         break;
+      }
+      if(result != NULL)
+        reinterpret_cast<PairHeader*>(result)->pairName = name.c_str();
     }
-    if(result != NULL)
-      reinterpret_cast<PairHeader*>(result)->pairName = name.c_str();
+    else {
+      debugMsg("constructPlexilPairMsg", " Unknown value.");
+    }
+    return result;
   }
-  else {
-    debugMsg("constructPlexilPairMsg", " Unknown value.");
-  }
-  return result;
-}
 
-  //! \brief Utility function to extract the value from a value message.
-  //! \param msg Pointer to const IPC message.
-  //! \return The Value represented by the message.
-  //! \note The returned value will be unknown if the message is not a value message.
   Value getPlexilMsgValue(struct PlexilMsgBase const *msg)
   {
     switch ((PlexilMsgType) msg->msgType) {

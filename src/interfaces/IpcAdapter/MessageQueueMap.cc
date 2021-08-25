@@ -55,13 +55,6 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Adds the given recipient to the queue to receive the given message.
-   * If a recipient already exists for this message, messages will be handed out in the order
-   * of the adding of the recipients.
-   * @param message The message the command is waiting for.
-   * @param cmd The command awaiting the message.
-   */
   void MessageQueueMap::addRecipient(const std::string& message, Command *cmd) {
     debugMsg("MessageQueueMap:addRecipient", " entered for \"" << message.c_str() << "\"");
     ThreadMutexGuard guard(m_mutex);
@@ -90,19 +83,12 @@ namespace PLEXIL
     }
   }
 
-  /**
-   * @brief Removes all recipients waiting on the given message string.
-   */
   void MessageQueueMap::clearRecipientsForMessage(const std::string& message) {
     ThreadMutexGuard guard(m_mutex);
     PairingQueue* pq = getQueue(message);
     pq->m_recipientQueue.clear();
   }
 
-  /**
-   * @brief Adds the given message to its queue. If there is a recipient waiting for the message, it is sent immediately.
-   * @param message The message string to be added
-   */
   void MessageQueueMap::addMessage(const std::string& message) {
     ThreadMutexGuard guard(m_mutex);
     PairingQueue* pq = getQueue(message);
@@ -113,12 +99,6 @@ namespace PLEXIL
     debugMsg("MessageQueueMap:addMessage", " Message \"" << pq->m_name.c_str() << "\" added");
   }
 
-  /**
-   * @brief Adds the given message with the given parameters to its queue.
-   * If there is a recipient waiting for the message, it is sent immediately.
-   * @param message The message string to be added
-   * @param params The parameters that are to be sent with the message
-   */
   void MessageQueueMap::addMessage(const std::string& message, const Value& param) {
     ThreadMutexGuard guard(m_mutex);
     PairingQueue* pq = getQueue(message);
@@ -130,16 +110,6 @@ namespace PLEXIL
              " Message \"" << pq->m_name.c_str() << "\" added, value = \"" << param << "\"");
   }
 
-  /**
-   * @brief Sets the flag that determines whether or not incoming messages
-   * with duplicate strings are queued. If true, all incoming messages are
-   * put into the queue. Oldest instances of the message are distributed first.
-   * If false, new messages with duplicate strings replace older ones; this
-   * will remove all oldest duplicates from the queue immediately as well
-   * as set the behavior for future messages.
-   * @param flag If false, duplicates will be replaced with the newest
-   * message. If true, duplicates are queued.
-   */
   void MessageQueueMap::setAllowDuplicateMessages(bool flag) {
     ThreadMutexGuard guard(m_mutex);
     for (std::map<std::string, PairingQueue*>::iterator it = m_map.begin(); it != m_map.end(); it++) {
@@ -169,9 +139,6 @@ namespace PLEXIL
     return result;
   }
 
-  /**
-   * @brief Resolves matches between messages and recipients. Should be called whenever updates occur to a queue.
-   */
   void MessageQueueMap::updateQueue(PairingQueue* queue) {
     debugMsg("MessageQueueMap:updateQueue", " entered");
     MessageQueue& mq = queue->m_messageQueue;
