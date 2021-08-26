@@ -74,7 +74,7 @@ namespace PLEXIL
 
     //! \brief Are a std::string instance and a null-terminated character string equal?
     //! \param a Const reference to a std::string.
-    //! \param b Const reference to another pointer to const character string.
+    //! \param b Const reference to a pointer to const character string.
     //! \return true if the first string is equal to the second, false otherwise.
     bool equal(std::string const &a, char const * const &b) const
     {
