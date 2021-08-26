@@ -33,13 +33,24 @@
 
 namespace PLEXIL
 {
+
+  //! \class StateCacheMapImpl
+  //! \brief Class implementing the StateCacheMap API.
   class StateCacheMapImpl : public StateCacheMap
   {
   private:
+
+    //! \brief Shorthand for the type of the map data structure.
     typedef std::map<State, StateCacheEntry> EntryMap;
+
+    //! \brief The map itself.
     EntryMap m_map;
 
-  public:
+    // Grant the base class singleton accessor a right to use the derived constructor.
+    friend StateCacheMap &StateCacheMap::instance();
+    
+    //! \brief Default constructor.
+    //! \note Should only be accessible to the base class singleton accessor.
     StateCacheMapImpl()
       : StateCacheMap()
     {
@@ -47,6 +58,13 @@ namespace PLEXIL
       ensureStateCacheEntry(State::timeState())->update((double) 0);
     }
 
+    // Copy, assignment disallowed
+    StateCacheMapImpl(StateCacheMapImpl const &);
+    StateCacheMapImpl &operator=(StateCacheMapImpl const &);
+
+  public:
+
+    //! \brief Virtual destructor.
     virtual ~StateCacheMapImpl()
     {
     }
