@@ -35,7 +35,7 @@ namespace PLEXIL
 
   //! \class ListNode
   //! \brief Specialization of NodeImpl for NodeList nodes.
-  //! \addtogroup Exec-Core The %PLEXIL Executive core
+  //! \ingroup Exec-Core
   class ListNode : public NodeImpl
   {
   public:

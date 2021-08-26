@@ -40,8 +40,8 @@ namespace PLEXIL
   //! \class NodeImpl
   //! \brief The innards shared between node implementation classes,
   //!        the XML parser, and external interfaces; also the 
-  //!        implementation class for empty nodes.
-  //! \addtogroup Exec-Core The %PLEXIL Executive core
+  //!        implementation class for Empty nodes.
+  //! \ingroup Exec-Core
   class NodeImpl :
     public Node,
     public Notifier

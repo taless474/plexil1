@@ -40,6 +40,10 @@ namespace PLEXIL {
   class Expression;
   class Node;
 
+  //! \class LuvFormat
+  //! \brief Class whose static member functions implement formatting
+  //!        for LuvListener.
+  //! \see LuvListener
   class LuvFormat {
   public:
 
@@ -111,7 +115,7 @@ namespace PLEXIL {
     /**
      * @brief Construct the message representing a new plan.
      * @param s The stream to write the XML to.
-     * @param plan The XML DOM representation of the new plan.
+     * @param plan Const handle to the XML representation of the new plan.
      */
     static void formatPlan(std::ostream &s,
                            pugi::xml_node const plan);
@@ -119,7 +123,7 @@ namespace PLEXIL {
     /**
      * @brief Construct the message representing a new library node.
      * @param s The stream to write the XML to.
-     * @param libNode The intermediate representation of the library node.
+     * @param libNode Const handle to the XML representation of the library node.
      */
     static void formatLibrary(std::ostream& s,
                               pugi::xml_node const libNode);

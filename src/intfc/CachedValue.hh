@@ -35,7 +35,7 @@ namespace PLEXIL
 
   //! \class CachedValue
   //! \brief Abstract base class for storing state cache values
-  //! \addtogroup External-Interface The %PLEXIL Executive core external interface
+  //! \ingroup External-Interface
   class CachedValue
   {
   public:

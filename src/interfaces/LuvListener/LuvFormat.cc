@@ -62,7 +62,7 @@ namespace PLEXIL {
     endTag(s, tag);
   }
 
-  //* Internal function for formatNodePath
+  // Internal function for formatNodePath
   void formatNodePathInternal(std::ostream& s, 
                               Node const *node) {
     // Fill in parents recursively
@@ -87,7 +87,7 @@ namespace PLEXIL {
   /**
    * @brief Generate the XML representation of the current values of the node's conditions.
    * @param s The stream to write the XML to.
-   * @param node The node whose conditions are being extracted.
+   * @param nptr Const pointer to the node whose conditions are being extracted.
    */
   void formatConditions(std::ostream& s, 
                         Node const *nptr)
@@ -111,11 +111,6 @@ namespace PLEXIL {
     endTag(s, LuvFormat::CONDITIONS_TAG());
   }
 
-  /**
-   * @brief Construct the PlanInfo header XML.
-   * @param s The stream to write the XML to.
-   * @param block Whether the viewer should block.
-   */
   void LuvFormat::formatPlanInfo(std::ostream& s, 
                                  bool block) {
     simpleStartTag(s, PLAN_INFO_TAG());
@@ -125,13 +120,6 @@ namespace PLEXIL {
     endTag(s, PLAN_INFO_TAG());
   }
 
-  /**
-   * @brief Construct the node state transition XML.
-   * @param s The stream to write the XML to.
-   * @param prevState The state from which the node is transitioning.
-   * @param newState The state to which the node is transitioning.
-   * @param node The node.
-   */
   void LuvFormat::formatTransition(std::ostream& s, 
                                    NodeState /* prevState */,
                                    NodeState newState,
@@ -159,13 +147,6 @@ namespace PLEXIL {
     endTag(s, NODE_STATE_UPDATE_TAG());
   }
 
-  /**
-   * @brief Construct the assignment XML.
-   * @param s The stream to write the XML to.
-   * @param dest The expression being assigned to.
-   * @param destName The variable name of the expression.
-   * @param value The internal representation of the new value.
-   */
   void LuvFormat::formatAssignment(std::ostream &s, 
                                    Expression const * /* dest */,
                                    std::string const &destName,
@@ -190,21 +171,11 @@ namespace PLEXIL {
     endTag(s, ASSIGNMENT_TAG());
   }
 
-  /**
-   * @brief Format the message representing a new plan.
-   * @param s The stream to write the XML to.
-   * @param plan The XML DOM representation of the new plan.
-   */
   void LuvFormat::formatPlan(std::ostream& s, 
                              pugi::xml_node const plan) {
     plan.print(s, "", PUGI_FORMAT_OPTIONS());
   }
 
-  /**
-   * @brief Construct the message representing a new library node.
-   * @param s The stream to write the XML to.
-   * @param plan The intermediate representation of the library node.
-   */
   void LuvFormat::formatLibrary(std::ostream& s, 
                                 pugi::xml_node const libNode)
   {

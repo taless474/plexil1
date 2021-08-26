@@ -27,8 +27,9 @@
 #ifndef LIFECYCLE_UTILS__H
 #define LIFECYCLE_UTILS__H
 
-/*
- * Tools for handling initialization and finalization in a controlled fashion
+/**
+ * \file lifecycle-utils.h
+ * \brief Functions to support orderly cleanup when an application exits.
  */
 
 #ifdef __cplusplus
@@ -53,6 +54,7 @@ void plexilAddFinalizer(lc_operator op);
 /**
  * \brief Run all the functions registered by plexilAddFinalizer, 
  *        in last-in, first-out order.
+ * \note The application should call this function immediately before exiting.
  * \ingroup Utils
  */
 void plexilRunFinalizers();

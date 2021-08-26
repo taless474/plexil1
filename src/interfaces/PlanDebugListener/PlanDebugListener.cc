@@ -71,6 +71,8 @@ namespace PLEXIL
                  node->getStateStartTime(newState));
   }
   
+  //! \brief Register the PlanDebugListener factory with the PLEXIL Application Framework.
+  //! \ingroup interface-library
   extern "C"
   void initPlanDebugListener()
   {

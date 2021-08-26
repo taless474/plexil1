@@ -38,9 +38,11 @@ namespace PLEXIL {
   class ResourceArbiterInterface;
   class Update;
 
+  //! \defgroup External-Interface The PLEXIL Executive core external interface
+
   //! \class ExternalInterface
   //! \brief Abstract base class for anything that interfaces the Exec to the outside world.
-  //! \addtogroup External-Interface The %PLEXIL Executive core external interface
+  //! \ingroup External-Interface
   class ExternalInterface {
   public:
 

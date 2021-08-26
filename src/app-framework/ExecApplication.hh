@@ -57,7 +57,7 @@ namespace PLEXIL
   // forward references
   class InterfaceManager;
 
-  //! \addtogroup App-Framework The PLEXIL Executive Application Framework
+  //! \defgroup App-Framework The PLEXIL Executive Application Framework
 
   //! \class ExecApplication
   //! \brief Provides a "pre-packaged" application skeleton for Universal Exec users.

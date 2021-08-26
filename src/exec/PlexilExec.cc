@@ -45,7 +45,7 @@ namespace PLEXIL
 
   //! \class PlexilExecImpl
   //! \brief Implements the PlexilExec API.
-  //! \addtogroup Exec-Core The %PLEXIL Executive core
+  //! \ingroup Exec-Core
   class PlexilExecImpl:
     public PlexilExec
   {

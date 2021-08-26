@@ -27,6 +27,8 @@
 #ifndef LOGGING_HH
 #define LOGGING_HH
 
+//! \defgroup Utils Common programming utilities
+
 //! \class Logging
 //! \brief Declares static member variables and functions to assist
 //!        with output logging.

@@ -42,9 +42,6 @@
 namespace PLEXIL
 {
 
-  /**
-   * @brief Constructor from configuration XML.
-   */
   LuvListener::LuvListener(pugi::xml_node const xml)
 	: ExecListener(xml),
 	  m_socket(NULL),
@@ -71,7 +68,6 @@ namespace PLEXIL
       m_block = blockattr.as_bool(false);
   }
 
-  //* Constructor from TestExec.
   LuvListener::LuvListener(const std::string& host, 
 						   const uint16_t port, 
 						   const bool block,
@@ -87,17 +83,12 @@ namespace PLEXIL
 	openSocket(m_port, m_host, m_ignoreConnectFailure);
   }
 
-  //* Destructor.
   LuvListener::~LuvListener()
   {
 	closeSocket();
     free((void *) m_host);
   }
 
-  /**
-   * @brief Perform listener-specific initialization.
-   * @return true if successful, false otherwise.
-   */
   bool LuvListener::initialize()
   {
     // parse XML to find host, port, blocking flag
@@ -157,38 +148,22 @@ namespace PLEXIL
     return true; 
   }
 
-  /**
-   * @brief Perform listener-specific startup.
-   * @return true if successful, false otherwise.
-   */
   bool LuvListener::start() 
   { 
     return openSocket(m_port, m_host, m_ignoreConnectFailure); 
   }
 
-  /**
-   * @brief Perform listener-specific actions to stop.
-   * @return true if successful, false otherwise.
-   */
   bool LuvListener::stop() 
   {
     return true; 
   }
 
-  /**
-   * @brief Perform listener-specific actions to reset to initialized state.
-   * @return true if successful, false otherwise.
-   */
   bool LuvListener::reset() 
   {
 	this->closeSocket();
     return true; 
   }
 
-  /**
-   * @brief Perform listener-specific actions to shut down.
-   * @return true if successful, false otherwise.
-   */
   bool LuvListener::shutdown() 
   { 
 	this->closeSocket();
@@ -199,12 +174,6 @@ namespace PLEXIL
   // Public class member functions
   //
 
-  /**
-   * @brief Construct the appropriate configuration XML for the desired settings.
-   * @param block true if the Exec should block until the user steps forward, false otherwise.
-   * @param hostname The host name where the Luv instance is running.
-   * @param port The port number for the Luv instance.
-   */
   pugi::xml_document* LuvListener::constructConfigurationXml(const bool& block,
 															 const char* hostname,
 															 const unsigned int port)
@@ -218,13 +187,6 @@ namespace PLEXIL
     return result;
   }
 
-
-  /**
-   * @brief Notify that a node has changed state.
-   * @param prevState The old state.
-   * @param prevState The new state.
-   * @param node The node that has transitioned.
-   */
   void 
   LuvListener::implementNotifyNodeTransition(NodeState prevState, 
 											 NodeState newState, 
@@ -238,12 +200,6 @@ namespace PLEXIL
 	}
   }
 
-
-  /**
-   * @brief Notify that a plan has been received by the Exec.
-   * @param plan The intermediate representation of the plan.
-   * @param parent The name of the parent node under which this plan will be inserted.
-   */
   void
   LuvListener::implementNotifyAddPlan(pugi::xml_node const plan) const 
   {
@@ -256,11 +212,6 @@ namespace PLEXIL
 	}
   }
 
-  /**
-   * @brief Notify that a library node has been received by the Exec.
-   * @param libNode The intermediate representation of the plan.
-   * @note The default method is deprecated and will go away in a future release.
-   */
   void
   LuvListener::implementNotifyAddLibrary(pugi::xml_node const libNode) const 
   {
@@ -272,12 +223,6 @@ namespace PLEXIL
 	}
   }
 
-  /**
-   * @brief Notify that a variable assignment has been performed.
-   * @param dest The Expression being assigned to.
-   * @param destName A string naming the destination.
-   * @param value The value (in internal Exec representation) being assigned.
-   */
   void 
   LuvListener::implementNotifyAssignment(Expression const *dest,
 										 std::string const &destName,
@@ -290,15 +235,6 @@ namespace PLEXIL
 	}
   }
 
-
-
-  /**
-   * @brief Open the socket connection to the viewer.
-   * @param port The IP port to which we are connecting.
-   * @param host The hostname to which we are connecting.
-   * @param ignoreFailure If true, failure is silently ignored.
-   * @return False if the connection fails and ignoreFailure is false, true otherwise.
-   */
   bool
   LuvListener::openSocket(uint16_t port, 
 						  const char* host, 
@@ -321,21 +257,17 @@ namespace PLEXIL
     return true; 
   }
 
-
-  //* Close the socket.
   void LuvListener::closeSocket()
   {
 	delete m_socket;
 	m_socket = NULL;
   }
 
-  //* Report whether the listener is connected to the viewer.
   bool LuvListener::isConnected()
   {
 	return m_socket != NULL;
   }
 
-  //* Send a plan info header to the viewer.
   void LuvListener::sendPlanInfo() const
   {
 	std::ostringstream s;
@@ -343,7 +275,6 @@ namespace PLEXIL
 	sendMessage(s.str());
   }
 
-  //* Send the message to the viewer.
   void LuvListener::sendMessage(const std::string& msg) const
   {
 	debugMsg("LuvListener:sendMessage", " sending:\n" << msg);
@@ -351,7 +282,6 @@ namespace PLEXIL
     waitForAck();
   }
 
-  //* Wait for acknowledgement from the viewer.
   void LuvListener::waitForAck() const
   {
     debugMsg("LuvListener:waitForAck", " entered");

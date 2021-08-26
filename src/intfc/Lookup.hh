@@ -63,7 +63,7 @@ namespace PLEXIL
 
   //! \class Lookup
   //! \brief Represents a Lookup expression in the %PLEXIL language.
-  //! \addtogroup External-Interface The %PLEXIL Executive core external interface
+  //! \ingroup External-Interface
   class Lookup :
     public Expression,
     public Propagator

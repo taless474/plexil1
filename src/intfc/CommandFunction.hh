@@ -37,7 +37,7 @@ namespace PLEXIL
   //! \class CommandFunction
   //! \brief An abstract base class representing a function whose value depends on
   //!        some property or properties of a command.
-  //! \addtogroup External-Interface The %PLEXIL Executive core external interface
+  //! \ingroup External-Interface
   class CommandFunction
     : public Expression,
       public Propagator

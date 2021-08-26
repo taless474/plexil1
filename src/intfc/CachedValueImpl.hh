@@ -34,7 +34,7 @@ namespace PLEXIL
   //! \class VoidCachedValue
   //! \brief Placeholder object used by the state cache to represent
   //!        a Lookup value whose type is not yet known.
-  //! \addtogroup External-Interface The %PLEXIL Executive core external interface
+  //! \ingroup External-Interface
   class VoidCachedValue : public CachedValue
   {
   public:

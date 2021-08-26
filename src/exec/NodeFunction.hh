@@ -39,7 +39,7 @@ namespace PLEXIL
   //! \class NodeFunction
   //! \brief An abstract base class for functions whose value depends on
   //!        some property of a node or its neighbors.
-  //! \addtogroup Exec-Core The %PLEXIL Executive core
+  //! \ingroup Exec-Core
   class NodeFunction
     : public Expression,
       public Propagator
