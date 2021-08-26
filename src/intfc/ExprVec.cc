@@ -83,7 +83,7 @@ namespace PLEXIL
     //! \brief Set the expression at the index.
     //! \param i The index.
     //! \param exp Pointer to the expression.
-    //! \param garbage true if the expression should be deleted with this object, false otherwise.
+    //! \param isGarbage true if the expression should be deleted with this object, false otherwise.
     void setArgument(size_t i, Expression *exp, bool isGarbage)
     {
       assertTrue_2(i < N, "setArgument(): too many args");
@@ -125,15 +125,15 @@ namespace PLEXIL
     //! \param oper A functor; it must implement an operator() method
     //!             of one argument, a pointer to Listenable,
     //!             returning void.
-    void doSubexprs(ListenableUnaryOperator const &opr)
+    void doSubexprs(ListenableUnaryOperator const &oper)
     {
       for (size_t i = 0; i < N; ++i)
-        (opr)(exprs[i]);
+        (oper)(exprs[i]);
     }
 
     //! \brief Print this object to an output stream.
-    //! \param s Reference to the stream
-    void print(std::ostream & str) const
+    //! \param str Reference to the stream
+    void print(std::ostream &str) const
     {
       for (size_t i = 0; i < N; ++i) {
         str << ' ';
@@ -205,7 +205,7 @@ namespace PLEXIL
     //! \brief Set the expression at the index.
     //! \param i The index.
     //! \param exp Pointer to the expression.
-    //! \param garbage true if the expression should be deleted with this object, false otherwise.
+    //! \param isGarbage true if the expression should be deleted with this object, false otherwise.
     void setArgument(size_t i, Expression *exp, bool isGarbage)
     {
       assertTrue_2(i < m_size, "setArgument(): too many args");
@@ -257,10 +257,10 @@ namespace PLEXIL
     //! \param oper A functor; it must implement an operator() method
     //!             of one argument, a pointer to Listenable,
     //!             returning void.
-    virtual void doSubexprs(ListenableUnaryOperator const &opr)
+    virtual void doSubexprs(ListenableUnaryOperator const &oper)
     {
       for (size_t i = 0; i < m_size; ++i)
-        (opr)(exprs[i]);
+        (oper)(exprs[i]);
     }
 
   private:

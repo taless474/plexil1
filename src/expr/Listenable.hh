@@ -56,19 +56,19 @@ namespace PLEXIL
   //! \class Listenable
   //! \brief Base class defining the API for objects to which an
   //!        ExpressionListener instance may be attached.
-
+  //!
   //! The Listenable base class defines the API for change
   //! notification sources in the %PLEXIL Executive expression
   //! subsystem.  Listenable itself has no state.  Its member
   //! functions can all be overridden by derived classes.  The default
   //! methods on the base class do nothing.
-
+  //!
   //! Expression implementations whose values cannot change can derive
   //! from Listenable directly.  Expressions whose values can change
   //! should derive from the Notifier class.  Expressions whose values
   //! are dependent upon other expressions should derive from the
   //! Propagator class.
-
+  //!
   //! \see ExpressionListener
   //! \see Notifier
   //! \see Propagator

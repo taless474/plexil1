@@ -78,7 +78,7 @@ namespace PLEXIL
     //! \param oper A functor; it must implement an operator() method
     //!             of one argument, a pointer to Listenable,
     //!             returning void.
-    virtual void doSubexprs(ListenableUnaryOperator const &f) = 0;
+    virtual void doSubexprs(ListenableUnaryOperator const &oper) = 0;
 
     //! \brief Print this object to an output stream.
     //! \param str Reference to the stream

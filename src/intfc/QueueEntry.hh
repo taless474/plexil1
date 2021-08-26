@@ -48,17 +48,18 @@ namespace PLEXIL
     Q_ADD_PLAN,         //!< A plan to be executed.
     Q_MARK,             //!< A marker.
 
-    Q_INVALID           //!< Values larger than this are invalid.
+    Q_INVALID           //!< Values equal to or greater than this are invalid.
   };
 
   //! \struct QueueEntry
   //! \brief Discriminated union representing external state to send to the Exec.
   //! \see InputQueue
+  //! \ingroup External-Interface
   struct QueueEntry
   {
     QueueEntry *next;         //!< Pointer to the next item in the queue.
     union {
-      Command *command;       //!< Only valid if type is one of_COMMAND_ACK, Q_COMMAND_RETURN, Q_COMMAND_ABORT.
+      Command *command;       //!< Only valid if type is one of Q_COMMAND_ACK, Q_COMMAND_RETURN, Q_COMMAND_ABORT.
       Update *update;         //!< Only valid if type is Q_UPDATE_ACK.
       State *state;           //!< Only valid if type is Q_LOOKUP.
       NodeImpl *plan;         //!< Only valid if type is Q_ADD_PLAN.
@@ -96,12 +97,12 @@ namespace PLEXIL
 
     //! \brief Prepare the entry for a command abort acknowledgement.
     //! \param cmd Pointer to the Command whose abort is being acknowledged.
-    //! \param val The acknowledgement value.
+    //! \param ack The acknowledgement value.
     void initForCommandAbort(Command *cmd, bool ack);
 
     //! \brief Prepare the entry for a planner update acknowledgement.
-    //! \param cmd Pointer to the Update being acknowledged.
-    //! \param val The acknowledgement value.
+    //! \param upd Pointer to the Update being acknowledged.
+    //! \param ack The acknowledgement value.
     void initForUpdateAck(Update *upd, bool ack);
 
     //! \brief Prepare the entry for a new plan.

@@ -59,10 +59,10 @@ namespace PLEXIL
 
     //! \brief Operate on the given Function, and store the result in a variable.
     //! \param result Reference to the variable.
-    //! \param arg Const reference to the function.
+    //! \param fn Const reference to the function.
     //! \return true if the result is known, false if not.
     //! \note Derived classes should implement the corresponding calc() method.
-    virtual bool operator()(R &result, Function const &args) const;
+    virtual bool operator()(R &result, Function const &fn) const;
 
     // Default methods, based on R
 
@@ -111,9 +111,9 @@ namespace PLEXIL
 
     //! \brief Actually perform the operation on the function and store the result.
     //! \param result Reference to the variable.
-    //! \param arg Const pointer to the expression.
+    //! \param fn Const reference to the function.
     //! \return true if the result is known, false if not.
-    virtual bool calc(R &result, Function const &args) const;
+    virtual bool calc(R &result, Function const &fn) const;
 
   protected:
 

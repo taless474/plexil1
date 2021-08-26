@@ -103,7 +103,7 @@ namespace PLEXIL
 
     //! \brief Map the given operator onto all propagation sources of the command.
     //! \param command Pointer to the Command.
-    //! \oper Const reference to the operator.
+    //! \param oper Const reference to the operator.
     //! \note Helper for CommandFunction::doSubexprs.
     virtual void doPropagationSources(Command *command,
                                       ListenableUnaryOperator const &oper) const = 0;

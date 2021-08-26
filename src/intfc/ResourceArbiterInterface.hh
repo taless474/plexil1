@@ -45,7 +45,7 @@ namespace PLEXIL
     virtual ~ResourceArbiterInterface() {}
 
     //! \brief Read the resource hierarchy from the named file.
-    //! \param fname Name of the file.
+    //! \param fName Name of the file.
     //! \return true if successful, false if not.
     virtual bool readResourceHierarchyFile(const std::string& fName) = 0;
 

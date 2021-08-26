@@ -66,7 +66,7 @@ namespace PLEXIL
   //! (e.g. arithmetic functions) should derive from Propagator; it
   //! inherits behavior from both ExpressionListener and Notifier, and
   //! as the name implies, it propagates change notifications.
-
+  //!
   //! \see Assignable
   //! \see ExpressionListener
   //! \see Listenable

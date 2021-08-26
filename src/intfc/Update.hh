@@ -94,7 +94,7 @@ namespace PLEXIL
     void execute();
 
     //! \brief Return an acknowledgement value for the update.
-    //! \param The value.
+    //! \param ack The value.
     void acknowledge(bool ack);
 
     //! \brief Delete all owned expressions, erase the pointers to the ones not owned.
