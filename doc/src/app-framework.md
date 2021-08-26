@@ -1,7 +1,7 @@
 # The PLEXIL Executive Application Framework {#app-framework}
 
 \namespace PLEXIL
-\addtogroup App-Framework The PLEXIL Executive Application Framework
+\addtogroup App-Framework
 
 In order to do useful things with %PLEXIL, the Executive must be able
 to inquire about the environment, effect commands, and report
@@ -38,7 +38,7 @@ interface objects from a configuration file loaded at runtime.
 ### Standard interface library
 
 A standard set of adapters and listeners, the [%PLEXIL Standard
-Interface Library](#interface-library), is part of the %PLEXIL
+Interface Library](\ref interface-library), is part of the %PLEXIL
 distribution.  It includes these modules:
 
 + The TimeAdapter uses standard POSIX APIs to read the current
@@ -58,6 +58,9 @@ distribution.  It includes these modules:
   
 + LuvListener allows monitoring %PLEXIL plan execution in real time
   via the %PLEXIL Viewer Java application.
+
++ PlanDebugListener logs the times when the Nodes in a plan transition
+  to `EXECUTING` and then to `FINISHING`.
 
 Users can take advantage of these capabilities directly, or use the
 source code of these interfaces as templates for implementing their

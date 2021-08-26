@@ -31,11 +31,14 @@ following platforms:
 Most of the distribution should run with minimal modifications on
 platforms conforming to the
 [POSIX.1-2008 standards](https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/).
+For example, an earlier release was successfully tested on FreeBSD 12,
+unmodified.
 
 The following software is necessary to build and run the tarball
 distribution:
 
-+ [GNU Make](https://www.gnu.org/software/make/).
++ [GNU Make](https://www.gnu.org/software/make/) release 3.81 or
+  newer.  (This is the default version on macOS.)
 
 + C99- and C++98-compliant compilers.  The development team uses
   several versions of the
@@ -46,10 +49,13 @@ distribution:
   [GNU bash](https://www.gnu.org/software/bash/),
   [Dash](https://wiki.archlinux.org/title/Dash), or
   [zsh](https://zsh.sourceforge.io/).  This list is not exhaustive.
-  Shells such as csh and tcsh are not supported.
 
-+ The Java programs require the Java 8 runtime environment (JRE) at a
+  \note The csh and tcsh shells are not supported.
+
++ The Java programs require a Java 8 runtime environment (JRE) at a
   minimum.  The development team uses the OpenJDK 8 implementation.
+  
+  \note Java releases prior to Java 8 will not work.
   
 The following additional software is required to build the %PLEXIL
 suite from source:
@@ -58,17 +64,22 @@ suite from source:
   ([m4](https://www.gnu.org/software/m4/m4.html),
   [libtool](https://www.gnu.org/software/libtool/libtool.html),
   [automake](https://www.gnu.org/software/automake/automake.html),
-  and [autoconf](https://www.gnu.org/software/autoconf/) ); or
+  and [autoconf](https://www.gnu.org/software/autoconf/)); or
 
 + [CMake](https://cmake.org/) release 3.6 or newer.
 
 + [GNU gperf](https://www.gnu.org/software/gperf/) release 3.0.1 or
   newer.
 
-+ The Java Development Kit (JDK), including a Java compiler, for Java
++ A Java Development Kit (JDK), including a Java compiler, for Java
   8 or newer.
 
 * [Apache ant](http://ant.apache.org/) release 1.8.x or newer.
+
+With the exception of Java 8, earlier versions of these tools may
+work, but are not tested regularly.  Please contact the %PLEXIL team
+at plexil-support@lists.sourceforge.net with your experiences and
+questions.
 
 ## Building and installing PLEXIL
 
@@ -82,7 +93,8 @@ the tarball, expand it, and use the top-level Makefile:
 By default, the top-level Makefile builds the `universalExec` and
 `testExec` command line applications, the IpcAdapter and UpdAdapter
 interface adapters, the Standard %PLEXIL compiler, the Plexilscript
-compiler, the %PLEXIL Checker, and the %PLEXIL Viewer.
+compiler, the %PLEXIL Checker, the %PLEXIL Viewer, and this
+documentation.
 
 If your application needs a customized build of the %PLEXIL Executive,
 you can build it using either the GNU Autotools or CMake.  Which to
@@ -124,12 +136,35 @@ build the Executive:
     make
     make install
 
-#### Options to the configure script
+#### Options to the configure script {#configure-options}
 
 To get an up-to-date list of the options supported by `configure`,
 simply type:
 
     ./configure --help
+
+The following options are enabled by default.  `--enable-` options can
+be turned off by supplying the corresponding `--disable-` option;
+likewise, `--with-` options can be turned off by using the
+corresponding `--without-` option.
+
++ `--enable-debug-listener` - Builds the [PlanDebugListener](\ref PlanDebugListener) in the
+  [PLEXIL Standard Interface Library](group__interface-library.html).  Requires debug logging.
+  
+* `--enable-debug-logging` - Builds in debug messaging support.
+  \see debug-messages
+
++ `--enable-viewer` - Builds the PLEXIL Viewer listener (a.k.a. LuvListener) in the 
+  [PLEXIL Standard Interface Library](group__interface-library.html).
+
++ `--enable-universal-exec` - Builds the `universalExec` command line
+  application.
+  
++ `--with-unix-time` - Builds the 
+  [TimeAdapter](\ref TimeAdapter) in the
+  [PLEXIL Standard Interface Library](group__interface-library.html).
+  
++ `--with-threads` - Builds in POSIX multithreading support.
 
 ### Custom PLEXIL Executive builds using CMake
 

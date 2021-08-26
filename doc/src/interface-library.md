@@ -8,9 +8,12 @@ The %PLEXIL Executive distribution includes the following interfaces.
 ## Prebuilt interfaces
 
 The following interface adapters are built by default, and are
-available to all PLEXIL applications.
+available to all PLEXIL applications.  Some can be disabled at
+build configuration time.
 
-### TimeAdapter
+\see getting-started.html#configure-options
+
+### TimeAdapter {#TimeAdapter}
 
 The *TimeAdapter* implements time lookups:
 
@@ -121,6 +124,50 @@ Launcher implements these Lookups:
 Launcher's interface XML element:
 
     <Adapter AdapterType="Launcher"/>
+
+### PlanDebugListener {#PlanDebugListener}
+
+The *PlanDebugListener* uses the debug message facility to optionally
+print a message with a time stamp when any Node transitions into
+either the `EXECUTING` or `FINISHED` states. 
+
+The messages are disabled by default.  They can be enabled by adding
+the line:
+
+    :Node:clock
+
+to the debug configuration file.
+
+PlanDebugListener's interface XML element:
+
+    <Listener ListenerType="PlanDebugListener"/>
+
+If more selective output is desired, a listener filter can be added to
+the configuration XML.
+
+\note If you do not wish to build the PlanDebugListener, specify the
+`--disable-debug-listener` option to `configure`.
+
+### LuvListener {#LuvListener}
+
+The *LuvListener* interfaces with the %PLEXIL Viewer, a visualization
+application, to allow monitoring the execution of %PLEXIL plans in
+real time.
+
+LuvListener's interface XML allows for a number of options.  Not all
+of them need to be provided.  And the `universalExec` application
+allows specifying the necessary parameters on the command line.
+
+The default values are shown in this example:
+
+    <Listener ListenerType="LuvListener"
+              HostName="localhost"
+              Port="49100"
+              Blocking="false"
+              IgnoreConnectFailure="true" />
+
+\note If you do not wish to build the LuvListener, specify the
+`--disable-viewer` option to `configure`.
 
 ## Optional interfaces
 
