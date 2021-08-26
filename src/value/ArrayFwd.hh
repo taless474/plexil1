@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,12 @@
 
 #include <string>
 
-#include "plexil-stdint.h"
+#include "plexil-stdint.h" // int32_t
+
+//! \file ArrayFwd.hh
+//! \brief Contains forward declarations for Array, ArrayImpl<T>, and
+//!        typedefs for ArrayImpl specializations.
+//! \ingroup Values
 
 namespace PLEXIL
 {

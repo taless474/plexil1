@@ -42,7 +42,7 @@ namespace PLEXIL
   {
   public:
     FactoryTestNodeConnector();
-    ~FactoryTestNodeConnector();
+    virtual ~FactoryTestNodeConnector();
 
     std::string const &getNodeId() const;
     Expression *findVariable(char const *name);

@@ -34,6 +34,7 @@ namespace PLEXIL {
   //! \class Constant
   //! \brief Templatized class for expressions whose value cannot change.
   //!        Expression listeners are therefore not required.
+  //! \ingroup Expressions
   template <typename T>
   class Constant :
     public GetValueImpl<T>
@@ -44,12 +45,15 @@ namespace PLEXIL {
     Constant();
 
     //! \brief Copy constructor.
+    //! \param other The Constant instance to copy.
     Constant(const Constant &other);
 
     //! \brief Constructor from value type.
+    //! \param value Const reference to the constant's value.
     Constant(const T &value);
 
     //! \brief Constructor from char *.
+    //! \param value The initial value, as a null-terminated string.
     //! \note Unimplemented conversions will cause a link time error.
     Constant(const char *value);
 
@@ -58,20 +62,20 @@ namespace PLEXIL {
 
     //! \brief Return a print name for the expression type.
     //! \return A constant character string.
-    const char *exprName() const;
+    virtual const char *exprName() const;
 
     //! \brief Retrieve the value of this Expression in its native type.
     //! \param result The appropriately typed place to put the result.
     //! \return True if known, false if unknown.
-    bool getValue(T &result) const;
+    virtual bool getValue(T &result) const;
 
     //! \brief Query whether the expression's value is known.
     //! \return True if known, false otherwise.
-    bool isKnown() const;
+    virtual bool isKnown() const;
 
     //! \brief Query whether this expression is constant, i.e. incapable of change.
     //! \return True if constant, false otherwise.
-    bool isConstant() const;
+    virtual bool isConstant() const;
 
   protected:
 
@@ -86,6 +90,7 @@ namespace PLEXIL {
 
   //! \class Constant<String>
   //! \brief Specialization of the Constant template for String valued constants.
+  //! \ingroup Expressions
   template <>
   class Constant<String> :
     public GetValueImpl<String>
@@ -96,12 +101,15 @@ namespace PLEXIL {
     Constant();
 
     //! \brief Copy constructor.
+    //! \param other The Constant instance to copy.
     Constant(const Constant &other);
 
     //! \brief Constructor from value type.
+    //! \param value Const reference to the constant's value.
     Constant(const String &value);
 
     //! \brief Constructor from char *.
+    //! \param value The initial value, as a null-terminated string.
     Constant(const char *value);
 
     //! \brief Virtual destructor.
@@ -109,25 +117,25 @@ namespace PLEXIL {
 
     //! \brief Return a print name for the expression type.
     //! \return A constant character string.
-    const char *exprName() const;
+    virtual const char *exprName() const;
 
     //! \brief Retrieve the value of this Expression in its native type.
     //! \param result The appropriately typed place to put the result.
     //! \return True if known, false if unknown.
-    bool getValue(String &result) const;
+    virtual bool getValue(String &result) const;
 
     //! \brief Retrieve a pointer to the (const) value of this Expression.
     //! \param ptr Reference to the pointer variable to receive the result.
     //! \return True if known, false if unknown.
-    bool getValuePointer(String const *& ptr) const;
+    virtual bool getValuePointer(String const *& ptr) const;
 
     //! \brief Query whether the expression's value is known.
     //! \return True if known, false otherwise.
-    bool isKnown() const;
+    virtual bool isKnown() const;
 
     //! \brief Query whether this expression is constant, i.e. incapable of change.
     //! \return True if constant, false otherwise.
-    bool isConstant() const;
+    virtual bool isConstant() const;
 
   protected:
 
@@ -141,6 +149,7 @@ namespace PLEXIL {
   };
 
   //! \brief Specialization of Constant class template for array-valued constants.
+  //! \ingroup Expressions
   template <typename T>
   class Constant<ArrayImpl<T> > :
     public GetValueImpl<ArrayImpl<T> >
@@ -151,9 +160,11 @@ namespace PLEXIL {
     Constant();
 
     //! \brief Copy constructor.
+    //! \param other The Constant instance to copy.
     Constant(const Constant &other);
 
     //! \brief Constructor from value type.
+    //! \param value Const reference to the constant's value.
     Constant(const ArrayImpl<T> &value);
 
     //! \brief Virtual destructor.
@@ -161,20 +172,20 @@ namespace PLEXIL {
 
     //! \brief Return a print name for the expression type.
     //! \return A constant character string.
-    const char *exprName() const;
+    virtual const char *exprName() const;
 
     //! \brief Retrieve a pointer to the (const) value of this Expression.
     //! \param ptr Reference to the pointer variable to receive the result.
     //! \return True if known, false if unknown.
-    bool getValuePointer(ArrayImpl<T> const *& ptr) const;
+    virtual bool getValuePointer(ArrayImpl<T> const *& ptr) const;
 
     //! \brief Query whether the expression's value is known.
     //! \return True if known, false otherwise.
-    bool isKnown() const;
+    virtual bool isKnown() const;
 
     //! \brief Query whether this expression is constant, i.e. incapable of change.
     //! \return True if constant, false otherwise.
-    bool isConstant() const;
+    virtual bool isConstant() const;
 
   protected:
 

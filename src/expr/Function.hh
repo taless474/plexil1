@@ -38,8 +38,20 @@ namespace PLEXIL
   class Operator;
 
   //! \class Function
-  //! \brief Represents an expression whose value depends on
-  //!        the value(s) of zero or more subexpressions.
+  //! \brief Base class for expressions whose value depends on the
+  //!        value(s) of zero or more subexpressions, and an operator on
+  //!        those subexpressions.
+  //!
+  //! The Function class abstracts the storage of an expression's
+  //! subexpressions from the computation performed on those
+  //! subexpressions.  It bundles some number of expressions and an
+  //! operator.
+  //!
+  //! Operator instances implement the desired computation via their
+  //! operator() methods.
+  //!
+  //! \see Operator
+  //! \ingroup Expressions
   class Function :
     public Expression,
     public Propagator
@@ -73,10 +85,10 @@ namespace PLEXIL
     //! \param s Reference to the stream.
     virtual void printValue(std::ostream &s) const;
 
-     //! \brief Retrieve the value of this Expression in its native form.
-     //! \param result The appropriately typed place to put the result.
-     //! \return True if result known, false if unknown.
-     //! \note Derived classes may override the default methods for performance.
+    //! \brief Retrieve the value of this Expression in its native form.
+    //! \param result The appropriately typed place to put the result.
+    //! \return True if result known, false if unknown.
+    //! \note Derived classes may override the default methods for performance.
     virtual bool getValue(Boolean &result) const;
     virtual bool getValue(uint16_t &result) const;
     virtual bool getValue(Integer &result) const;
@@ -135,7 +147,7 @@ namespace PLEXIL
 
   protected:
 
-    //! \brief Constructor; only available to derived classes.
+    //! \brief Protected constructor.  Only available to derived classes.
     //! \param op Const pointer to the function's operator.
     Function(Operator const *op);
 
@@ -156,6 +168,7 @@ namespace PLEXIL
   //! \param op Const pointer to the Operator.
   //! \param nargs The number of arguments.
   //! \return Pointer to the newly constructed Function.
+  //! \ingroup Expressions
   extern Function *makeFunction(Operator const *op,
                                 size_t nargs);
 
@@ -167,6 +180,7 @@ namespace PLEXIL
   //! \param garbage true if the argument is to be deleted with the object,
   //!                false if not.
   //! \return Pointer to the newly constructed Function.
+  //! \ingroup Expressions
   extern Function *makeFunction(Operator const *op,
                                 Expression *expr,
                                 bool garbage);
@@ -180,6 +194,7 @@ namespace PLEXIL
   //! \param garbage2 true if the second argument is to be deleted with the object,
   //!                 false if not.
   //! \return Pointer to the newly constructed Function.
+  //! \ingroup Expressions
   extern Function *makeFunction(Operator const *op, 
                                 Expression *expr1,
                                 Expression *expr2,

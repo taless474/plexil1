@@ -44,7 +44,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanNot, bool)
+    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanNot)
 
   private:
     BooleanNot(const BooleanNot &);
@@ -65,7 +65,7 @@ namespace PLEXIL
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
     bool operator()(bool &result, Function const &args) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanOr, bool)
+    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanOr)
 
   private:
     BooleanOr(const BooleanOr &);
@@ -86,7 +86,7 @@ namespace PLEXIL
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
     bool operator()(bool &result, Function const &args) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanAnd, bool)
+    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanAnd)
 
   private:
     BooleanAnd(const BooleanAnd &);
@@ -107,7 +107,7 @@ namespace PLEXIL
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
     bool operator()(bool &result, Function const &args) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanXor, bool)
+    DECLARE_OPERATOR_STATIC_INSTANCE(BooleanXor)
 
   private:
     BooleanXor(const BooleanXor &);

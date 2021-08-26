@@ -71,7 +71,7 @@ namespace PLEXIL
     Ceiling();
     virtual ~Ceiling();
     virtual bool calcInternal(Real &result, Expression const *arg) const;
-    DECLARE_OPERATOR_STATIC_INSTANCE(Ceiling, NUM);
+    DECLARE_OPERATOR_STATIC_INSTANCE(Ceiling);
 
   private:
     Ceiling(const Ceiling &);
@@ -85,7 +85,7 @@ namespace PLEXIL
     Floor();
     virtual ~Floor();
     virtual bool calcInternal(Real &result, Expression const *arg) const;
-    DECLARE_OPERATOR_STATIC_INSTANCE(Floor, NUM);
+    DECLARE_OPERATOR_STATIC_INSTANCE(Floor);
 
   private:
     Floor(const Floor &);
@@ -99,7 +99,7 @@ namespace PLEXIL
     Round();
     ~Round();
     virtual bool calcInternal(Real &result, Expression const *arg) const;
-    DECLARE_OPERATOR_STATIC_INSTANCE(Round, NUM);
+    DECLARE_OPERATOR_STATIC_INSTANCE(Round);
 
   private:
     Round(const Round &);
@@ -113,7 +113,7 @@ namespace PLEXIL
     Truncate();
     virtual ~Truncate();
     virtual bool calcInternal(Real &result, Expression const *arg) const;
-    DECLARE_OPERATOR_STATIC_INSTANCE(Truncate, NUM);
+    DECLARE_OPERATOR_STATIC_INSTANCE(Truncate);
 
   private:
     Truncate(const Truncate &);
@@ -129,7 +129,7 @@ namespace PLEXIL
     virtual bool checkArgTypes(std::vector<ValueType> const &typeVec) const;
     virtual bool calc(Integer &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(RealToInteger, Integer);
+    DECLARE_OPERATOR_STATIC_INSTANCE(RealToInteger);
 
   private:
     RealToInteger(const RealToInteger &);

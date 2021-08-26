@@ -51,7 +51,7 @@ namespace PLEXIL
 
     bool operator()(String &result, Function const &f) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(StringConcat, String);
+    DECLARE_OPERATOR_STATIC_INSTANCE(StringConcat);
 
   private:
     StringConcat();
@@ -72,7 +72,7 @@ namespace PLEXIL
 
     bool operator()(Integer &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(StringLength, Integer);
+    DECLARE_OPERATOR_STATIC_INSTANCE(StringLength);
 
   private:
     StringLength();

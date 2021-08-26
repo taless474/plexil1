@@ -44,7 +44,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(IsKnown, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(IsKnown)
 
   private:
     IsKnown();
@@ -65,7 +65,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(Equal, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(Equal)
 
   private:
     Equal();
@@ -86,7 +86,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(NotEqual, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(NotEqual)
 
   private:
     NotEqual();
@@ -108,7 +108,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(GreaterThan<T>, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(GreaterThan<T>)
 
   private:
     GreaterThan();
@@ -130,7 +130,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(GreaterEqual<T>, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(GreaterEqual<T>)
 
   private:
     GreaterEqual();
@@ -152,7 +152,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(LessThan<T>, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(LessThan<T>)
 
   private:
     LessThan();
@@ -174,7 +174,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *argA, Expression const *argB) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(LessEqual<T>, Boolean)
+    DECLARE_OPERATOR_STATIC_INSTANCE(LessEqual<T>)
 
   private:
     LessEqual();

@@ -34,6 +34,7 @@ namespace PLEXIL
   //! \class GetValueImpl
   //! \brief Mixin class providing common behavior for Expression classes
   //!        specialized for a specific value type.
+  //! \ingroup Expressions
   template <typename T>
   class GetValueImpl : virtual public Expression
   {
@@ -75,6 +76,7 @@ namespace PLEXIL
   };
 
   //! \brief Specialization of GetValueImpl for Integer typed expressions.
+  //! \ingroup Expressions
   template <>
   class GetValueImpl<Integer> : virtual public Expression
   {
@@ -121,6 +123,7 @@ namespace PLEXIL
   };
 
   //! \brief Specialization of GetValueImpl for string valued expressions.
+  //! \ingroup Expressions
   template <>
   class GetValueImpl<String> : virtual public Expression
   {
@@ -166,6 +169,7 @@ namespace PLEXIL
   };
 
   //! \brief Specialization of GetValueImpl for array valued expressions.
+  //! \ingroup Expressions
   template <typename T>
   class GetValueImpl<ArrayImpl<T> > : virtual public Expression
   {

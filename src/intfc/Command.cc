@@ -220,9 +220,9 @@ namespace PLEXIL
       m_commandIsConstant(false),
       m_resourcesFixed(false),
       m_resourcesAreConstant(false),
+      m_checkedConstant(false),
       m_nameIsGarbage(false),
-      m_destIsGarbage(false),
-      m_checkedConstant(false)
+      m_destIsGarbage(false)
   {
     m_ack.setName(nodeName);
   }
@@ -451,6 +451,7 @@ namespace PLEXIL
         it->activate();
 
     // Check for constancy at first activation
+    // TODO Move before checking m_commandIsConstant and m_resourcesAreConstant?
     if (!m_checkedConstant) {
       if ((m_commandNameIsConstant = isCommandNameConstant()))
         m_commandIsConstant = isCommandConstant(); // defaults to false

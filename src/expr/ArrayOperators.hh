@@ -44,7 +44,7 @@ namespace PLEXIL
 
     bool operator()(Integer &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(ArraySize, Integer);
+    DECLARE_OPERATOR_STATIC_INSTANCE(ArraySize);
 
   private:
     // Disallow copy, assign
@@ -64,7 +64,7 @@ namespace PLEXIL
 
     bool operator()(Integer &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(ArrayMaxSize, Integer);
+    DECLARE_OPERATOR_STATIC_INSTANCE(ArrayMaxSize);
 
   private:
     // Disallow copy, assign
@@ -84,7 +84,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(AllElementsKnown, bool);
+    DECLARE_OPERATOR_STATIC_INSTANCE(AllElementsKnown);
 
   private:
     // Disallow copy, assign
@@ -104,7 +104,7 @@ namespace PLEXIL
 
     bool operator()(bool &result, Expression const *arg) const;
 
-    DECLARE_OPERATOR_STATIC_INSTANCE(AnyElementsKnown, bool);
+    DECLARE_OPERATOR_STATIC_INSTANCE(AnyElementsKnown);
 
   private:
     // Disallow copy, assign
