@@ -1,4 +1,5 @@
 # Makefile for Plexil documentation
+# Presumes GNU make
 
 # Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.

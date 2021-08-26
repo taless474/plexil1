@@ -1,6 +1,7 @@
 # Top level Makefile for Plexil
+# Presumes GNU make
 
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,9 +34,10 @@ MAKEFILE_DIR := $(realpath $(join $(dir $(firstword $(MAKEFILE_LIST))),.))
 
 ifeq ($(PLEXIL_HOME),)
 PLEXIL_HOME := $(MAKEFILE_DIR)
+$(info Setting environment variable PLEXIL_HOME to $(MAKEFILE_DIR))
 else
 ifneq ($(PLEXIL_HOME),$(MAKEFILE_DIR))
-$(error Environment variable PLEXIL_HOME is in error. It must be set to $(MAKEFILE_DIR) before proceeding)
+$(error Environment variable PLEXIL_HOME is in error. It must be set to $(MAKEFILE_DIR) before proceeding.)
 endif
 endif
 
@@ -57,13 +59,13 @@ plexil-default: tools
 everything: universalExec TestExec IpcAdapter UdpAdapter plexil-compiler plexilscript checker plexilsim pv robosim sample checkpoint
 
 # Just the tools without the examples
-tools: universalExec TestExec IpcAdapter UdpAdapter plexil-compiler plexilscript checker plexilsim pv
+tools: universalExec TestExec IpcAdapter UdpAdapter plexil-compiler plexilscript checker plexilsim pv doc
 
 # Core facilities
-essentials: universalExec TestExec IpcAdapter UdpAdapter plexil-compiler plexilscript checker plexilsim
+essentials: universalExec TestExec IpcAdapter UdpAdapter plexil-compiler plexilscript checker plexilsim doc
 
 #
-# Standalone targets
+# Java targets
 #
 
 checker: checker/global-decl-checker.jar
@@ -71,10 +73,14 @@ checker: checker/global-decl-checker.jar
 checker/global-decl-checker.jar:
 	(cd checker && ant jar)
 
+.PHONY: checker/global-decl-checker.jar
+
 pv: viewers/pv/luv.jar
 
 viewers/pv/luv.jar:
 	(cd viewers/pv && ant jar)
+
+.PHONY: viewers/pv/luv.jar
 
 plexil-compiler: jars/PlexilCompiler.jar
 
@@ -86,8 +92,18 @@ plexilscript: jars/plexilscript.jar
 jars/plexilscript.jar:
 	(cd compilers/plexilscript && ant install)
 
-.PHONY: checker/global-decl-checker.jar viewers/pv/luv.jar
 .PHONY: jars/PlexilCompiler.jar jars/plexilscript.jar
+
+#
+# Documentation
+#
+
+doc: doc/html/index.html
+
+doc/html/index.html:
+	$(MAKE) -C doc
+
+#.PHONY: doc/html/index.html
 
 #
 # Targets which depend on the Automake targets below
