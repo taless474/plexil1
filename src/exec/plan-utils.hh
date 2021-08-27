@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2018, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -34,16 +34,22 @@ namespace PLEXIL
 
 // Printing Commands
 
-// Print arguments to standard output verbatim.
+//! \brief Print arguments to std::cout verbatim.
+//! \param args Const reference to vector of Value instances.
 void print (const std::vector<Value>& args);
 
-// Print arguments to standard output in a "pretty" way.
+//! \brief Print arguments to std::cout in a "pretty" way.
+//! \param args Const reference to vector of Value instances.
 void pprint (const std::vector<Value>& args);
 
-// Print arguments to a PLEXIL string verbatim.
+//! \brief Print arguments to a PLEXIL string verbatim.
+//! \param args Const reference to vector of Value instances.
+//! \return A Value instance containing the result String.
 Value printToString(const std::vector<Value>& args);
 
-// Print arguments to a PLEXIL string in a "pretty" way.
+//! \brief Print arguments to a PLEXIL string in a "pretty" way.
+//! \param args Const reference to vector of Value instances.
+//! \return A Value instance containing the result String.
 Value pprintToString(const std::vector<Value>& args);
 
 }

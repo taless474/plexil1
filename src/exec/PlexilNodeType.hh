@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2014, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -34,14 +34,19 @@
 
 namespace PLEXIL
 {
-  // Node type name constants
+  //! \brief Node type name constant.
+  //! \ingroup Exec-Core
+  ///@{
   extern std::string const ASSIGNMENT; // = "Assignment"
   extern std::string const COMMAND; // = "Command"
   extern std::string const EMPTY; // = "Empty"
   extern std::string const LIBRARYNODECALL; // = "LibraryNodeCall"
   extern std::string const LIST; // = "NodeList"
   extern std::string const UPDATE; // = "Update"
+  ///@}
 
+  //! \brief Represents the type of a PLEXIL Node.
+  //! \ingroup Exec-Core
   enum PlexilNodeType {
     NodeType_uninitialized = 0,
     NodeType_NodeList,
@@ -53,8 +58,16 @@ namespace PLEXIL
     NodeType_error
   };
 
+  //! \brief Get a string representation of a node type value.
+  //! \param nodeType The node type.
+  //! \return Const reference to the string.
+  //! \ingroup Exec-Core
   std::string const &nodeTypeString(PlexilNodeType nodeType);
 
+  //! \brief Get the PlexilNodeType value named by a string.
+  //! \param typeName Pointer to const null-terminated string.
+  //! \return The node type. Returns NodeType_error if not parseable.
+  //! \ingroup Exec-Core
   PlexilNodeType parseNodeType(char const *typeName);
   
 } // namespace PLEXIL
