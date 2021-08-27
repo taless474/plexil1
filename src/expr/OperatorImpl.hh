@@ -32,7 +32,27 @@
 namespace PLEXIL
 {
 
-  //! \brief Concrete templated class for operators whose return type is known and fixed.
+  //! \brief Virtual templated class for operators whose return type is known and fixed.
+  //!
+  //! OperatorImpl defines operator() methods which delegate to the
+  //! corresponding calc member functions, whose methods are
+  //! implemented by derived classes.  This allows the derived classes
+  //! to only implement the appropriate calc methods based on argument
+  //! count; the default calc methods on OperatorImpl throw a "wrong
+  //! argument count" PlanError.
+  //!
+  //! For arithmetic operators, it also allows the operator() method
+  //! to perform implicit type promotions.  The plan reader selects an
+  //! arithmetic operator by the types of the arguments, not the
+  //! result type.  This is the reason OperatorImpl<Integer> has
+  //! additional operator() methods with Real result variables.
+  //!
+  //! If more numeric types are added in the future, implementors
+  //! should add more specializations of OperatorImpl to support the
+  //! additional implicit type promotions, or should implement an
+  //! ArithmeticOperator base class template which supports them.
+  //!
+  //! \see ArithmeticFunctionFactory
   //! \ingroup Expressions
   template <typename R>
   class OperatorImpl : public Operator
@@ -46,7 +66,7 @@ namespace PLEXIL
     //! \param result Reference to the variable.
     //! \param arg Const pointer to the expression.
     //! \return true if the result is known, false if not.
-    //! \note Derived classes should implement the corresponding calc() method.
+    //! \note Delegates to the corresponding calc() method.
     virtual bool operator()(R &result, Expression const *arg) const;
 
     //! \brief Operate on the given Expressions, and store the result in a variable.
@@ -54,14 +74,14 @@ namespace PLEXIL
     //! \param arg0 Const pointer to the first expression.
     //! \param arg1 Const pointer to the second expression.
     //! \return true if the result is known, false if not.
-    //! \note Derived classes should implement the corresponding calc() method.
+    //! \note Delegates to the corresponding calc() method.
     virtual bool operator()(R &result, Expression const *arg0, Expression const *arg1) const;
 
     //! \brief Operate on the given Function, and store the result in a variable.
     //! \param result Reference to the variable.
     //! \param fn Const reference to the function.
     //! \return true if the result is known, false if not.
-    //! \note Derived classes should implement the corresponding calc() method.
+    //! \note Delegates to the corresponding calc() method.
     virtual bool operator()(R &result, Function const &fn) const;
 
     // Default methods, based on R
@@ -94,12 +114,12 @@ namespace PLEXIL
     Value toValue(Function const &exprs) const;
 
     // Delegated to derived classes
-    // Default methods issue "wrong argument count" error
 
     //! \brief Actually perform the operation on the expression and store the result.
     //! \param result Reference to the variable.
     //! \param arg Const pointer to the expression.
     //! \return true if the result is known, false if not.
+    //! \note Default method.  Throws "wrong argument count" error.
     virtual bool calc(R &result, Expression const *arg) const;
 
     //! \brief Actually perform the operation on the expressions and store the result.
@@ -107,12 +127,14 @@ namespace PLEXIL
     //! \param arg0 Const pointer to the first expression.
     //! \param arg1 Const pointer to the second expression.
     //! \return true if the result is known, false if not.
+    //! \note Default method.  Throws "wrong argument count" error.
     virtual bool calc(R &result, Expression const *arg0, Expression const *arg1) const;
 
     //! \brief Actually perform the operation on the function and store the result.
     //! \param result Reference to the variable.
     //! \param fn Const reference to the function.
     //! \return true if the result is known, false if not.
+    //! \note Default method.  Throws "wrong argument count" error.
     virtual bool calc(R &result, Function const &fn) const;
 
   protected:
@@ -127,10 +149,11 @@ namespace PLEXIL
     OperatorImpl &operator=(OperatorImpl const &);
   };
 
-  //! \brief Specialization of OperatorImpl for Integer valued
-  //!        Operations.  Implements conversions from Integer result
-  //!        to Real variables.
+  //! \brief Specialization of OperatorImpl for Integer typed
+  //!        operations.  Implements implicit promotion from Integer
+  //!        operands to Real result types.
   //! \ingroup Expressions
+  //! \see ArithmeticFunctionFactory
   template <>
   class OperatorImpl<Integer> : public Operator
   {
@@ -141,9 +164,30 @@ namespace PLEXIL
     virtual bool operator()(Integer &result, Expression const *arg0, Expression const *arg1) const;
     virtual bool operator()(Integer &result, Function const &args) const;
 
+    //
     // Conversion methods
+    //
+
+    //! \brief Operate on the given Expression, and store the result in a Real variable.
+    //! \param result Reference to the Real variable.
+    //! \param arg Const pointer to the expression.
+    //! \return true if the result is known, false if not.
+    //! \note Delegates to the Integer-typed calc method and promotes its result to Real.
     virtual bool operator()(Real &result, Expression const *arg) const;
+
+    //! \brief Operate on the given Expressions, and store the result in a Real variable.
+    //! \param result Reference to the Real variable.
+    //! \param arg0 Const pointer to the first expression.
+    //! \param arg1 Const pointer to the second expression.
+    //! \return true if the result is known, false if not.
+    //! \note Delegates to the Integer-typed calc method and promotes its result to Real.
     virtual bool operator()(Real &result, Expression const *arg0, Expression const *arg1) const;
+
+    //! \brief Operate on the given Function, and store the result in a Real variable.
+    //! \param result Reference to the Real variable.
+    //! \param fn Const reference to the function.
+    //! \return true if the result is known, false if not.
+    //! \note Delegates to the Integer-typed calc method and promotes its result to Real.
     virtual bool operator()(Real &result, Function const &args) const;
 
     ValueType valueType() const;
