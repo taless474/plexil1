@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2018, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -273,10 +273,10 @@ static bool testUnaryPropagation()
 static bool testBinaryBasics()
 {
   {
-    Addition<Integer> intAdd;
+    Operator const *intAdd = Addition<Integer>::instance();
     IntegerVariable won(1);
     IntegerConstant too(2);
-    Function *intFn = makeFunction(&intAdd, 2);
+    Function *intFn = makeFunction(intAdd, 2);
     intFn->setArgument(0, &won, false);
     intFn->setArgument(1, &too, false);
     Integer itemp;
@@ -325,10 +325,10 @@ static bool testBinaryBasics()
   }
 
   {
-    Addition<Real> realAdd;
+    Operator const *realAdd = Addition<Real>::instance();
     RealVariable tree(3);
     RealConstant fore(4);
-    Function *realFn = makeFunction(&realAdd, 2);
+    Function *realFn = makeFunction(realAdd, 2);
     realFn->setArgument(0, &tree, false);
     realFn->setArgument(1, &fore, false);
     Real rtemp;
@@ -386,11 +386,11 @@ static bool testNaryBasics()
   const std::vector<Boolean> garbage(3, false);
 
   {
-    Addition<Integer> intAdd;
+    Operator const *intAdd = Addition<Integer>::instance();
     IntegerVariable won(1);
     IntegerConstant too(2);
     IntegerVariable tree(3);
-    Function *intFn = makeFunction(&intAdd, 3);
+    Function *intFn = makeFunction(intAdd, 3);
     intFn->setArgument(0, &won, false);
     intFn->setArgument(1, &too, false);
     intFn->setArgument(2, &tree, false);
@@ -438,11 +438,11 @@ static bool testNaryBasics()
   }
 
   {
-    Addition<Real> realAdd;
+    Operator const *realAdd = Addition<Real>::instance();
     RealConstant fore(4);
     RealVariable fivefive(5.5);
     RealVariable sixfive(6.5);
-    Function *realFn = makeFunction(&realAdd, 3);
+    Function *realFn = makeFunction(realAdd, 3);
     realFn->setArgument(0, &fore, false);
     realFn->setArgument(1, &fivefive, false);
     realFn->setArgument(2, &sixfive, false);
