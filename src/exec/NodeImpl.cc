@@ -1673,12 +1673,6 @@ namespace PLEXIL
     m_failureType = NO_FAILURE;
   }
 
-  // Default method, applies to Empty, NodeList, LibraryNodeCall nodes.
-  void NodeImpl::abort() 
-  {
-    errorMsg("Abort illegal for node type " << getType());
-  }
-
   void NodeImpl::deactivateExecutable() 
   {
     specializedDeactivateExecutable();

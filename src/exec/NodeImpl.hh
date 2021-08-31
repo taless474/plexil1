@@ -89,7 +89,7 @@ namespace PLEXIL
     //! \note Public only for plan analyzer
     static char const *getConditionName(size_t idx);
 
-    //! \brief Constructor.
+    //! \brief Primary constructor.
     //! \param nodeId The name of this node, as a pointer to const character string.
     //! \param parent (Optional) Pointer to the parent of this node; used for the ancestor conditions and variable lookup.
     NodeImpl(char const *nodeId, NodeImpl *parent = NULL);
@@ -104,7 +104,7 @@ namespace PLEXIL
              NodeState state,
              NodeImpl *parent = NULL);
 
-    //! \brief Virtual destructor,
+    //! \brief Virtual destructor.  Deletes the node and all of its descendants, if any.
     virtual ~NodeImpl();
 
     //
@@ -485,10 +485,6 @@ namespace PLEXIL
 
     //! \brief Reset the node's outcome and failure type.
     void reset();
-
-    //! \brief Abort the actions being executed.
-    //! \note The default method throws an exception.
-    virtual void abort();
 
     //! \brief Deactivate the expressions relevant to the node's execution.
     //! \note Delegates to virtual member function specialized by node type.
