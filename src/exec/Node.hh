@@ -72,10 +72,12 @@ namespace PLEXIL {
 
     //! \brief Get the pointer to the next item in the queue.
     //! \return The pointer.
+    //! \see LinkedQueue
     virtual Node *next() const = 0;
 
     //! \brief Get the pointer to the pointer to the next item in the queue.
     //! \return The pointer.
+    //! \see LinkedQueue
     virtual Node **nextPtr() = 0;
 
     //
