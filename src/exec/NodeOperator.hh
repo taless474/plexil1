@@ -70,13 +70,11 @@ namespace PLEXIL
     //! \brief Allocate a cache for the result of this Operation.
     //! \return Pointer to the cache.  May be NULL.
     //! \note Not needed for Boolean, Integer, Real, internal values
-    //! \note Delegated to NodeOperatorImpl by default.
     virtual void *allocateCache() const = 0;
 
     //! \brief Delete a cache for the result of this Operation.
-    //! \param ptr Pointer to the cache.
+    //! \param Ptr Pointer to the cache.
     //! \note Not needed for Boolean, Integer, Real, internal values
-    //! \note Delegated to NodeOperatorImpl by default.
     virtual void deleteCache(void *Ptr) const = 0;
 
     //! \brief Execute the operation on the Node, and store the result.
@@ -114,7 +112,8 @@ namespace PLEXIL
     //! \return The Value.
     virtual Value toValue(NodeImpl const *node) const = 0;
 
-    //! \brief Map the given function over all propagation sources for this operator and Node.
+    //! \brief Map the given function over all relevant propagation
+    //!        sources for this operator and Node.
     //! \param node Pointer to the Node.
     //! \param oper Const reference to the Operator.
     //! \note Helper for setup and teardown of the notification network.

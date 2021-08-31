@@ -34,9 +34,10 @@
 
 namespace PLEXIL
 {
-  //! \brief Node type name constant.
-  //! \ingroup Exec-Core
   ///@{
+
+  //! \brief String constant used as a node type name.
+  //! \ingroup Exec-Core
   extern std::string const ASSIGNMENT; // = "Assignment"
   extern std::string const COMMAND; // = "Command"
   extern std::string const EMPTY; // = "Empty"
@@ -45,6 +46,7 @@ namespace PLEXIL
   extern std::string const UPDATE; // = "Update"
   ///@}
 
+  //! \enum PlexilNodeType
   //! \brief Represents the type of a PLEXIL Node.
   //! \ingroup Exec-Core
   enum PlexilNodeType {
@@ -69,7 +71,7 @@ namespace PLEXIL
   //! \return The node type. Returns NodeType_error if not parseable.
   //! \ingroup Exec-Core
   PlexilNodeType parseNodeType(char const *typeName);
-  
+
 } // namespace PLEXIL
 
 #endif // PLEXIL_NODE_TYPE_HH

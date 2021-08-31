@@ -71,7 +71,7 @@ namespace PLEXIL
     void addListener(ExecListener *listener);
 
     //! \brief Removes an Exec listener.
-    //! \param Pointer to the ExecListener.
+    //! \param listener Pointer to the ExecListener.
     void removeListener(ExecListener *listener);
 
     //
@@ -96,6 +96,7 @@ namespace PLEXIL
 
     //! \brief Notify that a step is complete and the listener
     //!        may publish transitions and assignments.
+    //! \param cycleNum The number of times a step has been completed.
     void stepComplete(unsigned int cycleNum);
 
     //

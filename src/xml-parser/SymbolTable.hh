@@ -37,6 +37,7 @@
 namespace PLEXIL
 {
 
+  //! \enum SymbolTyope
   //! \brief Enumeration for the type of a symbol in the PLEXIL symbol table.
   //! \ingroup XML-parser
   enum SymbolType {
@@ -138,7 +139,7 @@ namespace PLEXIL
     LibraryNodeSymbol(LibraryNodeSymbol const &orig);
 
     //! \brief Constructor from name string.
-    //! \param Pointer to the const null-terminated string.
+    //! \param name Pointer to the const null-terminated string.
     LibraryNodeSymbol(char const *name);
 
     //! \brief Copy assignment operator.
@@ -212,17 +213,17 @@ namespace PLEXIL
     virtual LibraryNodeSymbol *addLibraryNode(char const *name) = 0;
 
     //! \brief Get the symbol for the Command with the given name.
-    //! \param The name.
+    //! \param name The name.
     //! \return Const pointer to the Symbol.  Will be NULL if not found.
     virtual Symbol const *getCommand(char const *name) = 0;
 
     //! \brief Get the symbol for the Lookup with the given name.
-    //! \param The name.
+    //! \param name The name.
     //! \return Const pointer to the Symbol.  Will be NULL if not found.
     virtual Symbol const *getLookup(char const *name) = 0;
 
     //! \brief Get the symbol for the LibraryNode with the given name.
-    //! \param The name.
+    //! \param name The name.
     //! \return Const pointer to the LibraryNodeSymbol.  Will be NULL if not found.
     virtual LibraryNodeSymbol const *getLibraryNode(char const *name) = 0;
   };

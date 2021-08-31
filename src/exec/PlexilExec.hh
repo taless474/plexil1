@@ -35,7 +35,7 @@ namespace PLEXIL
   class ExecListenerBase;
   class Node;
 
-  //! \defgroup Exec-Core The %PLEXIL Executive core
+  //! \defgroup Exec-Core The PLEXIL Executive core
 
   //! \class PlexilExec
   //! \brief Stateless abstract base class defining the API of the %PLEXIL executive core.

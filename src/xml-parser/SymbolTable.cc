@@ -299,7 +299,7 @@ namespace PLEXIL
     }
 
     //! \brief Get the symbol for the Command with the given name.
-    //! \param The name.
+    //! \param name The name.
     //! \return Const pointer to the Symbol.  Will be NULL if not found.
     Symbol const *getCommand(char const *name)
     {
@@ -312,7 +312,7 @@ namespace PLEXIL
     }
 
     //! \brief Get the symbol for the Lookup with the given name.
-    //! \param The name.
+    //! \param name The name.
     //! \return Const pointer to the Symbol.  Will be NULL if not found.
     Symbol const *getLookup(char const *name)
     {
@@ -325,7 +325,7 @@ namespace PLEXIL
     }
 
     //! \brief Get the symbol for the LibraryNode with the given name.
-    //! \param The name.
+    //! \param name The name.
     //! \return Const pointer to the LibraryNodeSymbol.  Will be NULL if not found.
     LibraryNodeSymbol const *getLibraryNode(char const *name)
     {
