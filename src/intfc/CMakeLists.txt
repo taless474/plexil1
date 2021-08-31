@@ -1,4 +1,4 @@
-## Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+## Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 ##  All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -47,9 +47,8 @@ target_link_libraries(PlexilIntfc PUBLIC
 install(FILES 
   CachedValue.hh CachedValueImpl.hh Command.hh CommandFunction.hh
   CommandHandleVariable.hh ExprVec.hh ExternalInterface.hh InputQueue.hh
-  InterfaceError.hh Lookup.hh NodeConnector.hh QueueEntry.hh
-  ResourceArbiterInterface.hh State.hh StateCacheEntry.hh StateCacheMap.hh
-  Update.hh
+  InterfaceError.hh Lookup.hh QueueEntry.hh ResourceArbiterInterface.hh State.hh
+  StateCacheEntry.hh StateCacheMap.hh Update.hh
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if(MODULE_TESTS)

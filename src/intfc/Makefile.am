@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@ libPlexilIntfc_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/expr \
 include_HEADERS = CachedValue.hh CachedValueImpl.hh Command.hh \
  CommandFunction.hh CommandHandleVariable.hh ExprVec.hh \
  ExternalInterface.hh InputQueue.hh InterfaceError.hh Lookup.hh \
- NodeConnector.hh QueueEntry.hh ResourceArbiterInterface.hh State.hh \
+ QueueEntry.hh ResourceArbiterInterface.hh State.hh \
  StateCacheEntry.hh StateCacheMap.hh Update.hh
 
 libPlexilIntfc_la_SOURCES = CachedValue.cc CachedValueImpl.cc Command.cc \

@@ -47,8 +47,8 @@ target_link_libraries(PlexilExec PUBLIC
 # Public includes
 install(FILES 
   Assignment.hh AssignmentNode.hh CommandNode.hh ExecListenerBase.hh
-  LibraryCallNode.hh ListNode.hh Node.hh NodeImpl.hh
-  NodeFactory.hh NodeFunction.hh NodeOperator.hh NodeOperatorImpl.hh
+  LibraryCallNode.hh ListNode.hh Node.hh NodeConnector.hh NodeFactory.hh
+  NodeFunction.hh NodeImpl.hh NodeOperator.hh NodeOperatorImpl.hh
   NodeOperators.hh NodeTimepointValue.hh NodeTransition.hh
   NodeVariableMap.hh NodeVariables.hh PlexilExec.hh PlexilNodeType.hh
   VariableConflictSet.hh UpdateNode.hh plan-utils.hh

@@ -31,9 +31,9 @@ libPlexilExec_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/intfc \
  -I$(top_srcdir)/expr -I$(top_srcdir)/value -I$(top_srcdir)/utils
 
 include_HEADERS = Assignment.hh AssignmentNode.hh CommandNode.hh \
- ExecListenerBase.hh LibraryCallNode.hh ListNode.hh Node.hh NodeImpl.hh \
- NodeFactory.hh NodeFunction.hh NodeOperator.hh NodeOperatorImpl.hh \
- NodeOperators.hh NodeTimepointValue.hh NodeTransition.hh \
+ ExecListenerBase.hh LibraryCallNode.hh ListNode.hh Node.hh NodeConnector.hh \
+ NodeFactory.hh NodeFunction.hh NodeImpl.hh NodeOperator.hh \
+ NodeOperatorImpl.hh NodeOperators.hh NodeTimepointValue.hh NodeTransition.hh \
  NodeVariableMap.hh NodeVariables.hh \
  PlexilExec.hh PlexilNodeType.hh VariableConflictSet.hh UpdateNode.hh \
  plan-utils.hh
