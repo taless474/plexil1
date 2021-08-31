@@ -86,6 +86,8 @@
 #endif
 #endif // PIC
 
+#include "pugixml.hpp"
+
 #include <map>
 
 #include "plexil-string.h"
