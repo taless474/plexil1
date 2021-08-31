@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -213,10 +213,10 @@ namespace PLEXIL
     return it->second;
   }
 
-  //
-  // SymbolTableImpl
-  //
 
+  //! \class SymbolTableImpl
+  //! \brief Implementation of the PLEXIL symbol table.
+  //! \ingroup XML-parser
   class SymbolTableImpl
     : public SymbolTable
   {
@@ -224,18 +224,20 @@ namespace PLEXIL
     typedef std::map<std::string, Symbol *> SymbolMap;
     typedef std::map<std::string, LibraryNodeSymbol *> LibraryMap;
 
-    SymbolMap m_commandMap;
-    SymbolMap m_lookupMap;
+    SymbolMap m_commandMap;     //!< Map of declared Commands.
+    SymbolMap m_lookupMap;      //!< Map of declared Lookups.
     // SymbolMap m_functionMap; // future
-    LibraryMap m_libraryMap;
+    LibraryMap m_libraryMap;    //!< Map of declared LibraryNodes.
 
   public:
+
+    //! \brief Default constructor.
     SymbolTableImpl()
-      : SymbolTable()
     {
     }
 
-    ~SymbolTableImpl()
+    //! \brief Virtual destructor.
+    virtual ~SymbolTableImpl()
     {
       SymbolMap::iterator it = m_commandMap.begin();
       while (it != m_commandMap.end()) {
@@ -257,6 +259,9 @@ namespace PLEXIL
       }
     }
 
+    //! \brief Add a declared Command with the given name.
+    //! \param name The name.
+    //! \return Pointer to the Symbol constructed; will be NULL if the name is a duplicate.
     Symbol *addCommand(char const *name)
     {
       std::string const namestr(name);
@@ -267,6 +272,9 @@ namespace PLEXIL
       return (m_commandMap[namestr] = new Symbol(name, COMMAND_TYPE));
     }
 
+    //! \brief Add a declared Lookup with the given name.
+    //! \param name The name.
+    //! \return Pointer to the Symbol constructed; will be NULL if the name is a duplicate.
     Symbol *addLookup(char const *name)
     {
       std::string const namestr(name);
@@ -277,6 +285,9 @@ namespace PLEXIL
       return (m_lookupMap[namestr] = new Symbol(name, LOOKUP_TYPE));
     }
 
+    //! \brief Add a declared Library Node with the given name.
+    //! \param name The name.
+    //! \return Pointer to the Symbol constructed; will be NULL if the name is a duplicate.
     LibraryNodeSymbol *addLibraryNode(char const *name)
     {
       std::string const namestr(name);
@@ -287,6 +298,9 @@ namespace PLEXIL
       return (m_libraryMap[namestr] = new LibraryNodeSymbol(name));
     }
 
+    //! \brief Get the symbol for the Command with the given name.
+    //! \param The name.
+    //! \return Const pointer to the Symbol.  Will be NULL if not found.
     Symbol const *getCommand(char const *name)
     {
       std::string const namestr(name);
@@ -297,6 +311,9 @@ namespace PLEXIL
       return it->second;
     }
 
+    //! \brief Get the symbol for the Lookup with the given name.
+    //! \param The name.
+    //! \return Const pointer to the Symbol.  Will be NULL if not found.
     Symbol const *getLookup(char const *name)
     {
       std::string const namestr(name);
@@ -307,6 +324,9 @@ namespace PLEXIL
       return it->second;
     }
 
+    //! \brief Get the symbol for the LibraryNode with the given name.
+    //! \param The name.
+    //! \return Const pointer to the LibraryNodeSymbol.  Will be NULL if not found.
     LibraryNodeSymbol const *getLibraryNode(char const *name)
     {
       std::string const namestr(name);
