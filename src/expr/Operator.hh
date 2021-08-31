@@ -55,7 +55,7 @@ namespace PLEXIL
     }
 
     //! \brief Get the name of this Operator.
-    //! \return Const pointer to the name string.
+    //! \return Const reference to the name string.
     std::string const &getName() const;
 
     //! \brief Query whether this operator is a source of change events.
@@ -142,10 +142,20 @@ namespace PLEXIL
     std::string const m_name; //!< The Operator's name.
 
   private:
-    // unimplemented
+
+    // Explicitly unimplemented.
+#if __cplusplus >= 201103L
+    Operator() = delete;
+    Operator(Operator const &) = delete;
+    Operator(Operator &&) = delete;
+    Operator &operator=(Operator const &) = delete;
+    Operator &operator=(Operator &&) = delete;
+#else
     Operator();
     Operator(Operator const &);
     Operator &operator=(Operator const &);
+#endif
+
   };
 
 } // namespace PLEXIL
