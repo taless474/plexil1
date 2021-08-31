@@ -200,10 +200,10 @@ namespace PLEXIL
     return true;
   }
 
-  bool OperatorImpl<Integer>::operator()(Real &result, Function const &args) const
+  bool OperatorImpl<Integer>::operator()(Real &result, Function const &fn) const
   {
     Integer temp;
-    if (!this->calc(temp, args))
+    if (!this->calc(temp, fn))
       return false;
     result = (Real) temp;
     return true;

@@ -188,7 +188,7 @@ namespace PLEXIL
     //! \param fn Const reference to the function.
     //! \return true if the result is known, false if not.
     //! \note Delegates to the Integer-typed calc method and promotes its result to Real.
-    virtual bool operator()(Real &result, Function const &args) const;
+    virtual bool operator()(Real &result, Function const &fn) const;
 
     ValueType valueType() const;
     void *allocateCache() const;
