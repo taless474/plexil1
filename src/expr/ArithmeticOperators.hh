@@ -55,8 +55,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 
@@ -100,8 +100,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 
@@ -145,8 +145,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 
@@ -184,8 +184,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 
@@ -217,8 +217,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 
@@ -256,8 +256,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 
@@ -301,8 +301,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions, and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA Const pointer to the first subexpression.
-    //! \param argB Const pointer to the second subexpression.
+    //! \param arg0 Const pointer to the first subexpression.
+    //! \param arg1 Const pointer to the second subexpression.
     //! \return true if the result is known, false if not.
     bool calc(NUM &result, Expression const *arg0, Expression const *arg1) const;
 

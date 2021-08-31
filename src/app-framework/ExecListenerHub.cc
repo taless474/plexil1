@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -53,9 +53,6 @@ namespace PLEXIL
     m_listeners.clear();
   }
 
-  /**
-   * @brief Adds an Exec listener for publication of plan events.
-   */
   void ExecListenerHub::addListener(ExecListener *listener)
   {
     check_error_1(listener);
@@ -64,9 +61,6 @@ namespace PLEXIL
     m_listeners.push_back(listener);
   }
 
-  /**
-   * @brief Removes an Exec listener.
-   */
   void ExecListenerHub::removeListener(ExecListener *listener)
   {
     std::vector<ExecListener *>::iterator it = 
@@ -79,39 +73,6 @@ namespace PLEXIL
   // API to Exec
   //
 
-
-  /**
-   * @brief Notify that a plan has been received by the Exec.
-   * @param plan The intermediate representation of the plan.
-   */
-  void ExecListenerHub::notifyOfAddPlan(pugi::xml_node const plan)
-  {
-    for (std::vector<ExecListener *>::const_iterator it = m_listeners.begin();
-         it != m_listeners.end();
-         ++it)
-      (*it)->notifyOfAddPlan(plan);
-  }
-
-  /**
-   * @brief Notify that a library node has been received by the Exec.
-   * @param libNode The intermediate representation of the plan.
-   */
-  void ExecListenerHub::notifyOfAddLibrary(pugi::xml_node const libNode)
-  {
-    for (std::vector<ExecListener *>::const_iterator it = m_listeners.begin();
-         it != m_listeners.end();
-         ++it)
-      (*it)->notifyOfAddLibrary(libNode);
-  }
-
-  /**
-   * @brief Notify that a node has changed state.
-   * @param node Pointer to the node.
-   * @param oldState State being transitioned from.
-   * @param newState State being transitioned to.
-   * @note This is called synchronously from the inner loop of the Exec.
-   *       Listeners should not do any I/O during this call.
-   */
   void ExecListenerHub::notifyNodeTransition(Node *node,
                                              NodeState oldState,
                                              NodeState newState)
@@ -119,14 +80,6 @@ namespace PLEXIL
     m_transitions.push_back(NodeTransition(node, oldState, newState));
   }
 
-  /**
-   * @brief Notify that a variable assignment has been performed.
-   * @param dest The Expression being assigned to.
-   * @param destName A string naming the destination.
-   * @param value The value (in internal Exec representation) being assigned.
-   * @note This is called synchronously from the inner loop of the Exec.
-   *       Listeners should not do any I/O during this call.
-   */
   void ExecListenerHub::notifyOfAssignment(Expression const *dest,
                                            std::string const &destName,
                                            Value const &value)
@@ -134,10 +87,6 @@ namespace PLEXIL
     m_assignments.push_back(AssignmentRecord(dest, destName, value));
   }
 
-  /**
-   * @brief Notify that a step is complete and the listener
-   *        may publish transitions and assignments.
-   */
   void ExecListenerHub::stepComplete(unsigned int cycleNum)
   {
     for (std::vector<ExecListener *>::const_iterator it = m_listeners.begin();
@@ -157,11 +106,22 @@ namespace PLEXIL
   // API to InterfaceManager
   //
 
-  /**
-   * @brief Perform listener-specific initialization.
-   * @return true if successful, false otherwise.
-   * @note Default method provided as a convenience for backward compatibility.
-   */
+  void ExecListenerHub::notifyOfAddPlan(pugi::xml_node const plan)
+  {
+    for (std::vector<ExecListener *>::const_iterator it = m_listeners.begin();
+         it != m_listeners.end();
+         ++it)
+      (*it)->notifyOfAddPlan(plan);
+  }
+
+  void ExecListenerHub::notifyOfAddLibrary(pugi::xml_node const libNode)
+  {
+    for (std::vector<ExecListener *>::const_iterator it = m_listeners.begin();
+         it != m_listeners.end();
+         ++it)
+      (*it)->notifyOfAddLibrary(libNode);
+  }
+
   bool ExecListenerHub::initialize()
   {
     bool success = true;
@@ -178,11 +138,6 @@ namespace PLEXIL
     return success;
   }
 
-  /**
-   * @brief Perform listener-specific startup.
-   * @return true if successful, false otherwise.
-   * @note Default method provided as a convenience for backward compatibility.
-   */
   bool ExecListenerHub::start()
   {
     bool success = true;
@@ -193,11 +148,6 @@ namespace PLEXIL
     return success;
   }
 
-  /**
-   * @brief Perform listener-specific actions to stop.
-   * @return true if successful, false otherwise.
-   * @note Default method provided as a convenience for backward compatibility.
-   */
   bool ExecListenerHub::stop()
   {
     bool success = true;
@@ -208,11 +158,6 @@ namespace PLEXIL
     return success;
   }
 
-  /**
-   * @brief Perform listener-specific actions to reset to initialized state.
-   * @return true if successful, false otherwise.
-   * @note Default method provided as a convenience for backward compatibility.
-   */
   bool ExecListenerHub::reset()
   {
     bool success = true;
@@ -223,11 +168,6 @@ namespace PLEXIL
     return success;
   }
 
-  /**
-   * @brief Perform listener-specific actions to shut down.
-   * @return true if successful, false otherwise.
-   * @note Default method provided as a convenience for backward compatibility.
-   */
   bool ExecListenerHub::shutdown()
   {
     bool success = true;

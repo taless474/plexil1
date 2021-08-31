@@ -58,8 +58,8 @@ namespace PLEXIL
 
     //! \brief Perform the operation on the expressions and store the result.
     //! \param result Reference to the result variable.
-    //! \param argA The first subexpression.
-    //! \param argB The second subexpression.
+    //! \param arg0 The first subexpression.
+    //! \param arg1 The second subexpression.
     //! \return true if the result of the operation is known, false if not.
     virtual bool operator()(NUM &result, Expression const *arg0, Expression const *arg1) const;
 

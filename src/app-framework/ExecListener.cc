@@ -41,7 +41,8 @@ namespace PLEXIL
   }
 
   ExecListener::ExecListener(pugi::xml_node const xml)
-    : m_filter(NULL)
+    : m_xml(xml),
+      m_filter(NULL)
   {
   }
 
@@ -156,11 +157,6 @@ namespace PLEXIL
   bool ExecListener::shutdown() 
   { 
     return true; 
-  }
-
-  void ExecListener::setFilter(ExecListenerFilter *fltr)
-  {
-    m_filter = fltr;
   }
 
   //

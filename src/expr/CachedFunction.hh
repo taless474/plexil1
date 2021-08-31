@@ -64,7 +64,7 @@ namespace PLEXIL
   //! \param expr1 Pointer to the function's first argument.
   //! \param expr2 Pointer to the function's second argument.
   //! \param garbage1 true if the first argument should be deleted with the function, false otherwise.
-  //! \param garbage1 true if the second argument should be deleted with the function, false otherwise.
+  //! \param garbage2 true if the second argument should be deleted with the function, false otherwise.
   //! \return Pointer to the newly allocated Function.
   //! \note Convenience wrapper for unit test.
   //! \ingroup Expressions
