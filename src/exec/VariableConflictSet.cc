@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2016, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -45,12 +45,12 @@ namespace PLEXIL
   {
   }
 
-  Expression const *VariableConflictSet::getVariable() const
+  Assignable const *VariableConflictSet::getVariable() const
   {
     return m_variable;
   }
 
-  void VariableConflictSet::setVariable(Expression *a)
+  void VariableConflictSet::setVariable(Assignable *a)
   {
     m_variable = a;
   }
