@@ -35,16 +35,14 @@ namespace PLEXIL
   class ExecListenerBase;
   class Node;
 
+  //! \defgroup Exec-Core The %PLEXIL Executive core
+
   //! \class PlexilExec
-  //! \brief Abstract base class defining the API of the %PLEXIL executive core.
-  //! \addtogroup Exec-Core The %PLEXIL Executive core
+  //! \brief Stateless abstract base class defining the API of the %PLEXIL executive core.
+  //! \ingroup Exec-Core
   class PlexilExec
   {
   public:
-    //! \brief Default constructor.
-    PlexilExec()
-    {
-    }
 
     //! \brief Virtual destructor.
     virtual ~PlexilExec()
@@ -111,11 +109,6 @@ namespace PLEXIL
     //! \return Const reference to the list of root nodes.
     virtual std::list<Node *> const &getPlans() const = 0;
 
-  private:
-
-    // Copy constructor, assignment not implemented
-    PlexilExec(PlexilExec const &);
-    PlexilExec &operator=(PlexilExec const &);
   };
 
   //! \brief Global pointer to the active PlexilExec instance.
