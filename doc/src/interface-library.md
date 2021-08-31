@@ -8,10 +8,12 @@ The %PLEXIL Executive distribution includes the following interfaces.
 ## Prebuilt interfaces
 
 The following interface adapters are built by default, and are
-available to all PLEXIL applications.  Some can be disabled at
+available to all %PLEXIL applications.  Some can be disabled at
 build configuration time.
 
-\see getting-started.html#configure-options
+See 
+[Options to the configure script](getting-started.html#configure-options)
+for more information.
 
 ### TimeAdapter {#TimeAdapter}
 
