@@ -50,8 +50,8 @@ class TransitionExecConnector :
   public PlexilExec
 {
 public:
-  TransitionExecConnector() : PlexilExec() {}
-  ~TransitionExecConnector() {}
+  TransitionExecConnector() {}
+  virtual ~TransitionExecConnector() {}
   
   virtual void addCandidateNode(Node * /* node */) {}
   virtual void enqueueAssignment(Assignment * /* assign */) {}
