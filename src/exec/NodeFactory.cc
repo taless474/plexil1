@@ -37,36 +37,53 @@
 
 namespace PLEXIL
 {
-  // NodeFactory implementation class
 
+  //! \brief Concrete node factory class template.
+  //! \ingroup Exec-Core
   template<class NODE_TYPE>
   class ConcreteNodeFactory : public NodeFactory
   {
   public:
+
+    //! \brief Default constructor.
     ConcreteNodeFactory()
-      : NodeFactory()
     {
     }
 
+    //! \brief Virtual destructor.
     virtual ~ConcreteNodeFactory()
     {
     }
 
 
   private:
-    // Deliberately unimplemented
-    ConcreteNodeFactory(const ConcreteNodeFactory&);
-    ConcreteNodeFactory& operator=(const ConcreteNodeFactory&);
 
+    // Copy, move constructors, assignment operators deliberately unimplemented
+#if __cplusplus >= 201103L
+    ConcreteNodeFactory(ConcreteNodeFactory const &) = delete;
+    ConcreteNodeFactory(ConcreteNodeFactory &&) = delete;
+    ConcreteNodeFactory &operator=(ConcreteNodeFactory const &) = delete;
+    ConcreteNodeFactory &operator=(ConcreteNodeFactory &&) = delete;
+#else
+    ConcreteNodeFactory(ConcreteNodeFactory const &);
+    ConcreteNodeFactory &operator=(ConcreteNodeFactory const &);
+#endif
+
+    //! \brief Primary factory method.
+    //! \param name The NodeId of the node to construct.
+    //! \param parent The parent node of the node to be constructed.
+    //! \return Pointer to the new NodeImpl.
     NodeImpl *create(char const *name, NodeImpl *parent) const
     {
       return new NODE_TYPE(name, parent);
     }
 
-    /**
-     * @brief Alternate constructor.  Used only by Exec test module.
-     */
-
+    //! \brief Alternate factory method.  Used only by Exec test module.
+    //! \param type The name of the node type to construct.
+    //! \param name The NodeId of the node to construct.
+    //! \param state The initial NodeState.
+    //! \param parent The parent node of the node to be constructed.
+    //! \return Pointer to the new NodeImpl.
     NodeImpl *create(const std::string& type,
                      const std::string& name, 
                      NodeState state,
@@ -77,8 +94,14 @@ namespace PLEXIL
 
   };
 
+  //! \internal
+  //! \ingroup Exec-Core
+  ///@{
+
+  //! \brief The array of node factories, indexed by PlexilNodeType.
   static NodeFactory* s_nodeFactories[NodeType_error];
 
+  //! \brief Delete all node factories.  Cleanup function to be run at application exit.
   static void purgeNodeFactories()
   {
     NodeFactory* tmp;
@@ -87,6 +110,8 @@ namespace PLEXIL
         delete tmp;
   }
 
+  
+  //! \brief Populate the array of node factories, and set up the cleanup function.
   static void initializeNodeFactories()
   {
     plexilAddFinalizer(&purgeNodeFactories);
@@ -101,6 +126,9 @@ namespace PLEXIL
     debugMsg("NodeFactory", " initialized");
   }
 
+  //! \brief Get the node factory for the given node type.
+  //! \param nodeType The type of the node to be constructed.
+  //! \return Const pointer to the NodeFactory instance.
   static NodeFactory const *getNodeFactory(PlexilNodeType nodeType)
   {
     assertTrue_2((nodeType > NodeType_uninitialized)
@@ -117,17 +145,8 @@ namespace PLEXIL
     return s_nodeFactories[nodeType];
   }
 
-  NodeFactory::NodeFactory()
-  {
-  }
+  ///@}
 
-  NodeFactory::~NodeFactory()
-  {
-  }
-
-  /**
-   * @brief Primary factory method.
-   */
   NodeImpl *NodeFactory::createNode(char const *name, 
                                     PlexilNodeType nodeType,
                                     NodeImpl *parent)
@@ -138,9 +157,6 @@ namespace PLEXIL
     return result;
   }
 
-  /**
-   * @brief Alternate factory method.  Used only by Exec test module.
-   */
   NodeImpl *NodeFactory::createNode(const std::string& type, 
                                     const std::string& name, 
                                     NodeState state,
