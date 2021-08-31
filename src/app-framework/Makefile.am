@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,7 @@ include_HEADERS = commandHandlerDefs.hh lookupHandlerDefs.hh \
  plannerUpdateHandlerDefs.hh AdapterConfiguration.hh AdapterExecInterface.hh \
  AdapterFactory.hh ExecApplication.hh ExecListener.hh ExecListenerFactory.hh \
  ExecListenerFilter.hh ExecListenerFilterFactory.hh ExecListenerHub.hh \
- InterfaceAdapter.hh ListenerFilters.hh \
- PlexilListener.hh SerializedInputQueue.hh SimpleInputQueue.hh
+ InterfaceAdapter.hh InterfaceSchema.hh ListenerFilters.hh
 
 # Headers of internal interest only
 noinst_HEADERS = InterfaceManager.hh Launcher.hh UtilityAdapter.hh
@@ -66,8 +65,8 @@ libPlexilAppFramework_la_SOURCES = AdapterConfiguration.cc \
  AdapterExecInterface.cc AdapterFactory.cc ExecApplication.cc \
  ExecListener.cc ExecListenerFactory.cc ExecListenerFilter.cc \
  ExecListenerFilterFactory.cc ExecListenerHub.cc InterfaceAdapter.cc \
- InterfaceManager.cc Launcher.cc ListenerFilters.cc SerializedInputQueue.cc \
- SimpleInputQueue.cc UtilityAdapter.cc
+ InterfaceManager.cc InterfaceSchema.cc Launcher.cc ListenerFilters.cc \
+ SerializedInputQueue.cc SimpleInputQueue.cc UtilityAdapter.cc
 
 if UNIX_TIME_OPT
 include_HEADERS += TimeAdapter.hh

@@ -27,8 +27,9 @@ add_library(PlexilAppFramework ${PlexilExec_SHARED_OR_STATIC}
   AdapterConfiguration.cc AdapterExecInterface.cc
   AdapterFactory.cc ExecApplication.cc ExecListener.cc
   ExecListenerFactory.cc ExecListenerFilter.cc ExecListenerFilterFactory.cc
-  ExecListenerHub.cc InterfaceAdapter.cc InterfaceManager.cc Launcher.cc
-  ListenerFilters.cc SerializedInputQueue.cc SimpleInputQueue.cc UtilityAdapter.cc
+  ExecListenerHub.cc InterfaceAdapter.cc InterfaceManager.cc InterfaceSchema.cc
+  Launcher.cc ListenerFilters.cc SerializedInputQueue.cc SimpleInputQueue.cc
+  UtilityAdapter.cc
   )
 
 install(TARGETS PlexilAppFramework
@@ -68,7 +69,7 @@ install(FILES
   AdapterConfiguration.hh AdapterExecInterface.hh AdapterFactory.hh
   ExecApplication.hh ExecListener.hh ExecListenerFactory.hh
   ExecListenerFilter.hh ExecListenerFilterFactory.hh ExecListenerHub.hh
-  InterfaceAdapter.hh ListenerFilters.hh PlexilListener.hh
+  InterfaceAdapter.hh InterfaceSchema.hh ListenerFilters.hh
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if(PLAN_DEBUG_LISTENER)

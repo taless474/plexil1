@@ -1,4 +1,4 @@
-## Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+## Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 ##  All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ target_link_libraries(PlexilExec PUBLIC
 # Public includes
 install(FILES 
   Assignment.hh AssignmentNode.hh CommandNode.hh ExecListenerBase.hh
-  InterfaceSchema.hh LibraryCallNode.hh ListNode.hh Node.hh NodeImpl.hh
+  LibraryCallNode.hh ListNode.hh Node.hh NodeImpl.hh
   NodeFactory.hh NodeFunction.hh NodeOperator.hh NodeOperatorImpl.hh
   NodeOperators.hh NodeTimepointValue.hh NodeTransition.hh
   NodeVariableMap.hh NodeVariables.hh PlexilExec.hh PlexilNodeType.hh

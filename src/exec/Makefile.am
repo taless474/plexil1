@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -31,17 +31,15 @@ libPlexilExec_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/intfc \
  -I$(top_srcdir)/expr -I$(top_srcdir)/value -I$(top_srcdir)/utils
 
 include_HEADERS = Assignment.hh AssignmentNode.hh CommandNode.hh \
- ExecListenerBase.hh InterfaceSchema.hh \
- LibraryCallNode.hh ListNode.hh Node.hh NodeImpl.hh NodeFactory.hh \
- NodeFunction.hh NodeOperator.hh NodeOperatorImpl.hh \
+ ExecListenerBase.hh LibraryCallNode.hh ListNode.hh Node.hh NodeImpl.hh \
+ NodeFactory.hh NodeFunction.hh NodeOperator.hh NodeOperatorImpl.hh \
  NodeOperators.hh NodeTimepointValue.hh NodeTransition.hh \
  NodeVariableMap.hh NodeVariables.hh \
  PlexilExec.hh PlexilNodeType.hh VariableConflictSet.hh UpdateNode.hh \
  plan-utils.hh
 
 libPlexilExec_la_SOURCES = Assignment.cc AssignmentNode.cc CommandNode.cc \
- InterfaceSchema.cc LibraryCallNode.cc \
- ListNode.cc NodeImpl.cc NodeFactory.cc \
+ LibraryCallNode.cc ListNode.cc NodeImpl.cc NodeFactory.cc \
  NodeFunction.cc NodeOperator.cc NodeOperatorImpl.cc \
  NodeOperators.cc NodeTimepointValue.cc NodeVariableMap.cc NodeVariables.cc \
  PlexilExec.cc PlexilNodeType.cc UpdateNode.cc VariableConflictSet.cc \
