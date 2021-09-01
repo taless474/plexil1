@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -215,12 +215,12 @@ static Value fetch (const string& name, const vector<Value>& args){
     }
     else{
       string data = args[0].valueToString();
-      int pos;
+      Integer pos;
       args[1].getValue(pos);
       if(args.size()==3){
 	const string newval = args[2].valueToString();
 	const string beginning = (pos>0)?data.substr(0,pos):"";
-	const string end = (pos<data.length())?data.substr(pos+1):"";
+	const string end = (pos < (Integer) data.length()) ? data.substr(pos+1) : "";
 	retval =  beginning + newval + end ;
       }
       else retval = string(1, data[pos]);

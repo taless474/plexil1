@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,7 @@ static string error = "Error in checkpoint system: ";
 
 // Check that the boot number is valid
 bool CheckpointSystem::valid_boot(Integer boot_num){
-  return boot_num >= 0 && boot_num < m_data_vector.size();
+  return boot_num >= 0 && boot_num < (Integer) m_data_vector.size();
 }
 
 bool CheckpointSystem::valid_checkpoint(const string& checkpoint_name,Integer boot_num){
@@ -67,7 +67,7 @@ bool CheckpointSystem::valid_checkpoint(const string& checkpoint_name,Integer bo
   return checkpoints.find(checkpoint_name) != checkpoints.end();
 }
 
-Value time_to_Value(Nullable<Real> time){
+Value time_to_Value(const Nullable<Real> &time){
   if(time.has_value()) return time.value();
   else return Unknown;
 }
@@ -134,7 +134,7 @@ Integer CheckpointSystem::numUnhandledBoots(){
   {
     Guard local_guard(m_rw,read);
     Integer retval = 0;
-    for(int i=0;i<m_data_vector.size();i++){
+    for (Integer i = 0; i < (Integer) m_data_vector.size(); i++) {
       BootData boot = m_data_vector.at(i);
       if(!boot.is_ok) retval++;
     }
@@ -216,7 +216,7 @@ Value CheckpointSystem::getCheckpointLastPassed(const string& checkpoint_name){
   {
     Guard local_guard(m_rw,read);
     Value retval = Unknown;
-    for (Integer i=0;i<m_data_vector.size();i++){
+    for (Integer i = 0; i < (Integer) m_data_vector.size(); i++) {
       map<const string, CheckpointData> checkpoints = m_data_vector.at(i).checkpoints;
       if(checkpoints.find(checkpoint_name)!=checkpoints.end() && checkpoints.at(checkpoint_name).state){
 	retval = i;

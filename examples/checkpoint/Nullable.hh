@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2020, Universities Space Research Association (USRA).
+/* Copyright (c) 2020-2021, Universities Space Research Association (USRA).
 *  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@ class Nullable{
 public:
   Nullable(T t) : data(t),      some(true) {}
   Nullable()    : some(false) {}
-  Nullable(const Nullable<T> &o) : data(o.data), some(o.some){}
+  Nullable(const Nullable<T> &o) : data(o.some ? o.data : T()), some(o.some){}
   Nullable<T> & operator=(const Nullable<T> &o){
     data = o.data;
     some = o.some;
