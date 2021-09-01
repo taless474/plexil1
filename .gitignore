@@ -1,5 +1,7 @@
 bin
 include
+# MacOS detritus
+.DS_Store
 # Emacs backup file names
 *~
 \#*#
