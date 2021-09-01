@@ -126,6 +126,17 @@ namespace PLEXIL
 
   private:
 
+    // Deliberately unimplemented.
+#if __cplusplus >= 201103L
+    Notifier(Notifier const &) = delete;
+    Notifier(Notifier &&) = delete;
+    Notifier &operator=(Notifier const &) = delete;
+    Notifier &operator=(Notifier &&) = delete;
+#else
+    Notifier(Notifier const &);
+    Notifier &operator=(Notifier const &);
+#endif
+
     //
     // Essential member variables
     //
