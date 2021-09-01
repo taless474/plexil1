@@ -101,8 +101,15 @@ namespace PLEXIL
   private:
 
     // deliberately unimplemented
+#if __cplusplus >= 201103L
+    RecursiveThreadMutex( const RecursiveThreadMutex& ) = delete;
+    RecursiveThreadMutex( RecursiveThreadMutex&& ) = delete;
+    RecursiveThreadMutex& operator=( const RecursiveThreadMutex& ) = delete;
+    RecursiveThreadMutex& operator=( RecursiveThreadMutex&& ) = delete;
+#else
     RecursiveThreadMutex( const RecursiveThreadMutex& );
-    const RecursiveThreadMutex& operator=( const RecursiveThreadMutex& );
+    RecursiveThreadMutex& operator=( const RecursiveThreadMutex& );
+#endif
 
     pthread_mutex_t m_mutex; //!< The platform's native mutex.
     pthread_t m_lockingThread; //!< The thread currently holding the mutex.
@@ -138,12 +145,18 @@ namespace PLEXIL
 
   private:
 
-    // Default and copy constructors deliberately unimplemented.
+    // Deliberately unimplemented.
+#if __cplusplus >= 201103L
+    RTMutexGuard() = delete;
+    RTMutexGuard(const RTMutexGuard &) = delete;
+    RTMutexGuard(RTMutexGuard &&) = delete;
+    RTMutexGuard& operator=(const RTMutexGuard &) = delete;
+    RTMutexGuard& operator=(RTMutexGuard &&) = delete;
+#else
     RTMutexGuard();
     RTMutexGuard(const RTMutexGuard &);
-
-    // Copy assignment deliberately unimplemented.
-    const RTMutexGuard& operator=(const RTMutexGuard &);
+    RTMutexGuard& operator=(const RTMutexGuard &);
+#endif
 
     RecursiveThreadMutex& m_mutex; //!< The RecursiveThreadMutex being guarded.
   };

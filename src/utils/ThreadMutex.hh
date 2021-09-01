@@ -77,8 +77,15 @@ namespace PLEXIL
   private:
 
     // deliberately unimplemented
+#if __cplusplus >= 201103L
+    ThreadMutex( const ThreadMutex& ) = delete;
+    ThreadMutex( ThreadMutex&& ) = delete;
+    ThreadMutex& operator=( const ThreadMutex& ) = delete;
+    ThreadMutex& operator=( ThreadMutex&& ) = delete;
+#else
     ThreadMutex( const ThreadMutex& );
-    const ThreadMutex& operator=( const ThreadMutex& );
+    ThreadMutex& operator=( const ThreadMutex& );
+#endif
 
     pthread_mutex_t m_mutex; //!< The platform's native mutex.
   };
@@ -105,12 +112,18 @@ namespace PLEXIL
 
   private:
 
-    // Default and copy constructors deliberately unimplemented.
+    // Deliberately unimplemented.
+#if __cplusplus >= 201103L
+    ThreadMutexGuard() = delete;
+    ThreadMutexGuard(const ThreadMutexGuard &) = delete;
+    ThreadMutexGuard(ThreadMutexGuard &&) = delete;
+    ThreadMutexGuard& operator=(const ThreadMutexGuard &) = delete;
+    ThreadMutexGuard& operator=(ThreadMutexGuard &&) = delete;
+#else
     ThreadMutexGuard();
     ThreadMutexGuard(const ThreadMutexGuard &);
-
-    // Copy assignment deliberately unimplemented.
-    const ThreadMutexGuard& operator=(const ThreadMutexGuard &);
+    ThreadMutexGuard& operator=(const ThreadMutexGuard &);
+#endif
 
     ThreadMutex& m_mutex; //!< The ThreadMutex instance being guarded.
   };
