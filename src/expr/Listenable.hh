@@ -54,7 +54,7 @@ namespace PLEXIL
   };
 
   //! \class Listenable
-  //! \brief Base class defining the API for objects to which an
+  //! \brief Stateless base class defining the API for objects to which an
   //!        ExpressionListener instance may be attached.
   //!
   //! The Listenable base class defines the API for change
@@ -169,14 +169,6 @@ namespace PLEXIL
     virtual bool isPropagationSource() const
     {
       return false;
-    }
- 
-  protected:
-
-    //! \brief Default constructor.
-    //! \note Protected; may only be called from derived classes.
-    Listenable()
-    {
     }
 
   };

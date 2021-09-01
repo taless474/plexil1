@@ -32,23 +32,13 @@ namespace PLEXIL
 {
 
   //! \class GetValueImpl
-  //! \brief Mixin class providing common behavior for Expression classes
+  //! \brief Stateless mixin class providing common behavior for Expression classes
   //!        specialized for a specific value type.
   //! \ingroup Expressions
   template <typename T>
   class GetValueImpl : virtual public Expression
   {
-  protected:
-    //! \brief Default constructor.
-    GetValueImpl() {}
-
-  private:
-    // Not implemented
-    GetValueImpl(GetValueImpl const &);
-
   public:
-    //! \brief Virtual destructor.
-    virtual ~GetValueImpl() {}
 
     //! \brief Return the value type of the expression.
     //! \return The value type.
@@ -80,17 +70,7 @@ namespace PLEXIL
   template <>
   class GetValueImpl<Integer> : virtual public Expression
   {
-  protected:
-    //! \brief Default constructor.
-    GetValueImpl() {}
-
-  private:
-    // Not implemented
-    GetValueImpl(GetValueImpl const &);
-
   public:
-    //! \brief Virtual destructor.
-    virtual ~GetValueImpl() {}
 
     //! \brief Return the value type of the expression.
     //! \return The value type.
@@ -127,17 +107,7 @@ namespace PLEXIL
   template <>
   class GetValueImpl<String> : virtual public Expression
   {
-  protected:
-    //! \brief Default constructor.
-    GetValueImpl() {}
-
-  private:
-    // Not implemented
-    GetValueImpl(GetValueImpl const &);
-
   public:
-    //! \brief Virtual destructor.
-    ~GetValueImpl() {}
 
     //! \brief Return the value type of the expression.
     //! \return The value type.
@@ -173,17 +143,7 @@ namespace PLEXIL
   template <typename T>
   class GetValueImpl<ArrayImpl<T> > : virtual public Expression
   {
-  protected:
-    //! \brief Default constructor.
-    GetValueImpl() {}
-
-  private:
-    // Not implemented
-    GetValueImpl(GetValueImpl const &);
-
   public:
-    //! \brief Virtual destructor.
-    virtual ~GetValueImpl() {}
 
     //! \brief Return the value type of the expression.
     //! \return The value type.

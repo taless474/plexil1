@@ -45,7 +45,7 @@ namespace PLEXIL
   //! \defgroup Expressions The PLEXIL Expression subsystem
 
   //! \class Expression
-  //! \brief Abstract base class for expressions in the %PLEXIL language.
+  //! \brief Stateless abstract base class for expressions in the %PLEXIL language.
   //!
   //! The Expression class is the basis for expressions in the %PLEXIL
   //! Executive.  It defines an API for querying an expression.  The
@@ -76,22 +76,7 @@ namespace PLEXIL
 
   class Expression : virtual public Listenable
   {
-  protected:
-
-    //! \brief Default constructor.
-    //! \note Protected; may only be called from derived classes.
-    Expression();
-
-  private:
-
-    // Unimplemented
-    Expression(Expression const &);
-    Expression &operator=(Expression const &);
-
   public:
-
-    //! \brief Virtual destructor.
-    virtual ~Expression();
 
     //
     // Essential type-invariant Expression API
