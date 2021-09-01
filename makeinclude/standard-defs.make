@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2020, Universities Space Research Association (USRA).
+# Copyright (c) 2006-2021, Universities Space Research Association (USRA).
 #  All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -44,9 +44,9 @@ ifneq ($(wildcard $(CONFIGURE_ENV)),)
 include $(CONFIGURE_ENV)
 
 # ... but in case we are reconfiguring:
-INITIAL_CPPFLAGS	?= $(CONFIGURED_CPPFLAGS)
-INITIAL_CFLAGS		?= $(CONFIGURED_CFLAGS)
-INITIAL_CXXFLAGS	?= $(CONFIGURED_CXXFLAGS)
+INITIAL_CPPFLAGS    ?= $(CONFIGURED_CPPFLAGS)
+INITIAL_CFLAGS      ?= $(CONFIGURED_CFLAGS)
+INITIAL_CXXFLAGS    ?= $(CONFIGURED_CXXFLAGS)
 
 else 
 #
@@ -62,7 +62,7 @@ else
 ##### *** Fortunately clang emulates gcc's option parsing.
 
 # Install the products into the source tree by default.
-PREFIX 		?= $(PLEXIL_HOME)
+PREFIX      ?= $(PLEXIL_HOME)
 INCLUDEDIR  ?= $(PREFIX)/include
 EXEC_PREFIX ?= $(PREFIX)
 BINDIR      ?= $(EXEC_PREFIX)/bin
@@ -70,13 +70,14 @@ LIBDIR      ?= $(EXEC_PREFIX)/lib
 # more?
 
 # Use the platform's default compilers.
-CC			?= cc
-CXX			?= c++
+CPP         ?= cpp
+CC          ?= cc
+CXX         ?= c++
 
 # Sane defaults for compiler flags.
-INITIAL_CPPFLAGS	?=
-INITIAL_CFLAGS		?= -g -O2 -Wall
-INITIAL_CXXFLAGS	?= $(INITIAL_CFLAGS) -std=c++03
+INITIAL_CPPFLAGS    ?=
+INITIAL_CFLAGS      ?= -g -O2 -Wall
+INITIAL_CXXFLAGS    ?= $(INITIAL_CFLAGS) -std=c++03
 
 # end defaults for configure
 endif
@@ -87,55 +88,55 @@ endif
 #
 
 # Commands
-ETAGS		?= etags
-LN_S		?= /bin/ln -s
+ETAGS       ?= etags
+LN_S        ?= /bin/ln -s
 SHELL       ?= /bin/sh
 
 # Where build products should be installed.
 # The defaults may be individually overridden by 'configure'.
 
 ifeq ($(BINDIR),)
-BINDIR		:= $(PREFIX)/bin
+BINDIR      := $(PREFIX)/bin
 endif
 
 ifeq ($(INCLUDEDIR),)
-INCLUDEDIR	:= $(PREFIX)/include
+INCLUDEDIR  := $(PREFIX)/include
 endif
 
 ifeq ($(LIBDIR),)
-LIBDIR		:= $(PREFIX)/lib
+LIBDIR      := $(PREFIX)/lib
 endif
 
 
 
-LIBRARY_SEARCH_PATH_FLAG	= -L
-LIB_PATH_FLAGS				= $(LIBRARY_PATH_SEARCH_FLAG)$(LIBDIR)
+LIBRARY_SEARCH_PATH_FLAG    = -L
+LIB_PATH_FLAGS              = $(LIBRARY_PATH_SEARCH_FLAG)$(LIBDIR)
 
-INC_DIRS	:= $(INCLUDEDIR)
+INC_DIRS    := $(INCLUDEDIR)
 
 # FIXME: find way to integrate with 'configure', libtool settings
 # Which variant(s) to build by default
 # These can be overridden at the command line or in the shell environment
 ifeq ($(PLEXIL_STATIC),)
-PLEXIL_SHARED		?= 1
+PLEXIL_SHARED       ?= 1
 else
-PLEXIL_SHARED		?=
+PLEXIL_SHARED       ?=
 endif
 
 ##### Other utilities
 
-CP		?= /bin/cp
-MKDIR	?= /bin/mkdir
+CP      ?= /bin/cp
+MKDIR   ?= /bin/mkdir
 
 DEPEND_FLAGS ?= -MM
 
 # Include path
 
-SYSTEM_INC_DIRS	?=
-INCLUDES	= $(addprefix -isystem,$(SYSTEM_INC_DIRS)) $(addprefix -I,$(INC_DIRS))
+SYSTEM_INC_DIRS ?=
+INCLUDES    = $(addprefix -isystem,$(SYSTEM_INC_DIRS)) $(addprefix -I,$(INC_DIRS))
 
 # Compiler flags for shared libraries
-POSITION_INDEPENDENT_CODE_FLAG	:= -fPIC
+POSITION_INDEPENDENT_CODE_FLAG  := -fPIC
 
 # Compiler flags for static linking
 STATIC_FLAG := -static
@@ -144,18 +145,18 @@ STATIC_FLAG := -static
 
 # Names the library that will be the product of this make.
 # User must set this to be useful.
-LIBRARY		=
+LIBRARY     =
 
 # Standard libraries for application framework based examples
-UE_LIBS		= pugixml PlexilAppFramework PlexilXmlParser PlexilExec PlexilIntfc PlexilExpr PlexilValue PlexilUtils
-EXTRA_LIBS	= 
-LIB_FLAGS	= $(foreach lib,$(EXTRA_LIBS) $(UE_LIBS),-l$(lib))
+UE_LIBS     = pugixml PlexilAppFramework PlexilXmlParser PlexilExec PlexilIntfc PlexilExpr PlexilValue PlexilUtils
+EXTRA_LIBS  = 
+LIB_FLAGS   = $(foreach lib,$(EXTRA_LIBS) $(UE_LIBS),-l$(lib))
 
 ##### Executable support
 
 # Names the executable that will be the product of this make.
 # User must set this to be useful.
-EXECUTABLE	=
+EXECUTABLE  =
 
 #
 # Linker
@@ -164,30 +165,30 @@ EXECUTABLE	=
 # Linker program
 
 # KMD: Command for building archive libraries, if applicable.
-AR		= ar
+AR      = ar
 
 # Command for building shared libraries, if applicable.
-LD		= $(CXX) $(CXXFLAGS) $(foreach flag,$(EXE_FLAGS),$(LINKER_PASSTHROUGH_FLAG)$(flag))
+LD      = $(CXX) $(CXXFLAGS) $(foreach flag,$(EXE_FLAGS),$(LINKER_PASSTHROUGH_FLAG)$(flag))
 
 # Compiler flag to pass an argument to the linker
-LINKER_PASSTHROUGH_FLAG			?= -Wl,
+LINKER_PASSTHROUGH_FLAG         ?= -Wl,
 # Linker flag for link-time library search path
-LIBRARY_PATH_SEARCH_FLAG		:= -L
-LINKTIME_SHARED_LIBRARY_PATH_FLAG	:= -L
+LIBRARY_PATH_SEARCH_FLAG        := -L
+LINKTIME_SHARED_LIBRARY_PATH_FLAG   := -L
 # Linker flag for static link-time library search path
-STATIC_LIBRARY_PATH_FLAG		:= -L
+STATIC_LIBRARY_PATH_FLAG        := -L
 # Linker flag for run-time library search path
-RUNTIME_SHARED_LIBRARY_PATH_FLAG	:= -rpath
+RUNTIME_SHARED_LIBRARY_PATH_FLAG    := -rpath
 # Linker flag to construct shared library
-SHARED_FLAGS				:= -shared
+SHARED_FLAGS                := -shared
 # Extension for shared library
-SUFSHARE				:= .so
+SUFSHARE                := .so
 # Linker flag to construct statically linked executable
-STATIC_EXE_FLAG				:= -Bstatic
+STATIC_EXE_FLAG             := -Bstatic
 
-EXE_FLAGS				=
+EXE_FLAGS               =
 ifneq ($(PLEXIL_STATIC),)
-EXE_FLAGS				+= $(STATIC_EXE_FLAG)
+EXE_FLAGS               += $(STATIC_EXE_FLAG)
 endif
 
 ##### Java
@@ -233,8 +234,8 @@ endif
 
 # FIXME: User supplied flags should override defaults.
 CPPFLAGS    = $(CONFIGURED_CPPFLAGS) $(VARIANT_CPPFLAGS) $(INCLUDES)
-CFLAGS		= $(CONFIGURED_CFLAGS) $(VARIANT_CFLAGS)
-CXXFLAGS	= $(CONFIGURED_CXXFLAGS) $(VARIANT_CXXFLAGS)
+CFLAGS      = $(CONFIGURED_CFLAGS) $(VARIANT_CFLAGS)
+CXXFLAGS    = $(CONFIGURED_CXXFLAGS) $(VARIANT_CXXFLAGS)
 
 include $(PLEXIL_HOME)/makeinclude/platform-defs.make
 
