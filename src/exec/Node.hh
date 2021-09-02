@@ -61,11 +61,6 @@ namespace PLEXIL {
   {
   public:
 
-    //! \brief Virtual destructor.
-    virtual ~Node()
-    {
-    }
-
     //
     // LinkedQueue API used by PlexilExec
     //
@@ -155,19 +150,6 @@ namespace PLEXIL {
     //! \return The string.
     virtual std::string toString(const unsigned int indent = 0) = 0;
 
-  protected:
-
-    //! \brief Protected constructor.  Only available to derived classes.
-    Node()
-      : NodeConnector(),
-        ExpressionListener()
-    {
-    }
-
-  private:
-    // Not implemented
-    Node(Node const &);
-    Node &operator=(Node const &);
   };
 
   // See implementation in NodeImpl.cc
