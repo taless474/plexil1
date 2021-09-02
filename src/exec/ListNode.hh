@@ -178,6 +178,20 @@ namespace PLEXIL
     //! \brief The vector of child nodes.
     //! \note Shared with derived class LibraryCallNode
     std::vector<NodeImpl *> m_children;
+
+  private:
+
+    // Deliberately unimplemented
+#if __cplusplus >= 201103L
+    ListNode(ListNode const &) = delete;
+    ListNode(ListNode &&) = delete;
+    ListNode &operator=(ListNode const &) = delete;
+    ListNode &operator=(ListNode &&) = delete;
+#else
+    ListNode(ListNode const &);
+    ListNode &operator=(ListNode const &);
+#endif
+
   };
 
 }

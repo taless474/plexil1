@@ -86,6 +86,17 @@ namespace PLEXIL
 
     NodeVariableMap *m_aliasMap; //!< The map of called node names to actual expressions.
 
+    // Deliberately unimplemented
+#if __cplusplus >= 201103L
+    LibraryCallNode(LibraryCallNode const &) = delete;
+    LibraryCallNode(LibraryCallNode &&) = delete;
+    LibraryCallNode &operator=(LibraryCallNode const &) = delete;
+    LibraryCallNode &operator=(LibraryCallNode &&) = delete;
+#else
+    LibraryCallNode(LibraryCallNode const &);
+    LibraryCallNode &operator=(LibraryCallNode const &);
+#endif
+
   };
 
 }

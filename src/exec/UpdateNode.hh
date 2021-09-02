@@ -120,6 +120,17 @@ namespace PLEXIL
     //! \brief Construct a dummy update for unit testing.
     void createDummyUpdate();
 
+    // Deliberately unimplemented
+#if __cplusplus >= 201103L
+    UpdateNode(UpdateNode const &) = delete;
+    UpdateNode(UpdateNode &&) = delete;
+    UpdateNode &operator=(UpdateNode const &) = delete;
+    UpdateNode &operator=(UpdateNode &&) = delete;
+#else
+    UpdateNode(UpdateNode const &);
+    UpdateNode &operator=(UpdateNode const &);
+#endif
+
     Update *m_update; //!< Pointer to the Update object.
   };
 

@@ -803,6 +803,17 @@ namespace PLEXIL
     //! \note Called only from NodeImpl::print.
     void printVariables(std::ostream& stream, const unsigned int indent = 0) const;
 
+    // Deliberately unimplemented
+#if __cplusplus >= 201103L
+    NodeImpl(NodeImpl const &) = delete;
+    NodeImpl(NodeImpl &&) = delete;
+    NodeImpl &operator=(NodeImpl const &) = delete;
+    NodeImpl &operator=(NodeImpl &&) = delete;
+#else
+    NodeImpl(NodeImpl const &);
+    NodeImpl &operator=(NodeImpl const &);
+#endif
+
   };
 
 }

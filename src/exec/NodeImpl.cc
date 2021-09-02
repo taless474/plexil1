@@ -145,8 +145,7 @@ namespace PLEXIL
   }
 
   NodeImpl::NodeImpl(char const *nodeId, NodeImpl *parent)
-    : Node(),
-      Notifier(),
+    : Notifier(),
       m_next(NULL),
       m_queueStatus(0),
       m_state(INACTIVE_STATE),
@@ -179,7 +178,7 @@ namespace PLEXIL
                      const std::string& name, 
                      NodeState state,
                      NodeImpl *parent)
-    : Node(),
+    : Notifier(),
       m_next(NULL),
       m_queueStatus(0),
       m_state(state),

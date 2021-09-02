@@ -137,6 +137,17 @@ namespace PLEXIL
     //! \brief Abort the command being executed.
     void abort();
 
+    // Deliberately unimplemented
+#if __cplusplus >= 201103L
+    CommandNode(CommandNode const &) = delete;
+    CommandNode(CommandNode &&) = delete;
+    CommandNode &operator=(CommandNode const &) = delete;
+    CommandNode &operator=(CommandNode &&) = delete;
+#else
+    CommandNode(CommandNode const &);
+    CommandNode &operator=(CommandNode const &);
+#endif
+
     Command *m_command; //!< The command to be performed.
   };
 

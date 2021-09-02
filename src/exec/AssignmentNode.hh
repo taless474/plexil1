@@ -131,6 +131,17 @@ namespace PLEXIL
     //! \note Only used in the unit test variant constructor.
     void initDummyAssignment();
 
+    // Deliberately unimplemented
+#if __cplusplus >= 201103L
+    AssignmentNode(AssignmentNode const &) = delete;
+    AssignmentNode(AssignmentNode &&) = delete;
+    AssignmentNode &operator=(AssignmentNode const &) = delete;
+    AssignmentNode &operator=(AssignmentNode &&) = delete;
+#else
+    AssignmentNode(AssignmentNode const &);
+    AssignmentNode &operator=(AssignmentNode const &);
+#endif
+
     Assignment *m_assignment;   //!< Pointer to the Assignment object.
     int32_t m_priority;         //!< The priority of this node.
   };
