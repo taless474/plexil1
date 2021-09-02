@@ -39,6 +39,13 @@ namespace PLEXIL
   class Expression;
   class NodeConnector;
 
+  //! \file createExpression.hh
+  //! \brief Declares the interface to the XML parser for expressions.
+  //! \ingroup XML-parser
+
+  //! \ingroup XML-parser
+  ///@{
+
   //! \brief Check the XML for validity as an expression.
   //! \param nodeId Name of the node to which the expression belongs.
   //! \param expr The XML representation of the expression.
@@ -88,9 +95,7 @@ namespace PLEXIL
                                       NodeConnector *node,
                                       bool& wasCreated);
 
-  //! \brief Deallocate all factories
-  // FIXME
-  // extern void purgeExpressionFactories();
+  ///@}
 
 } // namespace PLEXIL
 

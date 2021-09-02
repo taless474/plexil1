@@ -38,8 +38,9 @@ namespace PLEXIL
 {
   class SymbolTable;
 
-  // \struct Library
-  // \brief Internal representation of a loaded LibraryNode.
+  //! \struct Library
+  //! \brief Internal representation of a loaded LibraryNode.
+  //! \ingroup XML-parser
   struct Library {
     //! \brief Pointer to a pre-checked XML document.
     pugi::xml_document *doc;
@@ -59,6 +60,9 @@ namespace PLEXIL
       : doc(d), symtab(s)
     {}
   };
+
+  //! \ingroup XML-parser
+  ///@{
 
   //! \brief Get the current library search path.
   //! \return Const reference to the path.
@@ -100,6 +104,8 @@ namespace PLEXIL
   //! \return The Library if successful, NULL otherwise.
   //! \note Ownership of the document is transferred to the caller.
   extern Library const *loadLibraryDocument(pugi::xml_document *doc);
+
+  ///@}
 
 } // namespace PLEXIL
 
