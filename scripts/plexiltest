@@ -230,7 +230,8 @@ do
             fi;;
         
         -l | -library )
-            validate_file "$1" "$2"
+            # NOT HERE
+            # validate_file "$1" "$2"
             libraries="$libraries -l $2"
             lib_cmd="$lib_cmd-l $2 "
             shift
@@ -288,10 +289,6 @@ then
         exit 2
     fi
     
-    if [ -n "$check" ]
-    then
-        checker
-    fi
     if [ -z "$quiet" ]
     then
         summarize
@@ -304,6 +301,17 @@ then
     # shellcheck disable=SC2086
     # The unquoted expansions are deliberate
     exec "$prog" $plan_cmd $script_cmd $lib_cmd $lib_dirs_cmd $debug_cmd $viewer $port_cmd $block $quiet
+fi
+
+if [ -n "$libraries" ]
+then
+    # Check library files using the library path
+    for f in $libraries
+    do
+        # The unquoted expansion is deliberate
+        # shellcheck disable=SC2086
+        confirm_library_file_exists "$f" $library_dirs
+    done
 fi
 
 # Check Viewer options
@@ -366,7 +374,7 @@ fi
 # Check plan for errors
 if [ -z "$viewer" ] && [ -n "$check" ]
 then
-    checker
+    checker "$plan_nm"
 fi
 
 # The plan file's extension, used to compute guessed script name.

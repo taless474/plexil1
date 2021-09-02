@@ -30,7 +30,7 @@
 
 plexil_check_prog()
 {
-    if [ ! -e "$1" ]
+    if [ ! -x "$1" ]
     then
         echo "$(basename "$0"): $1 does not exist." >&2
         echo 'You probably need to build it.' >&2
@@ -86,6 +86,65 @@ validate_port()
     fi
 }
 
+# Confirm that the library file exists and is readable.
+# Attempt to emulate exec's behavior.
+# $1 is library name, additional args are library paths
+# Return status of 0 if found, 1 if not found.
+confirm_library_file_exists()
+{
+    local fname="$1"
+    local fname_plx=
+    if printf '%s\n' "$1" | grep -qv '\.plx$'
+    then
+        fname_plx="${1}.plx"
+    fi
+
+    if [ -f "$fname" ] && [ -r "$fname" ]
+    then
+        return 0
+    elif [ -n "$fname_plx" ] && [ -f "$fname_plx" ] && [ -r "$fname_plx" ]
+    then
+        return 0
+    fi
+
+    shift
+    while [ -n "$1" ]
+    do
+        if [ -f "$1/$fname" ] && [ -r "$1/$fname" ]
+        then
+            return 0
+        elif [ -n "$fname_plx" ] && [ -f "$fname_plx" ] && [ -r "$fname_plx" ]
+        then
+            return 0
+        fi
+    done
+
+    echo "$(basename "$0"): Option -l: Library $fname not found" >&2
+    exit 1
+}
+
+# Confirm that the file exists and is readable.
+# $1 is file, additional args are library paths
+# Return status of 0 if found, 1 if not found.
+validate_library_file()
+{
+    if [ -f "$1" ] && [ -r "$1" ]
+    then
+        return 0
+    fi
+
+    local fname="$1"
+    shift
+    while [ -n "$1" ]
+    do
+        if [ -f "$1/$fname" ] && [ -r "$1/$fname" ]
+        then
+            return 0
+        fi
+    done
+
+}
+
 warn()
 {
    if [ -z "$quiet" ]
@@ -94,6 +153,7 @@ warn()
    fi
 }
 
+# $1 = the plan file to check
 checker()
 {
     if [ ! -x "$PLEXIL_HOME/scripts/checkPlexil" ]
@@ -101,15 +161,15 @@ checker()
         echo "$(basename "$0"): $PLEXIL_HOME/scripts/checkPlexil not found." >&2
         exit 1
     fi
-    if [ ! -r "$plan_nm" ]
+    if [ ! -r "$1" ]
     then
-        echo "$(basename "$0"): File $plan_nm does not exist, or is not readable." >&2
+        echo "$(basename "$0"): File $1 does not exist, or is not readable." >&2
         exit 1
     fi
     echo "Checking plan..."
-    if ! "$PLEXIL_HOME/scripts/checkPlexil" "$plan_nm"
+    if ! "$PLEXIL_HOME/scripts/checkPlexil" "$1"
     then
-        echo "$(basename "$0"): $plan_nm contains type errors. See the checker output for details." >&2
+        echo "$(basename "$0"): $1 contains type errors. See the checker output for details." >&2
         exit 1
     fi
 }

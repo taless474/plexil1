@@ -147,15 +147,18 @@ summarize()
     echo
 }
 
+# Use custom executable if requested
 if [ -n "$PLEXIL_EXECUTABLE" ] && [ -x "$PLEXIL_EXECUTABLE" ]
 then
     prog="$PLEXIL_EXECUTABLE"
-elif [ -x "$PLEXIL_HOME"/bin/universalExec ]
+elif [ -f "$PLEXIL_HOME"/bin/universalExec ] && [ -x "$PLEXIL_HOME"/bin/universalExec ]
 then
+    # Use the installed universalExec
     prog="$PLEXIL_HOME"/bin/universalExec
-elif [ -x "$PLEXIL_HOME"/bin/universalExec/universalExec ]
+elif [ -f "$PLEXIL_HOME"/src/universal-exec/universalExec ] && [ -x "$PLEXIL_HOME"/src/universal-exec/universalExec ]
 then
-    prog="$PLEXIL_HOME"/bin/universalExec/universalExec
+    # Use the built-but-not-yet-installed universalExec
+    prog="$PLEXIL_HOME"/src/universal-exec/universalExec
 else
     echo "$(basename "$0"): Plexil executable not found, aborting" >&2
     exit 1
@@ -209,8 +212,8 @@ do
             ;;
 
         --for-viewer )
-            automate="$1";;
-
+            automate="$1"
+            ;;
 
         -h )
             # Is it a help request or a host name?
@@ -254,7 +257,8 @@ do
             ;;
 
         -l | -library )
-            validate_file "$1" "$2"
+            # NOT HERE
+            # validate_file "$1" "$2"
             libraries="$libraries$2 "
             lib_cmd="$lib_cmd-l $2 "
             shift
@@ -291,10 +295,6 @@ if [ -n "$automate" ]
 then
     # Just Do It - presume caller knows what it's doing.
     # We do not expect a local Viewer to use the -h option.
-    if [ -n "$plan_nm" ] && [ -n "$check" ]
-    then
-        checker
-    fi
     config_cmd="-c $config_nm"
     if [ -z "$quiet" ]
     then
@@ -309,6 +309,17 @@ then
     # The unquoted expansions are deliberate
     # shellcheck disable=SC2086
     exec "$prog" $plan_cmd $config_cmd $lib_cmd $lib_dirs_cmd $debug_cmd $viewer $port_cmd $block $quiet
+fi
+
+if [ -n "$libraries" ]
+then
+    # Check library files using the library path
+    for f in $libraries
+    do
+        # The unquoted expansion is deliberate
+        # shellcheck disable=SC2086
+        confirm_library_file_exists "$f" $library_dirs
+    done
 fi
 
 if [ -n "$block" ]
@@ -409,7 +420,7 @@ fi
 # Check plan for errors
 if [ -z "$viewer" ] && [ -n "$check" ]
 then
-    checker
+    checker "$plan_nm"
 fi
 
 # separate command-line from plexilexec output
