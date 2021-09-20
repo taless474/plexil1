@@ -113,10 +113,11 @@ confirm_library_file_exists()
         if [ -f "$1/$fname" ] && [ -r "$1/$fname" ]
         then
             return 0
-        elif [ -n "$fname_plx" ] && [ -f "$fname_plx" ] && [ -r "$fname_plx" ]
+        elif [ -n "$1/$fname_plx" ] && [ -f "$1/$fname_plx" ] && [ -r "$1/$fname_plx" ]
         then
             return 0
         fi
+        shift
     done
 
     echo "$(basename "$0"): Option -l: Library $fname not found" >&2
